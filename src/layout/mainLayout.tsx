@@ -7,6 +7,7 @@ import {
   Avatar,
   Menu,
   ActionIcon,
+  Divider,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { NavLink as RouterNavLink } from "react-router-dom";
@@ -15,6 +16,7 @@ import { FaHome, FaInfo } from "react-icons/fa";
 import logo from "../../public/logo.png";
 import avatar from "../assets/avatar.png";
 import { CiSettings, CiLogout } from "react-icons/ci";
+import { MdKeyboardArrowRight } from "react-icons/md";
 // import SideNav from "../components/sidenav/SideNav";
 type MainLayoutProps = {
   children: React.ReactNode;
@@ -24,7 +26,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <AppShell
       header={{ height: { base: 48, sm: 60, lg: 76 } }}
-      navbar={{ width: 200, breakpoint: "sm", collapsed: { mobile: !opened } }}
+      navbar={{ width: 240, breakpoint: "sm", collapsed: { mobile: !opened } }}
       padding="md"
     >
       {/* <SideNav /> */}
@@ -42,7 +44,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <Button size="xs">🌙</Button>
         </Flex>
       </AppShell.Header>
-      <AppShell.Navbar p="md">
+      <AppShell.Navbar p="sm">
         <AppShell.Section grow component={ScrollArea}>
           <MantineNavLink
             label="home"
@@ -57,15 +59,25 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             leftSection={<FaInfo />}
           />
         </AppShell.Section>
-
+        <Divider my="xs" />
         <AppShell.Section>
-          <Flex justify={"space-around"} align={"center"}>
-            User Name
-            <br />
+          <div className="flex items-center justify-between">
+            <div>
+              <Avatar src={avatar} alt="avatar" />
+            </div>
+            <div>
+              <p className="text-sm font-bold">User Name</p>
+              <p className="text-sm text-slate-500">random@email.com</p>
+            </div>
             <Menu>
               <Menu.Target>
-                <ActionIcon radius={100} size="auto">
-                  <Avatar src={avatar} alt="avatar" />
+                <ActionIcon
+                  radius={100}
+                  size="auto"
+                  color="indigo"
+                  variant="outline"
+                >
+                  <MdKeyboardArrowRight />
                 </ActionIcon>
               </Menu.Target>
               <Menu.Dropdown>
@@ -78,7 +90,34 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 </RouterNavLink>
               </Menu.Dropdown>
             </Menu>
-          </Flex>
+          </div>
+          {/* <Flex justify={"space-around"} align={"center"}>
+            <ActionIcon radius={100} size="auto">
+              <Avatar src={avatar} alt="avatar" />
+            </ActionIcon>
+
+            <div className="flex">
+              <p className="text-sm text-left">User Name</p>
+              <p className="text-sm">random@email.com</p>
+            </div>
+
+            <Menu>
+              <Menu.Target>
+                <ActionIcon radius={100} size="auto">
+                  <MdKeyboardArrowRight />
+                </ActionIcon>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Label>Options</Menu.Label>
+                <RouterNavLink to="/settings">
+                  <Menu.Item leftSection={<CiSettings />}>Settings</Menu.Item>
+                </RouterNavLink>
+                <RouterNavLink to="/logout">
+                  <Menu.Item leftSection={<CiLogout />}>Logout</Menu.Item>
+                </RouterNavLink>
+              </Menu.Dropdown>
+            </Menu>
+          </Flex> */}
         </AppShell.Section>
       </AppShell.Navbar>
       <AppShell.Main>{children}</AppShell.Main>
