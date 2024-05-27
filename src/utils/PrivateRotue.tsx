@@ -1,7 +1,7 @@
 import { Outlet, Navigate } from "react-router-dom";
 import MainLayout from "../layout/mainLayout";
 const PrivateRoute = () => {
-  const auth = { token: false };
+  const auth = { token: true };
   return auth.token ? <Outlet /> : <Navigate to="/registration" />;
 };
 
