@@ -1,9 +1,20 @@
-import { AppShell, Burger, ScrollArea, Flex, Button } from "@mantine/core";
+import {
+  AppShell,
+  Burger,
+  ScrollArea,
+  Flex,
+  Button,
+  Avatar,
+  Menu,
+  ActionIcon,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Link, NavLink as RouterNavLink } from "react-router-dom";
+import { NavLink as RouterNavLink } from "react-router-dom";
 import { NavLink as MantineNavLink } from "@mantine/core";
 import { FaHome, FaInfo } from "react-icons/fa";
 import logo from "../../public/logo.png";
+import avatar from "../assets/avatar.png";
+import { CiSettings, CiLogout } from "react-icons/ci";
 // import SideNav from "../components/sidenav/SideNav";
 type MainLayoutProps = {
   children: React.ReactNode;
@@ -13,7 +24,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <AppShell
       header={{ height: { base: 48, sm: 60, lg: 76 } }}
-      navbar={{ width: 240, breakpoint: "sm", collapsed: { mobile: !opened } }}
+      navbar={{ width: 200, breakpoint: "sm", collapsed: { mobile: !opened } }}
       padding="md"
     >
       {/* <SideNav /> */}
@@ -25,9 +36,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         >
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           {/* <div>Logo</div> */}
-          <Link to="/">
+          <RouterNavLink to="/">
             <img src={logo} alt="logo" style={{ width: "30px" }} />
-          </Link>
+          </RouterNavLink>
           <Button size="xs">🌙</Button>
         </Flex>
       </AppShell.Header>
@@ -48,7 +59,26 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         </AppShell.Section>
 
         <AppShell.Section>
-          Navbar footer – always at the bottom
+          <Flex justify={"space-around"} align={"center"}>
+            User Name
+            <br />
+            <Menu>
+              <Menu.Target>
+                <ActionIcon radius={100} size="auto">
+                  <Avatar src={avatar} alt="avatar" />
+                </ActionIcon>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Label>Options</Menu.Label>
+                <RouterNavLink to="/settings">
+                  <Menu.Item leftSection={<CiSettings />}>Settings</Menu.Item>
+                </RouterNavLink>
+                <RouterNavLink to="/logout">
+                  <Menu.Item leftSection={<CiLogout />}>Logout</Menu.Item>
+                </RouterNavLink>
+              </Menu.Dropdown>
+            </Menu>
+          </Flex>
         </AppShell.Section>
       </AppShell.Navbar>
       <AppShell.Main>{children}</AppShell.Main>

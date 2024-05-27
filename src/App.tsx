@@ -7,6 +7,8 @@ import PrivateRoute, { PrivateRouteWithLayout } from "./utils/PrivateRotue.tsx";
 import Login from "./containers/login.tsx";
 import Registration from "./containers/registration.tsx";
 import About from "./containers/about.tsx";
+import Settings from "./containers/settings.tsx";
+import Logout from "./containers/logout.tsx";
 function App() {
   return (
     <>
@@ -15,6 +17,8 @@ function App() {
         <Route element={<PrivateRoute />}>
           <Route element={<PrivateRouteWithLayout />}>
             <Route path="/about" element={<About />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/logout" element={<Logout />} />
             <Route path="/" element={<Home />} />
             <Route path="*" element={<Home />} />
           </Route>
