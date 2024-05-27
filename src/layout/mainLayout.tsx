@@ -1,8 +1,9 @@
 import { AppShell, Burger, ScrollArea, Flex, Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { NavLink as RouterNavLink } from "react-router-dom";
+import { Link, NavLink as RouterNavLink } from "react-router-dom";
 import { NavLink as MantineNavLink } from "@mantine/core";
 import { FaHome, FaInfo } from "react-icons/fa";
+import logo from "../../public/logo.png";
 // import SideNav from "../components/sidenav/SideNav";
 type MainLayoutProps = {
   children: React.ReactNode;
@@ -16,15 +17,17 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       padding="md"
     >
       {/* <SideNav /> */}
-      <AppShell.Header>
+      <AppShell.Header style={{}}>
         <Flex
           justify="space-between"
           align="center"
           style={{ padding: "10px 20px" }}
         >
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <div>Logo</div>
-
+          {/* <div>Logo</div> */}
+          <Link to="/">
+            <img src={logo} alt="logo" style={{ width: "30px" }} />
+          </Link>
           <Button size="xs">🌙</Button>
         </Flex>
       </AppShell.Header>
