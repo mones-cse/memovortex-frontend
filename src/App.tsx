@@ -5,6 +5,7 @@ import Landing from "./containers/landing.tsx";
 // import { PublicRoute } from "./components/routes/customeRoute.tsx";
 import PrivateRoute, { PrivateRouteWithLayout } from "./utils/PrivateRotue.tsx";
 import Login from "./containers/login.tsx";
+import Registration from "./containers/registration.tsx";
 import About from "./containers/about.tsx";
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="*" element={<Home />} />
         </Route>
         <Route path="/landing" element={<Landing />} />
+        <Route path="/registration" element={<Registration />} />
         <Route path="/login" element={<Login />} />
       </Routes>
     </>
