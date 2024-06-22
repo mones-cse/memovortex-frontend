@@ -14,3 +14,40 @@
   - services/: API service files for making network requests.
   - utils/: Utility functions and constants.
   - styles/: Global styles and variables.
+
+# why use immer
+
+```js
+const baseState = [
+  {
+    title: "Learn TypeScript",
+    done: true,
+  },
+  {
+    title: "Try Immer",
+    done: false,
+  },
+];
+```
+
+without immer
+
+```js
+const nextState = baseState.slice(); // shallow clone the array
+nextState[1] = {
+  // replace element 1...
+  ...nextState[1], // with a shallow clone of element 1
+  done: true, // ...combined with the desired update
+};
+nextState.push({ title: "Tweet about it" });
+```
+
+with immer
+
+```js
+import { produce } from "immer";
+const nextState = produce(baseState, (draft) => {
+  draft[1].done = true;
+  draft.push({ title: "Tweet about it" });
+});
+```
