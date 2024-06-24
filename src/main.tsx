@@ -4,15 +4,21 @@ import App from "./App.tsx";
 import "./index.css";
 import "@mantine/core/styles.css";
 
-import { BrowserRouter as Router } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
+import { BrowserRouter as Router } from "react-router-dom";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <MantineProvider>
-      <Router>
-        <App />
-      </Router>
-    </MantineProvider>
-  </React.StrictMode>
-);
+const rootElement = document.getElementById("root");
+
+if (rootElement) {
+	ReactDOM.createRoot(rootElement).render(
+		<React.StrictMode>
+			<MantineProvider>
+				<Router>
+					<App />
+				</Router>
+			</MantineProvider>
+		</React.StrictMode>,
+	);
+} else {
+	console.error("Failed to find the root element");
+}
