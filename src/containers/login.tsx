@@ -20,8 +20,7 @@ const Login = () => {
 		validateInputOnChange: true,
 
 		validate: {
-			email: (value) =>
-				/^\S+@\S+$/.test(value) ? null : "Invalid email",
+			email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
 
 			passwordInput: (value) => {
 				if (value.length === 0) {
@@ -45,11 +44,7 @@ const Login = () => {
 					<Text size="sm" c="dimmed">
 						For the purpose of login, your details are required.
 					</Text>
-					<form
-						onSubmit={form.onSubmit((values) =>
-							console.log(values),
-						)}
-					>
+					<form onSubmit={form.onSubmit((values) => console.log(values))}>
 						<TextInput
 							withAsterisk
 							label="Email Address"
@@ -95,10 +90,7 @@ const Login = () => {
 					</Group>
 					<Text size="xs" ta="center" c="dimmed" mt="xl" fw="700">
 						Don’t have an account?{" "}
-						<Link
-							to="/registration"
-							className="text-black underline"
-						>
+						<Link to="/registration" className="text-black underline">
 							Sign up
 						</Link>
 					</Text>

@@ -40,12 +40,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 					align="center"
 					style={{ padding: "10px 20px" }}
 				>
-					<Burger
-						opened={opened}
-						onClick={toggle}
-						hiddenFrom="sm"
-						size="sm"
-					/>
+					<Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
 					{/* <div>Logo</div> */}
 					<RouterNavLink to="/">
 						<img src={logo} alt="logo" style={{ width: "30px" }} />
@@ -76,9 +71,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 						</div>
 						<div>
 							<p className="text-sm font-bold">User Name</p>
-							<p className="text-sm text-slate-500">
-								random@email.com
-							</p>
+							<p className="text-sm text-slate-500">random@email.com</p>
 						</div>
 						<Menu>
 							<Menu.Target>
@@ -94,14 +87,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 							<Menu.Dropdown>
 								<Menu.Label>Options</Menu.Label>
 								<RouterNavLink to="/settings">
-									<Menu.Item leftSection={<CiSettings />}>
-										Settings
-									</Menu.Item>
+									<Menu.Item leftSection={<CiSettings />}>Settings</Menu.Item>
 								</RouterNavLink>
 								<RouterNavLink to="/logout">
-									<Menu.Item leftSection={<CiLogout />}>
-										Logout
-									</Menu.Item>
+									<Menu.Item leftSection={<CiLogout />}>Logout</Menu.Item>
 								</RouterNavLink>
 							</Menu.Dropdown>
 						</Menu>

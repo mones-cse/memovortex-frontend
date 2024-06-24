@@ -1,7 +1,7 @@
 - use react-router-dom for routing
 - use browser router for routing
 - used this [tutorial](https://www.youtube.com/watch?v=Ul3y1LXxzdU&ab_channel=WebDevSimplified) for routing
-
+- [rules](https://biomejs.dev/linter/rules/) of biomejs
 # Folder Structure
 
 - public/: Contains the static files, such as the HTML template, favicon, and other assets.

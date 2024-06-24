@@ -24,8 +24,7 @@ const Registration = () => {
 		validateInputOnChange: true,
 
 		validate: {
-			email: (value) =>
-				/^\S+@\S+$/.test(value) ? null : "Invalid email",
+			email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
 			fullName: (value) => {
 				if (value.length === 0) {
 					return "Full name is required";
@@ -45,9 +44,7 @@ const Registration = () => {
 				return null;
 			},
 			confirmPasswordInput: (value, values) =>
-				value === values.passwordInput
-					? null
-					: "Passwords do not match",
+				value === values.passwordInput ? null : "Passwords do not match",
 			termsOfService: (value) =>
 				value ? null : "You must agree to terms of service",
 		},
@@ -61,14 +58,9 @@ const Registration = () => {
 						Register Individual Account!
 					</Text>
 					<Text size="sm" c="dimmed">
-						For the purpose of industry regulation, your details are
-						required.
+						For the purpose of industry regulation, your details are required.
 					</Text>
-					<form
-						onSubmit={form.onSubmit((values) =>
-							console.log(values),
-						)}
-					>
+					<form onSubmit={form.onSubmit((values) => console.log(values))}>
 						<TextInput
 							withAsterisk
 							label="Your Full Name"
