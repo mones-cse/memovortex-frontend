@@ -7,9 +7,19 @@ import {
 	TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-
+import { zodResolver } from "mantine-form-zod-resolver";
 import { FaGoogle } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { z } from "zod";
+
+const schema = z.object({
+	email: z.string().email({ message: "Invalid email" }),
+	passwordInput: z
+		.string()
+		.min(5, { message: "Password must be at least 5 characters" })
+		.max(20, { message: "Password must be at most 20 characters" }),
+});
+
 const Login = () => {
 	const form = useForm({
 		mode: "uncontrolled",
@@ -17,22 +27,16 @@ const Login = () => {
 			email: "",
 			passwordInput: "",
 		},
+		validate: zodResolver(schema),
 		validateInputOnChange: true,
-
-		validate: {
-			email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-
-			passwordInput: (value) => {
-				if (value.length === 0) {
-					return "Password is required";
-				}
-				if (value.length < 3) {
-					return "Password must be at least 5 characters";
-				}
-				return null;
-			},
-		},
 	});
+
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		if (form.isValid()) {
+			console.log(form.getValues());
+		}
+	};
 	return (
 		<div className="flex h-screen ">
 			<div className="w-1/2 bg-blue-600" />
@@ -44,7 +48,7 @@ const Login = () => {
 					<Text size="sm" c="dimmed">
 						For the purpose of login, your details are required.
 					</Text>
-					<form onSubmit={form.onSubmit((values) => console.log(values))}>
+					<form onSubmit={handleSubmit}>
 						<TextInput
 							withAsterisk
 							label="Email Address"

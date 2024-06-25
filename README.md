@@ -1,6 +1,6 @@
 # Flash Card Frontend 
 
-# What I use in this project\
+# What I use in this project
 - React with vite
 - TypeScript
 - Zustand: for state management
