@@ -31,10 +31,9 @@ const Login = () => {
 		validateInputOnChange: true,
 	});
 
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
+	const handleSubmit = (values: typeof form.values) => {
 		if (form.isValid()) {
-			console.log(form.getValues());
+			console.log(values);
 		}
 	};
 	return (
@@ -48,7 +47,7 @@ const Login = () => {
 					<Text size="sm" c="dimmed">
 						For the purpose of login, your details are required.
 					</Text>
-					<form onSubmit={handleSubmit}>
+					<form onSubmit={form.onSubmit(handleSubmit)}>
 						<TextInput
 							withAsterisk
 							label="Email Address"
@@ -71,7 +70,7 @@ const Login = () => {
 						</Box>
 
 						<Group justify="flex-center" mt="md">
-							<Button type="submit" fullWidth>
+							<Button type="submit" fullWidth disabled={!form.isValid()}>
 								Login
 							</Button>
 						</Group>

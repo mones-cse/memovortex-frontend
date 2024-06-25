@@ -8,12 +8,37 @@ import {
 	TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { Link } from "react-router-dom";
-
+import { zodResolver } from "mantine-form-zod-resolver";
 import { FaGoogle } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { z } from "zod";
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+console.log(BACKEND_URL);
+
+const registrationSchema = z
+	.object({
+		email: z.string().email({ message: "Invalid email" }),
+		fullName: z
+			.string()
+			.min(3, { message: "Full name must be at least 3 characters" }),
+		passwordInput: z
+			.string()
+			.min(5, { message: "Password must be at least 5 characters" })
+			.max(20, { message: "Password must be at most 20 characters" }),
+		confirmPasswordInput: z.string(),
+		termsOfService: z.literal(true, {
+			message: "You must agree to terms of service",
+		}),
+	})
+	.refine((data) => data.passwordInput === data.confirmPasswordInput, {
+		message: "Passwords do not match",
+		path: ["confirmPasswordInput"],
+	});
+
 const Registration = () => {
 	const form = useForm({
-		mode: "uncontrolled",
+		// mode: "uncontrolled",
 		initialValues: {
 			email: "",
 			fullName: "",
@@ -21,34 +46,17 @@ const Registration = () => {
 			confirmPasswordInput: "",
 			termsOfService: false,
 		},
-		validateInputOnChange: true,
 
-		validate: {
-			email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-			fullName: (value) => {
-				if (value.length === 0) {
-					return "Full name is required";
-				}
-				if (value.length < 3) {
-					return "Full name must be at least 5 characters";
-				}
-				return null;
-			},
-			passwordInput: (value) => {
-				if (value.length === 0) {
-					return "Password is required";
-				}
-				if (value.length < 3) {
-					return "Password must be at least 5 characters";
-				}
-				return null;
-			},
-			confirmPasswordInput: (value, values) =>
-				value === values.passwordInput ? null : "Passwords do not match",
-			termsOfService: (value) =>
-				value ? null : "You must agree to terms of service",
-		},
+		validate: zodResolver(registrationSchema),
+		validateInputOnChange: true,
 	});
+
+	const handleSubmit = (values: typeof form.values) => {
+		if (form.isValid()) {
+			const { email, fullName, passwordInput: password_hash } = values;
+			console.log({ email, fullName, password_hash });
+		}
+	};
 	return (
 		<div className="flex h-screen ">
 			<div className="w-1/2 bg-blue-600" />
@@ -60,7 +68,7 @@ const Registration = () => {
 					<Text size="sm" c="dimmed">
 						For the purpose of industry regulation, your details are required.
 					</Text>
-					<form onSubmit={form.onSubmit((values) => console.log(values))}>
+					<form onSubmit={form.onSubmit(handleSubmit)}>
 						<TextInput
 							withAsterisk
 							label="Your Full Name"
@@ -110,7 +118,11 @@ const Registration = () => {
 						/>
 
 						<Group justify="flex-center" mt="md">
-							<Button type="submit" fullWidth>
+							<Button
+								type="submit"
+								fullWidth
+								// disabled={!form.isValid()}
+							>
 								Register Account
 							</Button>
 						</Group>
