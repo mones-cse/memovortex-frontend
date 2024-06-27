@@ -9,8 +9,9 @@ import {
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { FaGoogle } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
+import { useAuth } from "../hooks/useAuth";
 
 const schema = z.object({
 	email: z.string().email({ message: "Invalid email" }),
@@ -21,6 +22,8 @@ const schema = z.object({
 });
 
 const Login = () => {
+	const { isPending, error, login } = useAuth();
+	const navigate = useNavigate();
 	const form = useForm({
 		mode: "uncontrolled",
 		initialValues: {
@@ -31,9 +34,20 @@ const Login = () => {
 		validateInputOnChange: true,
 	});
 
-	const handleSubmit = (values: typeof form.values) => {
+	const handleSubmit = async (values: typeof form.values) => {
 		if (form.isValid()) {
 			console.log(values);
+			const { email, passwordInput: password } = values;
+
+			try {
+				const response = await login({ email, password });
+				console.log("🚀 ~ handleSubmit ~ response", response);
+				if (response.success) {
+					navigate("/dashboard");
+				}
+			} catch (error) {
+				console.log("🚀 ~ handleSubmit ~ error:", error);
+			}
 		}
 	};
 	return (
@@ -61,7 +75,7 @@ const Login = () => {
 							<PasswordInput
 								withAsterisk
 								label="Password"
-								placeholder="type your password"
+								placeholder="your password"
 								key={form.key("passwordInput")}
 								type="password"
 								{...form.getInputProps("passwordInput")}
@@ -70,9 +84,14 @@ const Login = () => {
 						</Box>
 
 						<Group justify="flex-center" mt="md">
-							<Button type="submit" fullWidth disabled={!form.isValid()}>
+							<Button type="submit" fullWidth disabled={isPending}>
 								Login
 							</Button>
+							{error && (
+								<p className="text-red-500">
+									Error: {(error as Error).message}
+								</p>
+							)}
 						</Group>
 
 						<Text size="xs" ta="center" c="dimmed" mt="md">

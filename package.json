@@ -16,6 +16,7 @@
 		"@mantine/form": "^7.10.0",
 		"@mantine/hooks": "^7.10.0",
 		"@tanstack/react-query": "^5.48.0",
+		"@tanstack/react-query-devtools": "^5.48.0",
 		"axios": "^1.7.2",
 		"immer": "^10.1.1",
 		"mantine-form-zod-resolver": "^1.1.0",
