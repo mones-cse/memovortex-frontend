@@ -1,12 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import About from "./containers/about.tsx";
-import Home from "./containers/home.tsx";
-import Landing from "./containers/landing.tsx";
-import Login from "./containers/login.tsx";
-import Logout from "./containers/logout.tsx";
-import Registration from "./containers/registration.tsx";
-import Settings from "./containers/settings.tsx";
+import About from "./pages/about.tsx";
+import Home from "./pages/home.tsx";
+import Landing from "./pages/landing.tsx";
+import Login from "./pages/login.tsx";
+import Logout from "./pages/logout.tsx";
+import Registration from "./pages/registration.tsx";
+import Settings from "./pages/settings.tsx";
 // import { PublicRoute } from "./components/routes/customeRoute.tsx";
 import PrivateRoute, { PrivateRouteWithLayout } from "./utils/PrivateRotue.tsx";
 function App() {
