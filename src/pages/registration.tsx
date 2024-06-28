@@ -12,6 +12,7 @@ import { zodResolver } from "mantine-form-zod-resolver";
 import { FaGoogle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { z } from "zod";
 import { useAuth } from "../hooks/useAuth";
 
@@ -58,12 +59,21 @@ const Registration = () => {
 			const { email, fullName: full_name, password: password_hash } = values;
 			try {
 				await registration({ email, full_name, password_hash });
+				toast.success("Registration successful. Please login to continue");
 				navigate("/login");
 			} catch (err) {
-				console.error("Registration failed", err);
+				if (error) {
+					toast.error(
+						error instanceof Error
+							? error.message
+							: "An error occurred during registration",
+					);
+				}
+				console.error("🚀 ~ handleSubmit ~ err:", err);
 			}
 		}
 	};
+
 	return (
 		<div className="flex h-screen ">
 			<div className="w-1/2 bg-blue-600" />
@@ -131,11 +141,7 @@ const Registration = () => {
 							<Button type="submit" fullWidth disabled={isPending}>
 								{isPending ? "Registering..." : "Register Account"}
 							</Button>
-							{error && (
-								<p className="text-red-500">
-									Error: {(error as Error).message}
-								</p>
-							)}
+							{/* {error && (() => toast.error((error as Error).message))} */}
 						</Group>
 
 						<Text size="xs" ta="center" c="dimmed" mt="md">
