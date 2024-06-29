@@ -19,7 +19,8 @@ export const useAuth = () => {
 			console.log("onSuccess", result);
 			if (result.data.token) {
 				console.log("data.token", result.data.token);
-				localStorage.setItem("token", result.data.token);
+				localStorage.setItem("access_token", result.data.token.access_token);
+				localStorage.setItem("refresh_token", result.data.refresh_token);
 			}
 			queryClient.invalidateQueries({
 				queryKey: ["user"],
