@@ -37,7 +37,7 @@ const registrationSchema = z
 	});
 
 const Registration = () => {
-	const { registration, isPending, error } = useAuth();
+	const { registration, isPending } = useAuth();
 	const navigate = useNavigate();
 
 	const form = useForm({
@@ -61,7 +61,7 @@ const Registration = () => {
 				await registration({ email, full_name, password_hash });
 				toast.success("Registration successful. Please login to continue");
 				navigate("/login");
-			} catch (err) {
+			} catch (error) {
 				if (error) {
 					toast.error(
 						error instanceof Error
@@ -69,7 +69,7 @@ const Registration = () => {
 							: "An error occurred during registration",
 					);
 				}
-				console.error("🚀 ~ handleSubmit ~ err:", err);
+				console.error("🚀 ~ handleSubmit ~ err:", error);
 			}
 		}
 	};

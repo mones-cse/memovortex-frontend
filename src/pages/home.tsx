@@ -2,7 +2,6 @@ import { useStore } from "../stores/useStore";
 
 const Home = () => {
 	const { count, setCount, grandFather, incChildAge } = useStore();
-	console.log("🚀 ~ Home ~ count, setCount:", count, setCount);
 	return (
 		<div>
 			<h1>Home</h1>

@@ -10,6 +10,7 @@ import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { FaGoogle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { z } from "zod";
 import { useAuth } from "../hooks/useAuth";
 
@@ -22,7 +23,7 @@ const schema = z.object({
 });
 
 const Login = () => {
-	const { isPending, error, login } = useAuth();
+	const { isPending, login } = useAuth();
 	const navigate = useNavigate();
 	const form = useForm({
 		mode: "uncontrolled",
@@ -36,7 +37,6 @@ const Login = () => {
 
 	const handleSubmit = async (values: typeof form.values) => {
 		if (form.isValid()) {
-			console.log(values);
 			const { email, passwordInput: password } = values;
 
 			try {
@@ -46,6 +46,13 @@ const Login = () => {
 					navigate("/dashboard");
 				}
 			} catch (error) {
+				if (error) {
+					toast.error(
+						error instanceof Error
+							? error.message
+							: "An error occurred during registration",
+					);
+				}
 				console.log("🚀 ~ handleSubmit ~ error:", error);
 			}
 		}
@@ -87,11 +94,6 @@ const Login = () => {
 							<Button type="submit" fullWidth disabled={isPending}>
 								Login
 							</Button>
-							{error && (
-								<p className="text-red-500">
-									Error: {(error as Error).message}
-								</p>
-							)}
 						</Group>
 
 						<Text size="xs" ta="center" c="dimmed" mt="md">
