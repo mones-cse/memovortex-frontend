@@ -11,7 +11,7 @@ export const registrationFunction = async (
 ) => {
 	try {
 		const response = await axiosInstance.post(
-			`${API_URL}/auth/register`,
+			`${API_URL}/v1/auth/register`,
 			credentials,
 		);
 		console.log("🚀 ~ registrationFunction ~ response.data", response.data);
@@ -33,7 +33,7 @@ export const registrationFunction = async (
 export const loginFunction = async (credentials: LoginCredentials) => {
 	try {
 		const response = await axiosInstance.post(
-			`${API_URL}/auth/login`,
+			`${API_URL}/v1/auth/login`,
 			credentials,
 		);
 		console.log("🚀 ~ LoginFunction ~ response.data", response.data);

@@ -10,14 +10,14 @@ import Registration from "./pages/registration.tsx";
 import Settings from "./pages/settings.tsx";
 import "react-toastify/dist/ReactToastify.css";
 // import { PublicRoute } from "./components/routes/customeRoute.tsx";
-import PrivateRoute, { PrivateRouteWithLayout } from "./utils/PrivateRotue.tsx";
+import PrivateRoute from "./utils/PrivateRotue.tsx";
 function App() {
 	return (
 		<>
 			<Routes>
 				{/* <PublicRoute path="/" element={<Landing />} /> */}
 				<Route element={<PrivateRoute />}>
-					<Route element={<PrivateRouteWithLayout />}>
+					<Route element={<PrivateRoute withLayout={true} />}>
 						<Route path="/about" element={<About />} />
 						<Route path="/settings" element={<Settings />} />
 						<Route path="/logout" element={<Logout />} />
