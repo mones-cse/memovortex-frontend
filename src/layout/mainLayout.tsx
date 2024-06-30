@@ -17,11 +17,13 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import logo from "../../public/logo.png";
 import avatar from "../assets/avatar.png";
+import { useAuth } from "../hooks/useAuth";
 // import SideNav from "../components/sidenav/SideNav";
 type MainLayoutProps = {
 	children: React.ReactNode;
 };
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+	const { logout } = useAuth();
 	const [opened, { toggle }] = useDisclosure();
 	return (
 		<AppShell
@@ -89,9 +91,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 								<RouterNavLink to="/settings">
 									<Menu.Item leftSection={<CiSettings />}>Settings</Menu.Item>
 								</RouterNavLink>
-								<RouterNavLink to="/logout">
-									<Menu.Item leftSection={<CiLogout />}>Logout</Menu.Item>
-								</RouterNavLink>
+
+								<Menu.Item leftSection={<CiLogout />} onClick={logout}>
+									Logout
+								</Menu.Item>
 							</Menu.Dropdown>
 						</Menu>
 					</div>
