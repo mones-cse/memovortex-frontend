@@ -12,6 +12,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ withLayout = false }) => {
 	const { isAuthenticated, checkAuth } = useAuth();
 
 	useEffect(() => {
+		console.log("called !!!!");
 		const verifyAuth = async () => {
 			await checkAuth();
 			setIsLoading(false);

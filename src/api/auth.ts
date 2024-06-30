@@ -51,3 +51,24 @@ export const loginFunction = async (credentials: LoginCredentials) => {
 		throw new Error("An error occurred during login");
 	}
 };
+
+export const newAccessTokenByRefreshToken = async (refreshToken: string) => {
+	try {
+		const response = await axiosInstance.post(
+			`${API_URL}/v1/auth/refresh-token`,
+			{ refresh_token: refreshToken },
+		);
+		return response;
+	} catch (error) {
+		if (axios.isAxiosError(error) && error.response) {
+			console.log(
+				"🚀 ~ newAccessTokenByRefreshToken ~ error.response):",
+				error.response.data.message,
+			);
+			throw new Error(
+				error.response.data.message || "An error occurred during token refresh",
+			);
+		}
+		throw new Error("An error occurred during token refresh");
+	}
+};

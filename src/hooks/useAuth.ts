@@ -33,7 +33,7 @@ export const useAuth = () => {
 	});
 
 	const logout = useCallback(() => {
-		console.log("🚀 ~ logout ~ logout:", logout);
+		console.log("🚀 ~ logout ~ called");
 		removeToken();
 		setUser(null);
 		setIsAuthenticated(false);
@@ -43,8 +43,9 @@ export const useAuth = () => {
 
 	const verifyToken = useTokenVerification(logout);
 
-	const checkAuth = useCallback(() => {
-		const verifiedUser = verifyToken();
+	const checkAuth = useCallback(async () => {
+		const verifiedUser = await verifyToken();
+
 		if (verifiedUser) {
 			setUser(verifiedUser);
 			setIsAuthenticated(true);
@@ -54,6 +55,8 @@ export const useAuth = () => {
 		}
 	}, [verifyToken, setUser, setIsAuthenticated]);
 
+	// This useEffect is not needed because we are calling checkAuth in the App.tsx
+	// But incase find any issue with the checkAuth then we can use this useEffect
 	useEffect(() => {
 		checkAuth();
 	}, [checkAuth]);
