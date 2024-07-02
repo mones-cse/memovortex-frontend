@@ -1,9 +1,10 @@
 import { useStore } from "../stores/useStore";
+import { MainContainer } from "../ui/MainContainer";
 
 const Home = () => {
 	const { count, setCount, grandFather, incChildAge } = useStore();
 	return (
-		<div>
+		<MainContainer withSpace>
 			<h1>Home</h1>
 			<p>Welcome to the home page</p>
 			<br />
@@ -20,7 +21,7 @@ const Home = () => {
 			<button onClick={() => incChildAge(10)} type="button">
 				Increment Child Age to 10
 			</button>
-		</div>
+		</MainContainer>
 	);
 };
 

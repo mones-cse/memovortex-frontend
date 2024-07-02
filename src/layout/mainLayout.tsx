@@ -22,18 +22,38 @@ import { useAuth } from "../hooks/useAuth";
 type MainLayoutProps = {
 	children: React.ReactNode;
 };
+
+const mainLinksData = [
+	{ icon: <FaHome />, label: "home", to: "/" },
+	{ icon: <FaInfo />, label: "about", to: "/about" },
+];
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
-	const { logout } = useAuth();
+	const { logout, user } = useAuth();
 	const [opened, { toggle }] = useDisclosure();
+	const MainLinks = () => {
+		return (
+			<>
+				{mainLinksData.map((link) => (
+					<MantineNavLink
+						label={link.label}
+						component={RouterNavLink}
+						to={link.to}
+						leftSection={link.icon}
+						key={link.label}
+					/>
+				))}
+			</>
+		);
+	};
 	return (
 		<AppShell
 			header={{ height: { base: 48, sm: 60, lg: 76 } }}
 			navbar={{
-				width: 240,
+				width: 200,
 				breakpoint: "sm",
 				collapsed: { mobile: !opened },
 			}}
-			padding="md"
+			style={{ padding: "0px" }}
 		>
 			{/* <SideNav /> */}
 			<AppShell.Header style={{}}>
@@ -52,18 +72,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 			</AppShell.Header>
 			<AppShell.Navbar p="sm">
 				<AppShell.Section grow component={ScrollArea}>
-					<MantineNavLink
-						label="home"
-						component={RouterNavLink}
-						to={"/"}
-						leftSection={<FaHome />}
-					/>
-					<MantineNavLink
-						label="about"
-						component={RouterNavLink}
-						to={"/about"}
-						leftSection={<FaInfo />}
-					/>
+					<MainLinks />
 				</AppShell.Section>
 				<Divider my="xs" />
 				<AppShell.Section>
@@ -72,8 +81,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 							<Avatar src={avatar} alt="avatar" />
 						</div>
 						<div>
-							<p className="text-sm font-bold">User Name</p>
-							<p className="text-sm text-slate-500">random@email.com</p>
+							<p className="text-sm font-bold">{user?.full_name}</p>
+							<p className="text-xs text-slate-500">{user?.email}</p>
 						</div>
 						<Menu>
 							<Menu.Target>

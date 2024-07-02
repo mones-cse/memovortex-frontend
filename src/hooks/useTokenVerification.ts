@@ -43,6 +43,7 @@ export const useTokenVerification = (logout: () => void) => {
 			return {
 				sub: decodedToken.sub,
 				email: decodedToken.email,
+				full_name: decodedToken.full_name,
 			};
 		} catch (error) {
 			console.error("Error decoding token:", error);

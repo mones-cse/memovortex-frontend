@@ -12,6 +12,7 @@ export type LoginCredentials = {
 export type User = {
 	sub: string;
 	email: string;
+	full_name: string;
 	// Add other relevant user properties
 };
 
