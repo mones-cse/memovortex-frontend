@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginFunction, registrationFunction } from "../api/auth";
 import { useAuthStore } from "../stores/authStore";
@@ -57,9 +57,10 @@ export const useAuth = () => {
 
 	// This useEffect is not needed because we are calling checkAuth in the App.tsx
 	// But incase find any issue with the checkAuth then we can use this useEffect
-	useEffect(() => {
-		checkAuth();
-	}, [checkAuth]);
+	// todo check if this useEffect is needed
+	// useEffect(() => {
+	// 	checkAuth();
+	// }, [checkAuth]);
 
 	return {
 		registration: registrationMutation.mutateAsync,

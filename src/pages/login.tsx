@@ -41,7 +41,6 @@ const Login = () => {
 
 			try {
 				const response = await login({ email, password });
-				console.log("🚀 ~ handleSubmit ~ response", response);
 				if (response.success) {
 					navigate("/dashboard");
 				}

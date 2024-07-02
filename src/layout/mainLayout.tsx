@@ -16,9 +16,8 @@ import { FaHome, FaInfo } from "react-icons/fa";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import logo from "../../public/logo.png";
-import avatar from "../assets/avatar.png";
 import { useAuth } from "../hooks/useAuth";
-// import SideNav from "../components/sidenav/SideNav";
+
 type MainLayoutProps = {
 	children: React.ReactNode;
 };
@@ -78,7 +77,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 				<AppShell.Section>
 					<div className="flex items-center justify-between">
 						<div>
-							<Avatar src={avatar} alt="avatar" />
+							<Avatar name={user?.full_name} color="initials" />
 						</div>
 						<div>
 							<p className="text-sm font-bold">{user?.full_name}</p>

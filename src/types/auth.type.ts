@@ -16,6 +16,11 @@ export type User = {
 	// Add other relevant user properties
 };
 
+export type TChangePassword = {
+	oldPassword: string;
+	newPassword: string;
+};
+
 export type AuthStore = {
 	user: User | null;
 	isAuthenticated: boolean;

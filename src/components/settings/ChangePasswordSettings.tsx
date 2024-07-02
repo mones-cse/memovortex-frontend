@@ -1,7 +1,9 @@
 import { Button, Card, Stack, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
+import { toast } from "react-toastify";
 import { z } from "zod";
+import { useChangePasswordMutation } from "../../hooks/mutations/auth";
 
 const CustomCard = Card.withProps({
 	shadow: "md",
@@ -38,6 +40,7 @@ const schema = z
 	});
 
 export const ChangePasswordSettings = () => {
+	const changePasswordMutation = useChangePasswordMutation();
 	const form = useForm({
 		mode: "uncontrolled",
 		initialValues: {
@@ -51,22 +54,26 @@ export const ChangePasswordSettings = () => {
 	});
 	const handleSubmit = async (values: typeof form.values) => {
 		if (form.isValid()) {
-			const { currentPassword, newPassword, confirmNewPassword } = values;
+			const { currentPassword: oldPassword, newPassword } = values;
 			try {
 				// Call API to change password
-				console.log(
-					"🚀 ~ handleSubmit ~ currentPassword, newPassword, confirmNewPassword:",
-					currentPassword,
+				const response = await changePasswordMutation.mutateAsync({
+					oldPassword,
 					newPassword,
-					confirmNewPassword,
-				);
+				});
+				if (response && response.status === 200) {
+					toast.success("Password changed successfully");
+					form.reset();
+				}
 			} catch (error) {
-				// Handle error
-				console.log("🚀 ~ handleSubmit ~ error:", error);
+				toast.error(
+					error instanceof Error
+						? error.message
+						: "An error occurred during password change",
+				);
 			}
 		}
 	};
-	// form.clearErrors() can be used to clear errors
 
 	return (
 		<CustomCard>
