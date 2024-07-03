@@ -117,7 +117,9 @@ const Note = ({ note }: { note: NoteType }) => {
 							className="cursor-pointer transition ease-in-out  delay-50 hover:-translate-y-1 hover:scale-110  duration-150"
 						/>
 						<button
-							onClick={handleEditClick}
+							onClick={() => {
+								handleEditClick(note.id.toString(), note.noteTitle);
+							}}
 							type="button"
 							className="bg-black  p-1.5 rounded-full cursor-pointer transition ease-in-out  delay-50 hover:-translate-y-1 hover:scale-110  duration-150"
 						>
