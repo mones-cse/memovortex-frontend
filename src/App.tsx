@@ -6,11 +6,11 @@ import Home from "./pages/home.tsx";
 import Landing from "./pages/landing.tsx";
 import Login from "./pages/login.tsx";
 import Logout from "./pages/logout.tsx";
+import Notes from "./pages/notes.tsx";
 import Registration from "./pages/registration.tsx";
 import Settings from "./pages/settings.tsx";
 import "react-toastify/dist/ReactToastify.css";
 import { Suspense } from "react";
-// import { PublicRoute } from "./components/routes/customeRoute.tsx";
 import PrivateRoute from "./utils/PrivateRotue.tsx";
 function App() {
 	return (
@@ -22,6 +22,7 @@ function App() {
 						<Route element={<PrivateRoute withLayout={true} />}>
 							<Route path="/about" element={<About />} />
 							<Route path="/settings" element={<Settings />} />
+							<Route path="/notes" element={<Notes />} />
 							<Route path="/logout" element={<Logout />} />
 							<Route path="/" element={<Home />} />
 							<Route path="*" element={<Home />} />

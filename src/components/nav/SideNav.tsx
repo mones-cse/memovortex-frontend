@@ -1,10 +1,11 @@
 import { AppShell, NavLink as MantineNavLink, ScrollArea } from "@mantine/core";
-import { FaHome, FaInfo } from "react-icons/fa";
+import { FaHome, FaInfo, FaStickyNote } from "react-icons/fa";
 import { NavLink as RouterNavLink } from "react-router-dom";
 
 const mainLinksData = [
 	{ icon: <FaHome />, label: "home", to: "/" },
 	{ icon: <FaInfo />, label: "about", to: "/about" },
+	{ icon: <FaStickyNote />, label: "notes", to: "/notes" },
 ];
 
 export const SideNav = () => {
