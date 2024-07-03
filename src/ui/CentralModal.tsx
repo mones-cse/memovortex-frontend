@@ -10,10 +10,12 @@ export const CentralModal = () => {
 	const renderModal = () => {
 		switch (modalType) {
 			case "updateNote":
-				return <div>Update Modal</div>;
-			case "deleteNote":
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
+				return <div>Update Modal</div>;
+			case "deleteNote":
+				// todo: fix this
+
 				return <NoteDeleteModal {...modalProps} />;
 			default:
 				return null;

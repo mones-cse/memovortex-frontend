@@ -81,7 +81,6 @@ const notesData = [
 
 const Note = ({ note }: { note: NoteType }) => {
 	const store = userStore();
-	console.log({ store });
 
 	const hadleTrashClick = (id: string) => {
 		console.log("Trash Clicked");

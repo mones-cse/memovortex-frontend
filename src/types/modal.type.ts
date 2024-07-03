@@ -1,14 +1,21 @@
 type ModalType = "updateNote" | "deleteNote" | null;
 
+export type ModalProps = {
+	updateNote: { noteId: string; noteTitle: string };
+	deleteNote: { noteId: string };
+};
+
 type State = {
 	modalType: ModalType;
-	modalProps: Record<string, unknown>;
+	modalProps: ModalProps extends null
+		? Record<string, never>
+		: ModalProps[Exclude<ModalType, null>];
 };
 
 type Actions = {
-	openModal: (
-		ModalType: ModalType,
-		modalProps?: Record<string, unknown>,
+	openModal: <T extends Exclude<ModalType, null>>(
+		ModalType: T,
+		modalProps: ModalProps[T],
 	) => void;
 	closeModal: () => void;
 };

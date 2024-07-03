@@ -1,6 +1,6 @@
 import { Button } from "@mantine/core";
-
-export const NoteDeleteModal = ({ noteId }: { noteId: string }) => {
+import type { ModalProps } from "../../types/modal.type";
+export const NoteDeleteModal = ({ noteId }: ModalProps["deleteNote"]) => {
 	return (
 		<div>
 			<p>Delete note no {noteId}</p>

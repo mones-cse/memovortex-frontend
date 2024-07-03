@@ -9,17 +9,17 @@ export const ModalSlice: StateCreator<
 	TModal
 > = (zustendSet) => ({
 	modalType: null,
-	modalProps: {},
+	modalProps: {} as TModal["modalProps"],
 	openModal: (modalType, modalProps) => {
 		zustendSet((state) => {
 			state.modalType = modalType;
-			state.modalProps = modalProps || {};
+			state.modalProps = modalProps;
 		});
 	},
 	closeModal: () => {
 		zustendSet((state) => {
 			state.modalType = null;
-			state.modalProps = {};
+			state.modalProps = {} as TModal["modalProps"];
 		});
 	},
 });
