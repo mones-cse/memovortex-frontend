@@ -1,2 +1,3 @@
 import type { TFamilySlice } from "./family.type";
-export type Store = TFamilySlice;
+import type { TModal } from "./modal.type";
+export type TStore = TFamilySlice & TModal;

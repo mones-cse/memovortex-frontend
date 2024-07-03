@@ -4,7 +4,7 @@
 import type { StateCreator } from "zustand";
 import type { TFamilySlice } from "../types/family.type";
 
-export const familySlice: StateCreator<
+export const FamilySlice: StateCreator<
 	TFamilySlice,
 	[["zustand/immer", never]],
 	[],

@@ -1,9 +1,11 @@
 import { Button } from "@mantine/core";
 import { FaPen, FaRegTrashAlt } from "react-icons/fa";
 import { FaStar } from "react-icons/fa6";
+import { userStore } from "../stores/store";
 import { MainContainer } from "../ui/MainContainer";
 
 type NoteType = {
+	id: string;
 	noteTitle: string;
 	noteContent: string;
 	isNoteFavourite: boolean;
@@ -13,6 +15,7 @@ type NoteType = {
 
 const notesData = [
 	{
+		id: 1,
 		noteTitle: "Note 1",
 		noteContent:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
@@ -21,6 +24,7 @@ const notesData = [
 		updatedAt: new Date(),
 	},
 	{
+		id: 2,
 		noteTitle: "Note 2",
 		noteContent:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. dummy text ever since the 1500s.",
@@ -28,8 +32,8 @@ const notesData = [
 		bgColor: "bg-blue-200",
 		updatedAt: new Date(),
 	},
-	// Add more notes here
 	{
+		id: 3,
 		noteTitle: "Note 3",
 		noteContent:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
@@ -38,6 +42,7 @@ const notesData = [
 		updatedAt: new Date(),
 	},
 	{
+		id: 4,
 		noteTitle: "Note 4",
 		noteContent:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
@@ -46,6 +51,7 @@ const notesData = [
 		updatedAt: new Date(),
 	},
 	{
+		id: 5,
 		noteTitle: "Note 5",
 		noteContent:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
@@ -54,6 +60,7 @@ const notesData = [
 		updatedAt: new Date(),
 	},
 	{
+		id: 6,
 		noteTitle: "Note 6",
 		noteContent:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
@@ -62,6 +69,7 @@ const notesData = [
 		updatedAt: new Date(),
 	},
 	{
+		id: 7,
 		noteTitle: "Note 7",
 		noteContent:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
@@ -72,12 +80,17 @@ const notesData = [
 ];
 
 const Note = ({ note }: { note: NoteType }) => {
-	const hadleTrashClick = () => {
+	const store = userStore();
+	console.log({ store });
+
+	const hadleTrashClick = (id: string) => {
 		console.log("Trash Clicked");
+		store.openModal("deleteNote", { noteId: id });
 	};
 
-	const handleEditClick = () => {
+	const handleEditClick = (id: string, noteTitle: string) => {
 		console.log("Edit Clicked");
+		store.openModal("updateNote", { noteId: id, noteTitle: noteTitle });
 	};
 
 	return (
@@ -101,7 +114,7 @@ const Note = ({ note }: { note: NoteType }) => {
 					</p>
 					<div className="flex gap-1 items-center">
 						<FaRegTrashAlt
-							onClick={hadleTrashClick}
+							onClick={() => hadleTrashClick(note.id.toString())}
 							className="cursor-pointer transition ease-in-out  delay-50 hover:-translate-y-1 hover:scale-110  duration-150"
 						/>
 						<button

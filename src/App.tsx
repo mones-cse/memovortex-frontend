@@ -11,6 +11,7 @@ import Registration from "./pages/registration.tsx";
 import Settings from "./pages/settings.tsx";
 import "react-toastify/dist/ReactToastify.css";
 import { Suspense } from "react";
+import { CentralModal } from "./ui/CentralModal.tsx";
 import PrivateRoute from "./utils/PrivateRotue.tsx";
 function App() {
 	return (
@@ -32,7 +33,7 @@ function App() {
 					<Route path="/registration" element={<Registration />} />
 					<Route path="/login" element={<Login />} />
 				</Routes>
-
+				<CentralModal />
 				<ToastContainer closeOnClick />
 			</Suspense>
 		</>
