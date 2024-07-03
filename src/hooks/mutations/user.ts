@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { changePassword } from "../../api/auth";
-import type { TChangePassword } from "../../types/auth.type";
+import { updateAccountInfo } from "../../api/user";
+import type { UpdateUserInfo } from "../../types/user.type";
 
-export const useChangePasswordMutation = () => {
+export const useUserInformationMutation = () => {
 	return useMutation({
-		mutationFn: (data: TChangePassword) => changePassword(data),
+		mutationFn: (data: UpdateUserInfo) => updateAccountInfo(data),
 		onSuccess: () => {
 			console.log("Password changed successfully");
 		},

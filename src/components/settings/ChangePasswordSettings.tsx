@@ -86,6 +86,7 @@ export const ChangePasswordSettings = () => {
 						description="Provide your current password"
 						key={form.key("currentPassword")}
 						{...form.getInputProps("currentPassword")}
+						mb="sm"
 					/>
 					<TextInput
 						label="New Password"
@@ -93,6 +94,7 @@ export const ChangePasswordSettings = () => {
 						description="Provide your new password"
 						key={form.key("newPassword")}
 						{...form.getInputProps("newPassword")}
+						mb="sm"
 					/>
 					<TextInput
 						label="Confirm New Password"
@@ -100,6 +102,7 @@ export const ChangePasswordSettings = () => {
 						description="Confirm your new password"
 						key={form.key("confirmNewPassword")}
 						{...form.getInputProps("confirmNewPassword")}
+						mb="sm"
 					/>
 
 					<Button type="submit" fullWidth disabled={!form.isDirty()} mt="md">
