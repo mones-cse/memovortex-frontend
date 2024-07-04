@@ -7,6 +7,7 @@ export type ModalProps = {
 
 type State = {
 	modalType: ModalType;
+	modalTitle: string;
 	modalProps: ModalProps extends null
 		? Record<string, never>
 		: ModalProps[Exclude<ModalType, null>];
@@ -15,6 +16,7 @@ type State = {
 type Actions = {
 	openModal: <T extends Exclude<ModalType, null>>(
 		ModalType: T,
+		modalTitle: string,
 		modalProps: ModalProps[T],
 	) => void;
 	closeModal: () => void;

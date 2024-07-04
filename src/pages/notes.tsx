@@ -84,12 +84,15 @@ const Note = ({ note }: { note: NoteType }) => {
 
 	const hadleTrashClick = (id: string) => {
 		console.log("Trash Clicked");
-		store.openModal("deleteNote", { noteId: id });
+		store.openModal("deleteNote", "Delete Note", { noteId: id });
 	};
 
 	const handleEditClick = (id: string, noteTitle: string) => {
 		console.log("Edit Clicked");
-		store.openModal("updateNote", { noteId: id, noteTitle: noteTitle });
+		store.openModal("updateNote", "Update Note", {
+			noteId: id,
+			noteTitle: noteTitle,
+		});
 	};
 
 	return (
