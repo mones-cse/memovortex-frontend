@@ -9,95 +9,103 @@ type NoteType = {
 	noteTitle: string;
 	noteContent: string;
 	isNoteFavourite: boolean;
-	bgColor: string;
+	noteBgColor: string;
 	updatedAt: Date;
 };
 
 const notesData = [
 	{
-		id: 1,
+		id: "1",
 		noteTitle: "Note 1",
 		noteContent:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
 		isNoteFavourite: true,
-		bgColor: "bg-red-200",
+		noteBgColor: "bg-red-200",
 		updatedAt: new Date(),
 	},
 	{
-		id: 2,
+		id: "2",
 		noteTitle: "Note 2",
 		noteContent:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. dummy text ever since the 1500s.",
 		isNoteFavourite: false,
-		bgColor: "bg-blue-200",
+		noteBgColor: "bg-blue-200",
 		updatedAt: new Date(),
 	},
 	{
-		id: 3,
+		id: "3",
 		noteTitle: "Note 3",
 		noteContent:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
 		isNoteFavourite: false,
-		bgColor: "bg-yellow-200",
+		noteBgColor: "bg-yellow-200",
 		updatedAt: new Date(),
 	},
 	{
-		id: 4,
+		id: "4",
 		noteTitle: "Note 4",
 		noteContent:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
 		isNoteFavourite: false,
-		bgColor: "bg-green-200",
+		noteBgColor: "bg-green-200",
 		updatedAt: new Date(),
 	},
 	{
-		id: 5,
+		id: "5",
 		noteTitle: "Note 5",
 		noteContent:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
 		isNoteFavourite: false,
-		bgColor: "bg-pink-200",
+		noteBgColor: "bg-pink-200",
 		updatedAt: new Date(),
 	},
 	{
-		id: 6,
+		id: "6",
 		noteTitle: "Note 6",
 		noteContent:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
 		isNoteFavourite: false,
-		bgColor: "bg-orange-200",
+		noteBgColor: "bg-orange-200",
 		updatedAt: new Date(),
 	},
 	{
-		id: 7,
+		id: "7",
 		noteTitle: "Note 7",
 		noteContent:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
 		isNoteFavourite: false,
-		bgColor: "bg-yellow-200",
+		noteBgColor: "bg-yellow-200",
 		updatedAt: new Date(),
 	},
 ];
 
 const Note = ({ note }: { note: NoteType }) => {
 	const store = userStore();
-
 	const hadleTrashClick = (id: string) => {
 		console.log("Trash Clicked");
 		store.openModal("deleteNote", "Delete Note", { noteId: id }, "sm");
 	};
 
-	const handleEditClick = (id: string, noteTitle: string) => {
+	const handleEditClick = ({
+		id,
+		noteTitle,
+		noteContent,
+		isNoteFavourite,
+		noteBgColor,
+	}: NoteType) => {
 		console.log("Edit Clicked");
 		store.openModal("updateNote", "Update Note", {
 			noteId: id,
 			noteTitle: noteTitle,
+			noteContent: noteContent,
+			isNoteFavourite: isNoteFavourite,
+			noteBgColor: noteBgColor,
 		});
 	};
 
 	return (
 		<div
-			className={`${note.bgColor} p-4 mb-4 rounded-md h-full shadow-lg flex  flex-col`}
+			className={`${note.noteBgColor} p-4 mb-4 rounded-md h-full shadow-lg flex  flex-col`}
 		>
 			<div className="flex items-center justify-between">
 				<p className="text-xl font-semibold">{note.noteTitle}</p>
@@ -121,7 +129,7 @@ const Note = ({ note }: { note: NoteType }) => {
 						/>
 						<button
 							onClick={() => {
-								handleEditClick(note.id.toString(), note.noteTitle);
+								handleEditClick(note);
 							}}
 							type="button"
 							className="bg-black  p-1.5 rounded-full cursor-pointer transition ease-in-out  delay-50 hover:-translate-y-1 hover:scale-110  duration-150"
@@ -136,8 +144,10 @@ const Note = ({ note }: { note: NoteType }) => {
 };
 
 const Notes = () => {
+	const store = userStore();
 	const handleNewNote = () => {
 		console.log("New Note");
+		store.openModal("newNote", "New Note", {}, "xl");
 	};
 
 	return (
@@ -158,28 +168,3 @@ const Notes = () => {
 };
 
 export default Notes;
-
-// <!DOCTYPE html>
-// <html lang="en">
-
-// <head>
-//     <meta charset="UTF-8">
-//     <meta name="viewport" content=
-//         "width=device-width, initial-scale=1.0">
-//     <title>Equal Height Columns with Grid</title>
-//     <link href=
-//         "https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
-//         rel="stylesheet">
-// </head>
-
-// <body>
-//     <div class="p-4 grid grid-cols-3 gap-2">
-//         <div class="bg-blue-500 p-4 text-white">
-//             GeeksforGeeks: A computer science portal for geeks.
-//         </div>
-//         <div class="bg-green-500 p-4 text-white">HTML</div>
-//         <div class="bg-red-500 p-4 text-white">CSS</div>
-//     </div>
-// </body>
-
-// </html>

@@ -1,9 +1,16 @@
-type ModalType = "updateNote" | "deleteNote" | null;
+type ModalType = "updateNote" | "deleteNote" | "newNote" | null;
 type ModalSize = "sm" | "md" | "lg" | "xl";
 
 export type ModalProps = {
-	updateNote: { noteId: string; noteTitle: string };
+	updateNote: {
+		noteId: string;
+		noteTitle: string;
+		noteContent: string;
+		isNoteFavourite: boolean;
+		noteBgColor: string;
+	};
 	deleteNote: { noteId: string };
+	newNote: Record<string, never>;
 };
 
 type State = {
