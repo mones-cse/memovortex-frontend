@@ -4,7 +4,8 @@ import { userStore } from "../stores/store";
 import { NoteDeleteModal } from "../components/modals/NoteDeleteModal";
 
 export const CentralModal = () => {
-	const { modalType, closeModal, modalProps, modalTitle } = userStore();
+	const { modalType, closeModal, modalProps, modalTitle, modalSize } =
+		userStore();
 	console.log("🚀 ~ CentralModal ~ modalProps:", modalProps);
 
 	const renderModal = () => {
@@ -27,7 +28,7 @@ export const CentralModal = () => {
 			opened={modalType !== null}
 			onClose={closeModal}
 			title={modalTitle || "Modal Title"}
-			size="xl"
+			size={modalSize || "lg"}
 		>
 			{renderModal()}
 		</Modal>

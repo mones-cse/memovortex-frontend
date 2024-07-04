@@ -1,4 +1,5 @@
 type ModalType = "updateNote" | "deleteNote" | null;
+type ModalSize = "sm" | "md" | "lg" | "xl";
 
 export type ModalProps = {
 	updateNote: { noteId: string; noteTitle: string };
@@ -8,6 +9,7 @@ export type ModalProps = {
 type State = {
 	modalType: ModalType;
 	modalTitle: string;
+	modalSize?: ModalSize;
 	modalProps: ModalProps extends null
 		? Record<string, never>
 		: ModalProps[Exclude<ModalType, null>];
@@ -18,6 +20,7 @@ type Actions = {
 		ModalType: T,
 		modalTitle: string,
 		modalProps: ModalProps[T],
+		modalSize?: ModalSize,
 	) => void;
 	closeModal: () => void;
 };

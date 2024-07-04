@@ -1,8 +1,8 @@
-import { useStore } from "../stores/useStore";
+import { userStore } from "../stores/store";
 import { MainContainer } from "../ui/MainContainer";
 
 const Home = () => {
-	const { count, setCount, grandFather, incChildAge } = useStore();
+	const { count, setCount, grandFather, incChildAge } = userStore();
 	return (
 		<MainContainer withSpace>
 			<h1>Home</h1>

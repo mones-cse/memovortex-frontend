@@ -84,7 +84,7 @@ const Note = ({ note }: { note: NoteType }) => {
 
 	const hadleTrashClick = (id: string) => {
 		console.log("Trash Clicked");
-		store.openModal("deleteNote", "Delete Note", { noteId: id });
+		store.openModal("deleteNote", "Delete Note", { noteId: id }, "sm");
 	};
 
 	const handleEditClick = (id: string, noteTitle: string) => {
