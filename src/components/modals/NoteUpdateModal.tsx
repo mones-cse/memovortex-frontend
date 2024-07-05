@@ -3,9 +3,9 @@ import type { ModalProps } from "../../types/modal.type";
 
 import { Input } from "@mantine/core";
 import { useState } from "react";
+import { useUpdateNoteMutation } from "../../hooks/mutations/note";
 import { userStore } from "../../stores/store";
 import { CustomColorPicker } from "../../ui/CustomColorPicker";
-
 export const NoteUpdateModal = ({
 	noteId,
 	noteTitle,
@@ -13,6 +13,7 @@ export const NoteUpdateModal = ({
 	isNoteFavourite,
 	noteBgColor,
 }: ModalProps["updateNote"]) => {
+	const { mutateAsync } = useUpdateNoteMutation();
 	const store = userStore();
 	const [noteTitleState, setNoteTitleState] = useState(noteTitle);
 	const [noteContentState, setNoteContentState] = useState(noteContent);
@@ -20,14 +21,14 @@ export const NoteUpdateModal = ({
 		useState(isNoteFavourite);
 	const [noteBgColorState, setNoteBgColorState] = useState(noteBgColor);
 
-	const handleSaveNote = () => {
-		console.log("Create new note");
-		console.log({
-			noteTitleState,
-			noteContentState,
-			isNoteFavouriteState,
-			noteBgColorState,
-			noteId,
+	const handleupdateNote = () => {
+		console.log("Update note");
+		mutateAsync({
+			noteTitle: noteTitleState,
+			noteContent: noteContentState,
+			isNoteFavourite: isNoteFavouriteState,
+			noteBgColor: noteBgColorState,
+			id: noteId,
 		});
 		store.closeModal();
 	};
@@ -73,8 +74,8 @@ export const NoteUpdateModal = ({
 				>
 					Cancle
 				</Button>
-				<Button variant="filled" color="blue" onClick={handleSaveNote}>
-					Save
+				<Button variant="filled" color="blue" onClick={handleupdateNote}>
+					Update
 				</Button>
 			</div>
 		</div>

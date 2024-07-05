@@ -1,8 +1,9 @@
 import axios from "axios";
-import type { TNote } from "../types/note.type";
+import type { TCreateNote, TUpdateNote } from "../types/note.type";
 import { axiosInstance } from "../utils/axiosConfig";
 
 const API_URL = import.meta.env.VITE_API_URL;
+
 export const fetchNotes = async () => {
 	try {
 		const response = await axiosInstance.get(`${API_URL}/v1/notes`);
@@ -12,28 +13,59 @@ export const fetchNotes = async () => {
 			console.log(error.response.data.message);
 			throw new Error(
 				error.response.data.message ||
-					"An error occurred during change password",
+					"An error occurred during fetching notes",
 			);
 		}
-		throw new Error("An error occurred during change password");
+		throw new Error("An error occurred during fetching notes");
 	}
 };
 
-// export const getNotes = async (data: TNote) => {
-// 	try {
-// 		const response = await axiosInstance.get(
-// 			`${API_URL}/v1/notes`,
-// 			data,
-// 		);
-// 		return response;
-// 	} catch (error) {
-// 		if (axios.isAxiosError(error) && error.response) {
-// 			console.log(error.response.data.message);
-// 			throw new Error(
-// 				error.response.data.message ||
-// 					"An error occurred during change password",
-// 			);
-// 		}
-// 		throw new Error("An error occurred during change password");
-// 	}
-// };
+export const createNotes = async (data: TCreateNote) => {
+	try {
+		const response = await axiosInstance.post(`${API_URL}/v1/notes`, data);
+		return response;
+	} catch (error) {
+		if (axios.isAxiosError(error) && error.response) {
+			console.log(error.response.data.message);
+			throw new Error(
+				error.response.data.message || "An error occurred during creating note",
+			);
+		}
+		throw new Error("An error occurred during creating note");
+	}
+};
+
+export const updateNotes = async (data: TUpdateNote) => {
+	try {
+		const response = await axiosInstance.patch(
+			`${API_URL}/v1/notes/${data.id}`,
+			data,
+		);
+		return response;
+	} catch (error) {
+		if (axios.isAxiosError(error) && error.response) {
+			console.log(error.response.data.message);
+			throw new Error(
+				error.response.data.message || "An error occurred during creating note",
+			);
+		}
+		throw new Error("An error occurred during creating note");
+	}
+};
+
+export const deleteNote = async (noteId: string) => {
+	try {
+		const response = await axiosInstance.delete(
+			`${API_URL}/v1/notes/${noteId}`,
+		);
+		return response;
+	} catch (error) {
+		if (axios.isAxiosError(error) && error.response) {
+			console.log(error.response.data.message);
+			throw new Error(
+				error.response.data.message || "An error occurred during deleting note",
+			);
+		}
+		throw new Error("An error occurred during deleting note");
+	}
+};

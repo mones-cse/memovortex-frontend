@@ -7,3 +7,10 @@ export type TNote = {
 	updatedAt: string;
 	createdAt: string;
 };
+
+export type TCreateNote = Pick<
+	TNote,
+	"noteTitle" | "noteContent" | "isNoteFavourite" | "noteBgColor"
+>;
+
+export type TUpdateNote = Pick<TNote, "id"> & Partial<TCreateNote>;

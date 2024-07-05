@@ -1,10 +1,13 @@
 import { Button } from "@mantine/core";
+import { useDeleteNoteMutation } from "../../hooks/mutations/note";
 import { userStore } from "../../stores/store";
 import type { ModalProps } from "../../types/modal.type";
 export const NoteDeleteModal = ({ noteId }: ModalProps["deleteNote"]) => {
 	const store = userStore();
+	const { mutateAsync } = useDeleteNoteMutation();
 	const handleDeleteNote = () => {
 		console.log("Deleting note with id: ", noteId);
+		mutateAsync(noteId);
 		store.closeModal();
 	};
 	return (

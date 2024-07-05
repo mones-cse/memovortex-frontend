@@ -2,6 +2,7 @@ import { Button, Checkbox, Textarea } from "@mantine/core";
 
 import { Input } from "@mantine/core";
 import { useState } from "react";
+import { useCreateNoteMutation } from "../../hooks/mutations/note";
 import { userStore } from "../../stores/store";
 import { CustomColorPicker } from "../../ui/CustomColorPicker";
 
@@ -11,10 +12,9 @@ export const NoteCreateModal = () => {
 	const [noteContent, setNoteContent] = useState("");
 	const [isNoteFavourite, setIsNoteFavourite] = useState(false);
 	const [noteBgColor, setNoteBgColor] = useState("#FFFFFF");
-
+	const { mutateAsync } = useCreateNoteMutation();
 	const handleSaveNote = () => {
-		console.log("Create new note");
-		console.log({ noteTitle, noteContent, isNoteFavourite, noteBgColor });
+		mutateAsync({ noteTitle, noteContent, isNoteFavourite, noteBgColor });
 		store.closeModal();
 	};
 
@@ -54,7 +54,12 @@ export const NoteCreateModal = () => {
 				>
 					Cancle
 				</Button>
-				<Button variant="filled" color="blue" onClick={handleSaveNote}>
+				<Button
+					variant="filled"
+					color="blue"
+					onClick={handleSaveNote}
+					disabled={!noteTitle || !noteContent}
+				>
 					Save
 				</Button>
 			</div>
