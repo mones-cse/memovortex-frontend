@@ -9,6 +9,7 @@ import Logout from "./pages/logout.tsx";
 import Notes from "./pages/notes.tsx";
 import Registration from "./pages/registration.tsx";
 import Settings from "./pages/settings.tsx";
+import Test from "./pages/test.tsx";
 import "react-toastify/dist/ReactToastify.css";
 import { Suspense } from "react";
 import { CentralModal } from "./ui/CentralModal.tsx";
@@ -25,6 +26,7 @@ function App() {
 							<Route path="/settings" element={<Settings />} />
 							<Route path="/notes" element={<Notes />} />
 							<Route path="/logout" element={<Logout />} />
+							<Route path="test" element={<Test />} />
 							<Route path="/" element={<Home />} />
 							<Route path="*" element={<Home />} />
 						</Route>
@@ -33,6 +35,7 @@ function App() {
 					<Route path="/registration" element={<Registration />} />
 					<Route path="/login" element={<Login />} />
 				</Routes>
+
 				<CentralModal />
 				<ToastContainer closeOnClick />
 			</Suspense>

@@ -147,7 +147,7 @@ const Notes = () => {
 	const store = userStore();
 	const handleNewNote = () => {
 		console.log("New Note");
-		store.openModal("newNote", "New Note", {}, "xl");
+		store.openModal("newNote", "New Note", {}, "lg");
 	};
 
 	return (

@@ -34,6 +34,7 @@ export const CentralModal = () => {
 			onClose={closeModal}
 			title={modalTitle || "Modal Title"}
 			size={modalSize || "lg"}
+			centered
 		>
 			{renderModal()}
 		</Modal>
