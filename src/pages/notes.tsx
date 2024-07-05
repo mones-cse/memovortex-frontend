@@ -1,85 +1,13 @@
 import { Button } from "@mantine/core";
 import { FaPen, FaRegTrashAlt } from "react-icons/fa";
 import { FaStar } from "react-icons/fa6";
+import { useFetchNotesQuery } from "../hooks/queries/note";
 import { userStore } from "../stores/store";
+import type { TNote } from "../types/note.type";
 import { MainContainer } from "../ui/MainContainer";
+import { formatDate } from "../utils/dateFormatter";
 
-type NoteType = {
-	id: string;
-	noteTitle: string;
-	noteContent: string;
-	isNoteFavourite: boolean;
-	noteBgColor: string;
-	updatedAt: Date;
-};
-
-const notesData = [
-	{
-		id: "1",
-		noteTitle: "Note 1",
-		noteContent:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
-		isNoteFavourite: true,
-		noteBgColor: "#FFFFFF",
-		updatedAt: new Date(),
-	},
-	{
-		id: "2",
-		noteTitle: "Note 2",
-		noteContent:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. dummy text ever since the 1500s.",
-		isNoteFavourite: false,
-		noteBgColor: "bg-blue-200",
-		updatedAt: new Date(),
-	},
-	{
-		id: "3",
-		noteTitle: "Note 3",
-		noteContent:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
-		isNoteFavourite: false,
-		noteBgColor: "bg-yellow-200",
-		updatedAt: new Date(),
-	},
-	{
-		id: "4",
-		noteTitle: "Note 4",
-		noteContent:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
-		isNoteFavourite: false,
-		noteBgColor: "bg-green-200",
-		updatedAt: new Date(),
-	},
-	{
-		id: "5",
-		noteTitle: "Note 5",
-		noteContent:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
-		isNoteFavourite: false,
-		noteBgColor: "bg-pink-200",
-		updatedAt: new Date(),
-	},
-	{
-		id: "6",
-		noteTitle: "Note 6",
-		noteContent:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
-		isNoteFavourite: false,
-		noteBgColor: "bg-orange-200",
-		updatedAt: new Date(),
-	},
-	{
-		id: "7",
-		noteTitle: "Note 7",
-		noteContent:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
-		isNoteFavourite: false,
-		noteBgColor: "bg-yellow-200",
-		updatedAt: new Date(),
-	},
-];
-
-const Note = ({ note }: { note: NoteType }) => {
+const Note = ({ note }: { note: TNote }) => {
 	const store = userStore();
 	const hadleTrashClick = (id: string) => {
 		console.log("Trash Clicked");
@@ -92,7 +20,7 @@ const Note = ({ note }: { note: NoteType }) => {
 		noteContent,
 		isNoteFavourite,
 		noteBgColor,
-	}: NoteType) => {
+	}: TNote) => {
 		console.log("Edit Clicked");
 		store.openModal("updateNote", "Update Note", {
 			noteId: id,
@@ -119,9 +47,7 @@ const Note = ({ note }: { note: NoteType }) => {
 			<p className="text-sm">{note.noteContent}</p>
 			<div className="mt-auto">
 				<div className="flex items-center justify-between">
-					<p className="text-sm text-left">
-						{note.updatedAt.toLocaleDateString()}
-					</p>
+					<p className="text-sm text-left">{formatDate(note.updatedAt)}</p>
 					<div className="flex gap-1 items-center">
 						<FaRegTrashAlt
 							onClick={() => hadleTrashClick(note.id.toString())}
@@ -144,11 +70,21 @@ const Note = ({ note }: { note: NoteType }) => {
 };
 
 const Notes = () => {
+	const { data, isPending, isError, error } = useFetchNotesQuery();
+
 	const store = userStore();
 	const handleNewNote = () => {
 		console.log("New Note");
 		store.openModal("newNote", "New Note", {}, "lg");
 	};
+
+	if (isPending) {
+		return <div>Loading...</div>;
+	}
+
+	if (isError) {
+		return <div>Error: {error.message}</div>;
+	}
 
 	return (
 		<MainContainer withSpace>
@@ -157,8 +93,8 @@ const Notes = () => {
 				<Button onClick={handleNewNote}>New Note</Button>
 			</div>
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
-				{notesData.map((note: NoteType) => (
-					<div key={note.noteTitle}>
+				{data?.data?.data.map((note: TNote) => (
+					<div key={note.id}>
 						<Note note={note} />
 					</div>
 				))}
