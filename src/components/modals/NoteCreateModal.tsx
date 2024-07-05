@@ -3,46 +3,7 @@ import { Button, Checkbox, Textarea } from "@mantine/core";
 import { Input } from "@mantine/core";
 import { useState } from "react";
 import { userStore } from "../../stores/store";
-
-type CustomColorPickerProps = {
-	swatches: string[];
-	value: string;
-	onChange: (x: string) => void;
-};
-
-const swatches = [
-	"#FFFFFF",
-	"#01D4FF",
-	"#FFC971",
-	"#B692FE",
-	"#E4EE90",
-	"#E8E9ED",
-	"#FF9B73",
-];
-
-const CustomColorPicker: React.FC<CustomColorPickerProps> = ({
-	swatches,
-	value,
-	onChange,
-}) => (
-	<div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-		{swatches.map((color: string) => (
-			<button
-				type="button"
-				key={color}
-				onClick={() => onChange(color)}
-				style={{
-					backgroundColor: color,
-					cursor: "pointer",
-					width: 30,
-					height: 30,
-					border: color === value ? "2px solid #444" : "1px solid #ccc",
-					borderRadius: "50%",
-				}}
-			/>
-		))}
-	</div>
-);
+import { CustomColorPicker } from "../../ui/CustomColorPicker";
 
 export const NoteCreateModal = () => {
 	const store = userStore();
@@ -83,11 +44,7 @@ export const NoteCreateModal = () => {
 				checked={isNoteFavourite}
 				onChange={(event) => setIsNoteFavourite(event.currentTarget.checked)}
 			/>
-			<CustomColorPicker
-				swatches={swatches}
-				value={noteBgColor}
-				onChange={setNoteBgColor}
-			/>
+			<CustomColorPicker value={noteBgColor} onChange={setNoteBgColor} />
 
 			<div className="flex gap-1 justify-end">
 				<Button

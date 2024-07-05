@@ -20,7 +20,7 @@ const notesData = [
 		noteContent:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
 		isNoteFavourite: true,
-		noteBgColor: "bg-red-200",
+		noteBgColor: "#FFFFFF",
 		updatedAt: new Date(),
 	},
 	{
