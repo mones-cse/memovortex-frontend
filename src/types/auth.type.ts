@@ -12,8 +12,7 @@ export type LoginCredentials = Pick<
 export type User = {
 	sub: string;
 	email: string;
-	full_name: string;
-	// Add other relevant user properties
+	fullName: string;
 };
 
 export type TChangePassword = {

@@ -10,10 +10,10 @@ export const UserMenuNav = () => {
 		<AppShell.Section>
 			<div className="flex items-center justify-between">
 				<div>
-					<Avatar name={user?.full_name} color="initials" />
+					<Avatar name={user?.fullName} color="initials" />
 				</div>
 				<div>
-					<p className="text-sm font-bold">{user?.full_name}</p>
+					<p className="text-sm font-bold">{user?.fullName}</p>
 					<p className="text-xs text-slate-500">{user?.email}</p>
 				</div>
 				<Menu>

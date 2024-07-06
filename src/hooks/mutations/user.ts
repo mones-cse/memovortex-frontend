@@ -1,15 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 import { updateAccountInfo } from "../../api/user";
-import type { UpdateUserInfo } from "../../types/user.type";
 
 export const useUserInformationMutation = () => {
 	return useMutation({
-		mutationFn: (data: UpdateUserInfo) => updateAccountInfo(data),
+		mutationFn: updateAccountInfo,
 		onSuccess: () => {
-			console.log("Password changed successfully");
-		},
-		onError: (error) => {
-			console.error("Failed to change password:", error);
+			toast.success("User Account Info changed successfully");
 		},
 	});
 };

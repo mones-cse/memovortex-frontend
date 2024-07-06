@@ -1,3 +1,3 @@
 export type UpdateUserInfo = {
-	full_name: string;
+	fullName: string;
 };

@@ -39,11 +39,11 @@ export const useTokenVerification = (logout: () => void) => {
 					return null;
 				}
 			}
-			// console.log("🚀 ~ decodedToken is valid ", decodedToken);
+			console.log("🚀 ~ decodedToken is valid ", decodedToken);
 			return {
 				sub: decodedToken.sub,
 				email: decodedToken.email,
-				full_name: decodedToken.full_name,
+				fullName: decodedToken.fullName,
 			};
 		} catch (error) {
 			console.error("Error decoding token:", error);
