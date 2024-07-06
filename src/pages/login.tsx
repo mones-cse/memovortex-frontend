@@ -38,22 +38,8 @@ const Login = () => {
 	const handleSubmit = async (values: typeof form.values) => {
 		if (form.isValid()) {
 			const { email, passwordInput: password } = values;
-
-			try {
-				const response = await login({ email, password });
-				if (response.success) {
-					navigate("/dashboard");
-				}
-			} catch (error) {
-				if (error) {
-					toast.error(
-						error instanceof Error
-							? error.message
-							: "An error occurred during registration",
-					);
-				}
-				console.log("🚀 ~ handleSubmit ~ error:", error);
-			}
+			await login({ email, password });
+			navigate("/dashboard");
 		}
 	};
 	return (

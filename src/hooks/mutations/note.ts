@@ -1,5 +1,4 @@
 import { createNotes, deleteNote, updateNotes } from "../../api/note";
-import type { TCreateNote, TUpdateNote } from "../../types/note.type";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -7,7 +6,7 @@ import { toast } from "react-toastify";
 export const useCreateNoteMutation = () => {
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: (data: TCreateNote) => createNotes(data),
+		mutationFn: createNotes,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["notes"] });
 			console.log("Note created successfully");
@@ -23,7 +22,7 @@ export const useCreateNoteMutation = () => {
 export const useUpdateNoteMutation = () => {
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: (data: TUpdateNote) => updateNotes(data),
+		mutationFn: updateNotes,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["notes"] });
 			console.log("Note updated successfully");

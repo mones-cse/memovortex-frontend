@@ -31,6 +31,7 @@ export const useAuth = () => {
 			queryClient.invalidateQueries({
 				queryKey: ["user"],
 			});
+			// toast.success("Login successful");
 		},
 	});
 

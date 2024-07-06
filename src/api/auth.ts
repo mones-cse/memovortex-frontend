@@ -19,25 +19,11 @@ export const registrationFunction = async (
 };
 
 export const loginFunction = async (credentials: LoginCredentials) => {
-	try {
-		const response = await axiosInstance.post(
-			`${API_URL}/v1/auth/login`,
-			credentials,
-		);
-		console.log("🚀 ~ LoginFunction ~ response.data", response.data);
-		return response.data;
-	} catch (error) {
-		if (axios.isAxiosError(error) && error.response) {
-			console.log(
-				"🚀 ~ loginFunction ~ error.response):",
-				error.response.data.message,
-			);
-			throw new Error(
-				error.response.data.message || "An error occurred during login",
-			);
-		}
-		throw new Error("An error occurred during login");
-	}
+	const response = await axiosInstance.post(
+		`${API_URL}/v1/auth/login`,
+		credentials,
+	);
+	return response.data;
 };
 
 export const newAccessTokenByRefreshToken = async (refreshToken: string) => {
