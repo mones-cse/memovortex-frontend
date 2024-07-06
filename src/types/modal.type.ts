@@ -3,7 +3,7 @@ type ModalSize = "sm" | "md" | "lg" | "xl";
 
 export type ModalProps = {
 	updateNote: {
-		noteId: string;
+		id: string;
 		noteTitle: string;
 		noteContent: string;
 		isNoteFavourite: boolean;

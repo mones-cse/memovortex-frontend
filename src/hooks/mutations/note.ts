@@ -25,12 +25,7 @@ export const useUpdateNoteMutation = () => {
 		mutationFn: updateNotes,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["notes"] });
-			console.log("Note updated successfully");
-			toast.success("Note updated successfully");
-		},
-		onError: (error) => {
-			console.error("Failed to update note:", error);
-			toast.error(`Failed to update note ${error}`);
+			// toast.success("Note updated successfully");
 		},
 	});
 };

@@ -7,7 +7,7 @@ import { useUpdateNoteMutation } from "../../hooks/mutations/note";
 import { userStore } from "../../stores/store";
 import { CustomColorPicker } from "../../ui/CustomColorPicker";
 export const NoteUpdateModal = ({
-	noteId,
+	id,
 	noteTitle,
 	noteContent,
 	isNoteFavourite,
@@ -21,14 +21,13 @@ export const NoteUpdateModal = ({
 		useState(isNoteFavourite);
 	const [noteBgColorState, setNoteBgColorState] = useState(noteBgColor);
 
-	const handleupdateNote = () => {
-		console.log("Update note");
-		mutateAsync({
+	const handleupdateNote = async () => {
+		await mutateAsync({
 			noteTitle: noteTitleState,
 			noteContent: noteContentState,
 			isNoteFavourite: isNoteFavouriteState,
 			noteBgColor: noteBgColorState,
-			id: noteId,
+			id,
 		});
 		store.closeModal();
 	};

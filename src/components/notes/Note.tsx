@@ -5,26 +5,12 @@ import { formatDate } from "../../utils/dateFormatter";
 
 export const Note = ({ note }: { note: TNote }) => {
 	const store = userStore();
-	const hadleTrashClick = (id: string) => {
-		console.log("Trash Clicked");
+	const handleTrashClick = (id: string) => {
 		store.openModal("deleteNote", "Delete Note", { noteId: id }, "sm");
 	};
 
-	const handleEditClick = ({
-		id,
-		noteTitle,
-		noteContent,
-		isNoteFavourite,
-		noteBgColor,
-	}: TNote) => {
-		console.log("Edit Clicked");
-		store.openModal("updateNote", "Update Note", {
-			noteId: id,
-			noteTitle: noteTitle,
-			noteContent: noteContent,
-			isNoteFavourite: isNoteFavourite,
-			noteBgColor: noteBgColor,
-		});
+	const handleEditClick = (note: TNote) => {
+		store.openModal("updateNote", "Update Note", note);
 	};
 
 	return (
@@ -47,7 +33,7 @@ export const Note = ({ note }: { note: TNote }) => {
 					<p className="text-sm text-left">{formatDate(note.updatedAt)}</p>
 					<div className="flex gap-1 items-center">
 						<FaRegTrashAlt
-							onClick={() => hadleTrashClick(note.id.toString())}
+							onClick={() => handleTrashClick(note.id.toString())}
 							className="cursor-pointer transition ease-in-out  delay-50 hover:-translate-y-1 hover:scale-110  duration-150"
 						/>
 						<button

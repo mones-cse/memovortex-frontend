@@ -25,21 +25,11 @@ export const createNotes = async (data: TCreateNote) => {
 };
 
 export const updateNotes = async (data: TUpdateNote) => {
-	try {
-		const response = await axiosInstance.patch(
-			`${API_URL}/v1/notes/${data.id}`,
-			data,
-		);
-		return response;
-	} catch (error) {
-		if (axios.isAxiosError(error) && error.response) {
-			console.log(error.response.data.message);
-			throw new Error(
-				error.response.data.message || "An error occurred during creating note",
-			);
-		}
-		throw new Error("An error occurred during creating note");
-	}
+	const response = await axiosInstance.patch(
+		`${API_URL}/v1/notes/${data.id}`,
+		data,
+	);
+	return response.data;
 };
 
 export const deleteNote = async (noteId: string) => {
