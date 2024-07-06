@@ -11,15 +11,11 @@ import type {
 export const registrationFunction = async (
 	credentials: RegistrationCredentials,
 ) => {
-	try {
-		const response = await axiosInstance.post(
-			`${API_URL}/v1/auth/register`,
-			credentials,
-		);
-		return response.data;
-	} catch (error) {
-		throw new Error();
-	}
+	const response = await axiosInstance.post(
+		`${API_URL}/v1/auth/register`,
+		credentials,
+	);
+	return response.data;
 };
 
 export const loginFunction = async (credentials: LoginCredentials) => {

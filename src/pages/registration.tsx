@@ -12,7 +12,6 @@ import { zodResolver } from "mantine-form-zod-resolver";
 import { FaGoogle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { useAuth } from "../hooks/useAuth";
 import { authSchemas } from "../schemas/index.schemas";
 
@@ -37,9 +36,7 @@ const Registration = () => {
 	const handleSubmit = async (values: typeof form.values) => {
 		if (form.isValid()) {
 			const { email, fullName, password } = values;
-
 			await registration({ email, fullName, password });
-			toast.success("Registration successful. Please login to continue");
 			navigate("/login");
 		}
 	};

@@ -20,12 +20,11 @@ axiosInstance.interceptors.request.use(
 	},
 );
 axiosInstance.interceptors.response.use(
-	(response) => {
-		return response;
-	},
-	async (error) => {
-		const message = error.response?.data?.message || error.message;
+	(response) => response,
+	(error) => {
+		const message =
+			error.response?.data?.message || error.message || "An error occurred";
 		toast.error(message);
-		return Promise.reject(error);
+		throw error;
 	},
 );

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { loginFunction, registrationFunction } from "../api/auth";
 import { useAuthStore } from "../stores/authStore";
 import { removeToken, setToken } from "../utils/tokenUtils";
@@ -17,6 +18,7 @@ export const useAuth = () => {
 			queryClient.invalidateQueries({
 				queryKey: ["user"],
 			});
+			toast.success("Registration successful. Please login to continue");
 		},
 	});
 
