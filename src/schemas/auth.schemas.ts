@@ -19,3 +19,11 @@ export const registrationSchema = z
 		message: "Passwords do not match",
 		path: ["confirmPassword"],
 	});
+
+export const loginSchema = z.object({
+	email: z.string().email({ message: "Invalid email" }),
+	passwordInput: z
+		.string()
+		.min(5, { message: "Password must be at least 5 characters" })
+		.max(20, { message: "Password must be at most 20 characters" }),
+});

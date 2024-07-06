@@ -10,17 +10,8 @@ import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { FaGoogle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { z } from "zod";
 import { useAuth } from "../hooks/useAuth";
-
-const schema = z.object({
-	email: z.string().email({ message: "Invalid email" }),
-	passwordInput: z
-		.string()
-		.min(5, { message: "Password must be at least 5 characters" })
-		.max(20, { message: "Password must be at most 20 characters" }),
-});
+import { authSchemas } from "../schemas/index.schemas";
 
 const Login = () => {
 	const { isPending, login } = useAuth();
@@ -31,7 +22,7 @@ const Login = () => {
 			email: "",
 			passwordInput: "",
 		},
-		validate: zodResolver(schema),
+		validate: zodResolver(authSchemas.loginSchema),
 		validateInputOnChange: true,
 	});
 
