@@ -16,19 +16,9 @@ export const registrationFunction = async (
 			`${API_URL}/v1/auth/register`,
 			credentials,
 		);
-		console.log("🚀 ~ registrationFunction ~ response.data", response.data);
 		return response.data;
 	} catch (error) {
-		if (axios.isAxiosError(error) && error.response) {
-			console.log(
-				"🚀 ~ registrationFunction ~ error.response):",
-				error.response.data.message,
-			);
-			throw new Error(
-				error.response.data.message || "An error occurred during registration",
-			);
-		}
-		throw new Error("An error occurred during registration");
+		throw new Error();
 	}
 };
 

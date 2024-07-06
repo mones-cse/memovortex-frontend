@@ -1,13 +1,13 @@
 export type RegistrationCredentials = {
 	email: string;
-	full_name: string;
-	password_hash: string;
-};
-
-export type LoginCredentials = {
-	email: string;
+	fullName: string;
 	password: string;
 };
+
+export type LoginCredentials = Pick<
+	RegistrationCredentials,
+	"email" | "password"
+>;
 
 export type User = {
 	sub: string;
