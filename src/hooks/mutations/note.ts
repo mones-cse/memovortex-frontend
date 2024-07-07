@@ -30,10 +30,8 @@ export const useDeleteNoteMutation = () => {
 		mutationFn: (id: string) => deleteNote(id),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["notes"] });
-			console.log("Note deleted successfully");
-		},
-		onError: (error) => {
-			console.error("Failed to delete note:", error);
+
+			toast.success("Note deleted successfully");
 		},
 	});
 };
