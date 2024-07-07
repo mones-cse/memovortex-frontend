@@ -1,68 +1,86 @@
-import { Button, Checkbox, Textarea } from "@mantine/core";
-
-import { Input } from "@mantine/core";
-import { useState } from "react";
+import { Button, Checkbox, TextInput, Textarea } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { zodResolver } from "mantine-form-zod-resolver";
 import { useCreateNoteMutation } from "../../hooks/mutations/note";
+import { noteSchemas } from "../../schemas/index.schemas";
 import { userStore } from "../../stores/store";
 import { CustomColorPicker } from "../../ui/CustomColorPicker";
 
 export const NoteCreateModal = () => {
 	const store = userStore();
-	const [noteTitle, setNoteTitle] = useState("");
-	const [noteContent, setNoteContent] = useState("");
-	const [isNoteFavourite, setIsNoteFavourite] = useState(false);
-	const [noteBgColor, setNoteBgColor] = useState("#FFFFFF");
 	const { mutateAsync } = useCreateNoteMutation();
-	const handleSaveNote = () => {
-		mutateAsync({ noteTitle, noteContent, isNoteFavourite, noteBgColor });
-		store.closeModal();
+	const setNoteBgColor = (color: string) => {
+		form.setFieldValue("noteBgColor", color);
+	};
+
+	const form = useForm({
+		mode: "uncontrolled",
+		initialValues: {
+			noteTitle: "",
+			noteContent: "",
+			isNoteFavourite: false,
+			noteBgColor: "#FFFFFF",
+		},
+		validate: zodResolver(noteSchemas.noteCreateSchema),
+		validateInputOnChange: true,
+	});
+
+	const handleSaveNote = async (values: typeof form.values) => {
+		if (form.isValid()) {
+			await mutateAsync(values);
+			store.closeModal();
+		}
 	};
 
 	return (
 		<div className="py-4">
-			<Input.Wrapper label="Note Title" mb="sm">
-				<Input
-					placeholder=""
-					value={noteTitle}
-					onChange={(e) => setNoteTitle(e.target.value)}
+			<form onSubmit={form.onSubmit(handleSaveNote)}>
+				<TextInput
+					label="Note Title"
+					placeholder="Insert note title"
+					{...form.getInputProps("noteTitle")}
+					key={form.key("noteTitle")}
 				/>
-			</Input.Wrapper>
 
-			<Textarea
-				label="Note Details"
-				placeholder=""
-				autosize
-				minRows={4}
-				maxRows={8}
-				value={noteContent}
-				onChange={(e) => setNoteContent(e.currentTarget.value)}
-				mb="sm"
-			/>
-			<Checkbox
-				label="Make this note star"
-				mb="sm"
-				checked={isNoteFavourite}
-				onChange={(event) => setIsNoteFavourite(event.currentTarget.checked)}
-			/>
-			<CustomColorPicker value={noteBgColor} onChange={setNoteBgColor} />
+				<Textarea
+					label="Note Details"
+					placeholder=""
+					autosize
+					minRows={4}
+					maxRows={8}
+					{...form.getInputProps("noteContent")}
+					key={form.key("noteContent")}
+					mb="sm"
+				/>
+				<Checkbox
+					label="Make this note star"
+					{...form.getInputProps("isNoteFavourite")}
+					key={form.key("isNoteFavourite")}
+					mb="sm"
+				/>
+				<CustomColorPicker
+					value={form.getValues().noteBgColor}
+					onChange={setNoteBgColor}
+				/>
 
-			<div className="flex gap-1 justify-end">
-				<Button
-					variant="outline"
-					color="gray"
-					onClick={() => store.closeModal()}
-				>
-					Cancle
-				</Button>
-				<Button
-					variant="filled"
-					color="blue"
-					onClick={handleSaveNote}
-					disabled={!noteTitle || !noteContent}
-				>
-					Save
-				</Button>
-			</div>
+				<div className="flex gap-1 justify-end">
+					<Button
+						variant="outline"
+						color="gray"
+						onClick={() => store.closeModal()}
+					>
+						Cancle
+					</Button>
+					<Button
+						variant="filled"
+						color="blue"
+						type="submit"
+						disabled={!form.isDirty()}
+					>
+						Save
+					</Button>
+				</div>
+			</form>
 		</div>
 	);
 };

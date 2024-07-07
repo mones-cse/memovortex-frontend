@@ -10,18 +10,8 @@ export const fetchNotes = async () => {
 };
 
 export const createNotes = async (data: TCreateNote) => {
-	try {
-		const response = await axiosInstance.post(`${API_URL}/v1/notes`, data);
-		return response;
-	} catch (error) {
-		if (axios.isAxiosError(error) && error.response) {
-			console.log(error.response.data.message);
-			throw new Error(
-				error.response.data.message || "An error occurred during creating note",
-			);
-		}
-		throw new Error("An error occurred during creating note");
-	}
+	const response = await axiosInstance.post(`${API_URL}/v1/notes`, data);
+	return response.data;
 };
 
 export const updateNotes = async (data: TUpdateNote) => {
