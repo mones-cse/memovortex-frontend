@@ -46,3 +46,5 @@ export const createDocument = async (data: TCreateDocument) => {
 	const response = await axiosInstance.post(`${API_URL}/v1/documents`, data);
 	return response.data;
 };
+
+export const useDocumentUpload = () => {};

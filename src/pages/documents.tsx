@@ -72,9 +72,6 @@ const Documents = () => {
 
 	const { mutateAsync: creatDocumentMutate } = useCreateDocumentMutation();
 
-	// const { mutateAsync: uploadFileToS3Mutate } = uploadFileToS3;
-	// const [uploadProgress, setUploadProgress] = useState(0);
-
 	const handleFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
 		if (e.target.files && e.target.files.length > 0) {
 			setFile(e.target.files[0]);
@@ -116,33 +113,6 @@ const Documents = () => {
 				.catch((err) => {
 					console.log("Error uploading file", err);
 				});
-
-			// Request pre-signed URL from backend
-			// const response = await axiosInstance.post("/v1/photos/get-upload-url", {
-			// 	fileName: file.name,
-			// 	fileType: file.type,
-			// });
-			// console.log("RESPONSE", response);
-			// const { url } = response.data;
-			// console.log("URL", url);
-
-			// // Upload file directly to S3
-			// await axios.put(url, file, {
-			// 	headers: {
-			// 		"Content-Type": file.type,
-			// 	},
-			// 	onUploadProgress: (progressEvent) => {
-			// 		const percentCompleted = Math.round(
-			// 			(progressEvent.loaded * 100) / (progressEvent.total || 1),
-			// 		);
-			// 		setUploadProgress(percentCompleted);
-			// 	},
-			// });
-
-			// Notify backend of successful upload
-			// await axiosInstance.post("/upload-complete", {
-			// 	fileName: file.name,
-			// });
 		} catch (error) {
 			console.error("Upload failed", error);
 		}
