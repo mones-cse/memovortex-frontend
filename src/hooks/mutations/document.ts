@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
 // import type { AxiosProgressEvent } from "axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -25,7 +26,6 @@ export const useGenerateS3UploadUrlMutation = () => {
 		mutationFn: generateS3UploadUrl,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["upload-url"] });
-			// toast.success("Generate s3 upload url successfully");
 		},
 	});
 };
@@ -33,33 +33,27 @@ export const useGenerateS3UploadUrlMutation = () => {
 export const useDocumentUpload = () => {
 	const [uploadProgress, setUploadProgress] = useState(0);
 
-	const { mutateAsync } = useGenerateS3UploadUrlMutation();
+	const { mutateAsync: generateS3UploadUrlMutate } =
+		useGenerateS3UploadUrlMutation();
 	const { mutateAsync: createDocumentMutate } = useCreateDocumentMutation();
 
 	const uploadDocument = async (file: File) => {
-		console.log("called", file);
-
 		try {
-			const data = await mutateAsync({
+			const data = await generateS3UploadUrlMutate({
 				fileName: file.name,
 				fileType: file.type,
 			});
 
-			try {
-				await uploadFileToS3({
-					url: data.data.url,
-					file,
-					onUploadProgress: (progressEvent) => {
-						const progress = Math.round(
-							(progressEvent.loaded * 100) / (progressEvent.total || 1),
-						);
-						setUploadProgress(progress);
-					},
-				});
-			} catch (error) {
-				console.error("Upload fuck", error);
-				throw error;
-			}
+			await uploadFileToS3({
+				url: data.data.url,
+				file,
+				onUploadProgress: (progressEvent) => {
+					const progress = Math.round(
+						(progressEvent.loaded * 100) / (progressEvent.total || 1),
+					);
+					setUploadProgress(progress);
+				},
+			});
 
 			const documentData = {
 				fileName: file.name,
@@ -71,10 +65,15 @@ export const useDocumentUpload = () => {
 				parentId: null,
 				isDirectory: false,
 			};
-			const result = await createDocumentMutate(documentData);
-			return result;
+			return createDocumentMutate(documentData);
 		} catch (error) {
-			console.error("Upload failed", error);
+			if (isAxiosError(error)) {
+				toast.error(
+					error.response?.data?.message || error.message || "An error occurred",
+				);
+			} else {
+				toast.error("An error occurred");
+			}
 		} finally {
 			setUploadProgress(0);
 		}

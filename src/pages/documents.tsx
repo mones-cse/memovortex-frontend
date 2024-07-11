@@ -1,5 +1,4 @@
 import { Progress } from "@mantine/core";
-// import axios from "axios";
 import { useState } from "react";
 import type { ChangeEventHandler } from "react";
 import { useDocumentUpload } from "../hooks/mutations/document";
@@ -9,28 +8,6 @@ import { MainContainer } from "../ui/MainContainer";
 // import { IMAGE_MIME_TYPE, Dropzone } from "@mantine/dropzone";
 
 // import { Text, Image, SimpleGrid } from "@mantine/core";
-
-// const UploadProgressBar = ({ progress }: { progress: number }) => {
-// 	return (
-// 		<div
-// 			style={{ width: "100%", backgroundColor: "#e0e0e0", borderRadius: "5px" }}
-// 		>
-// 			<div
-// 				style={{
-// 					width: `${progress}%`,
-// 					backgroundColor: "#4CAF50",
-// 					height: "20px",
-// 					borderRadius: "5px",
-// 					textAlign: "center",
-// 					lineHeight: "20px",
-// 					color: "white",
-// 				}}
-// 			>
-// 				{progress}%
-// 			</div>
-// 		</div>
-// 	);
-// };
 
 // const BaseDemo = () => {
 // 	const [files, setFiles] = useState<FileWithPath[]>([]);
@@ -64,7 +41,7 @@ import { MainContainer } from "../ui/MainContainer";
 const Documents = () => {
 	const [file, setFile] = useState({ name: "", type: "", size: 0 });
 	const { uploadDocument, uploadProgress } = useDocumentUpload();
-	console.log(uploadProgress);
+
 	const handleFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
 		if (e.target.files && e.target.files.length > 0) {
 			setFile(e.target.files[0]);
@@ -72,15 +49,9 @@ const Documents = () => {
 	};
 
 	const handleUpload = async () => {
-		console.log("handle Upload called", file);
 		if (!file) return;
-
-		try {
-			const result = await uploadDocument(file as File);
-			console.log("⚡️ File uploaded successfully🔥", result);
-		} catch (error) {
-			console.error("Upload failed", error);
-		}
+		const result = await uploadDocument(file as File);
+		console.log(result);
 	};
 	return (
 		<MainContainer withSpace>
