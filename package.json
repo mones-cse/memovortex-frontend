@@ -13,9 +13,11 @@
 	},
 	"dependencies": {
 		"@mantine/core": "^7.11.0",
+		"@mantine/dropzone": "^7.11.1",
 		"@mantine/form": "^7.10.0",
 		"@mantine/hooks": "^7.10.1",
 		"@mantine/tiptap": "^7.11.1",
+		"@tabler/icons-react": "^3.9.0",
 		"@tanstack/react-query": "^5.48.0",
 		"@tanstack/react-query-devtools": "^5.48.0",
 		"@tiptap/extension-code-block": "^2.4.0",

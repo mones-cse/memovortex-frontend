@@ -11,6 +11,9 @@ importers:
       '@mantine/core':
         specifier: ^7.11.0
         version: 7.11.0(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mantine/dropzone':
+        specifier: ^7.11.1
+        version: 7.11.1(@mantine/core@7.11.0(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.10.1(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/form':
         specifier: ^7.10.0
         version: 7.10.1(react@18.3.1)
@@ -20,6 +23,9 @@ importers:
       '@mantine/tiptap':
         specifier: ^7.11.1
         version: 7.11.1(@mantine/core@7.11.0(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.10.1(react@18.3.1))(@tiptap/extension-link@2.4.0(@tiptap/core@2.4.0(@tiptap/pm@2.4.0))(@tiptap/pm@2.4.0))(@tiptap/react@2.4.0(@tiptap/core@2.4.0(@tiptap/pm@2.4.0))(@tiptap/pm@2.4.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tabler/icons-react':
+        specifier: ^3.9.0
+        version: 3.9.0(react@18.3.1)
       '@tanstack/react-query':
         specifier: ^5.48.0
         version: 5.48.0(react@18.3.1)
@@ -538,6 +544,14 @@ packages:
       react: ^18.2.0
       react-dom: ^18.2.0
 
+  '@mantine/dropzone@7.11.1':
+    resolution: {integrity: sha512-Jvn+ikhT1GtQq3EMAYWK+1lk6CVDeB1Ykok7oUjTWPZDYAcQkLDNfPpFLqrbPPYSMav0u67zzaq9fUVTYVVhew==}
+    peerDependencies:
+      '@mantine/core': 7.11.1
+      '@mantine/hooks': 7.11.1
+      react: ^18.2.0
+      react-dom: ^18.2.0
+
   '@mantine/form@7.10.1':
     resolution: {integrity: sha512-mZwzg4GEWKEDKEIZu9FmSpGFzYYhFD2YArVOXUM0MMciUqX7yxSCon1PaPJxrV8ldc6FE+JLVI2+G2KVxJ3ZXA==}
     peerDependencies:
@@ -663,6 +677,14 @@ packages:
     resolution: {integrity: sha512-UOo5FdvOL0+eIVTgS4tIdbW+TtnBLWg1YBCcU2KWM7nuNwRz9bksDX1bekJJCpu25N1DVWaCwnT39dVQxzqS8g==}
     cpu: [x64]
     os: [win32]
+
+  '@tabler/icons-react@3.9.0':
+    resolution: {integrity: sha512-7Fbcrb5LYBGd9rwfkgrJsvLYGqPqO4WV3u6lfqE2wRzEVcevDQcdvo8toKp5Jcc66MPMEmMg+/tnUGwFIKQmUQ==}
+    peerDependencies:
+      react: '>= 16'
+
+  '@tabler/icons@3.9.0':
+    resolution: {integrity: sha512-wZAwEu4iI0WmUA/bjstzNYri13D8X14f/SCRrzr2MyU+WP/6Vd+xq4YLM52dOS8V6ZVt+ujuE9IFkuJdsdSVAQ==}
 
   '@tanstack/eslint-plugin-query@5.47.0':
     resolution: {integrity: sha512-Y56KKu0DoftFkCd3H0xckDbvm38kg9UrGF2CABqMYr7yo94XUZhBYE8R3Gq7N4JxRvPha+lUg37eypECY5u2kA==}
@@ -1844,6 +1866,12 @@ packages:
     peerDependencies:
       react: ^18.3.1
 
+  react-dropzone-esm@15.0.1:
+    resolution: {integrity: sha512-RdeGpqwHnoV/IlDFpQji7t7pTtlC2O1i/Br0LWkRZ9hYtLyce814S71h5NolnCZXsIN5wrZId6+8eQj2EBnEzg==}
+    engines: {node: '>= 10.13'}
+    peerDependencies:
+      react: '>= 16.8 || 18.0.0'
+
   react-icons@5.2.1:
     resolution: {integrity: sha512-zdbW5GstTzXaVKvGSyTaBalt7HSfuK5ovrzlpyiWHAFXndXTdd/1hdDHI4xBM1Mn7YriT6aqESucFl9kEXzrdw==}
     peerDependencies:
@@ -2598,6 +2626,14 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
+  '@mantine/dropzone@7.11.1(@mantine/core@7.11.0(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.10.1(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@mantine/core': 7.11.0(@mantine/hooks@7.10.1(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mantine/hooks': 7.10.1(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-dropzone-esm: 15.0.1(react@18.3.1)
+
   '@mantine/form@7.10.1(react@18.3.1)':
     dependencies:
       fast-deep-equal: 3.1.3
@@ -2685,6 +2721,13 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.18.0':
     optional: true
+
+  '@tabler/icons-react@3.9.0(react@18.3.1)':
+    dependencies:
+      '@tabler/icons': 3.9.0
+      react: 18.3.1
+
+  '@tabler/icons@3.9.0': {}
 
   '@tanstack/eslint-plugin-query@5.47.0(eslint@8.57.0)(typescript@5.4.5)':
     dependencies:
@@ -3922,6 +3965,11 @@ snapshots:
       loose-envify: 1.4.0
       react: 18.3.1
       scheduler: 0.23.2
+
+  react-dropzone-esm@15.0.1(react@18.3.1):
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.3.1
 
   react-icons@5.2.1(react@18.3.1):
     dependencies:

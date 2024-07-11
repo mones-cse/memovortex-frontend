@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import "@mantine/core/styles.css";
+import "@mantine/dropzone/styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -11,6 +12,16 @@ import { BrowserRouter as Router } from "react-router-dom";
 
 const rootElement = document.getElementById("root");
 const queryClient = new QueryClient();
+
+declare global {
+	interface BigInt {
+		toJSON: () => string;
+	}
+}
+
+BigInt.prototype.toJSON = function () {
+	return this.toString();
+};
 
 const theme = createTheme({
 	breakpoints: {
