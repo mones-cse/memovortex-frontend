@@ -1,4 +1,5 @@
 import axios from "axios";
+import type { AxiosProgressEvent } from "axios";
 import type { TCreateDocument } from "../types/document.type";
 import { axiosInstance } from "../utils/axiosConfig";
 
@@ -24,21 +25,22 @@ export const generateS3UploadUrl = async (data: {
 	return response.data;
 };
 
-export const uploadFileToS3 = async (data: {
+export const uploadFileToS3 = async ({
+	url,
+	file,
+	onUploadProgress,
+}: {
 	url: string;
 	file: File;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	onUploadProgress: (progressEvent: AxiosProgressEvent) => void;
 }) => {
-	const { url, file } = data;
+	console.log("🚀 ~ file:", file, url);
 	return axios.put(url, file, {
 		headers: {
 			"Content-Type": file.type,
 		},
-		// 	onUploadProgress: (progressEvent) => {
-		// 		const percentCompleted = Math.round(
-		// 			(progressEvent.loaded * 100) / (progressEvent.total || 1),
-		// 		);
-		// 		setUploadProgress(percentCompleted);
-		// 	},
+		onUploadProgress,
 	});
 };
 
@@ -46,5 +48,3 @@ export const createDocument = async (data: TCreateDocument) => {
 	const response = await axiosInstance.post(`${API_URL}/v1/documents`, data);
 	return response.data;
 };
-
-export const useDocumentUpload = () => {};

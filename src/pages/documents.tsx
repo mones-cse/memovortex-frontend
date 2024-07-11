@@ -1,12 +1,8 @@
+import { Progress } from "@mantine/core";
 // import axios from "axios";
 import { useState } from "react";
 import type { ChangeEventHandler } from "react";
-import { uploadFileToS3 } from "../api/document";
-// import { axiosInstance } from "../utils/axiosConfig";
-import {
-	useCreateDocumentMutation,
-	useGenerateS3UploadUrlMutation,
-} from "../hooks/mutations/document";
+import { useDocumentUpload } from "../hooks/mutations/document";
 import { MainContainer } from "../ui/MainContainer";
 
 // import type { FileWithPath } from "@mantine/dropzone";
@@ -67,11 +63,8 @@ import { MainContainer } from "../ui/MainContainer";
 
 const Documents = () => {
 	const [file, setFile] = useState({ name: "", type: "", size: 0 });
-	const { mutateAsync: generateS3UploadUrlMutate } =
-		useGenerateS3UploadUrlMutation();
-
-	const { mutateAsync: creatDocumentMutate } = useCreateDocumentMutation();
-
+	const { uploadDocument, uploadProgress } = useDocumentUpload();
+	console.log(uploadProgress);
 	const handleFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
 		if (e.target.files && e.target.files.length > 0) {
 			setFile(e.target.files[0]);
@@ -83,36 +76,8 @@ const Documents = () => {
 		if (!file) return;
 
 		try {
-			generateS3UploadUrlMutate({
-				fileName: file.name,
-				fileType: file.type,
-			})
-				.then((res) => {
-					console.log("⚡️ url has been generated", res.data.url);
-					return uploadFileToS3({ url: res.data.url, file: file as File });
-				})
-				.then(() => {
-					console.log("⚡️ file has been uploaded in s3");
-					const fileType = file.name.split(".").pop();
-					const fileSize = BigInt(file.size);
-					const data = {
-						fileName: file.name,
-						fileType: fileType || "uncategorized",
-						mimeType: file.type,
-						fileSize: fileSize,
-						fileS3key: file.name,
-						category: "file",
-						parentId: null,
-						isDirectory: false,
-					};
-					return creatDocumentMutate(data);
-				})
-				.then((res) => {
-					console.log("⚡️ File uploaded successfully🔥", res);
-				})
-				.catch((err) => {
-					console.log("Error uploading file", err);
-				});
+			const result = await uploadDocument(file as File);
+			console.log("⚡️ File uploaded successfully🔥", result);
 		} catch (error) {
 			console.error("Upload failed", error);
 		}
@@ -128,7 +93,7 @@ const Documents = () => {
 			>
 				Upload
 			</button>
-			{/* {uploadProgress > 0 && <UploadProgressBar progress={uploadProgress} />} */}
+			{uploadProgress > 0 && <Progress value={uploadProgress} />}
 			<br />
 
 			{/* <BaseDemo /> */}
