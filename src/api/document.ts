@@ -33,6 +33,12 @@ export const uploadFileToS3 = async (data: {
 		headers: {
 			"Content-Type": file.type,
 		},
+		// 	onUploadProgress: (progressEvent) => {
+		// 		const percentCompleted = Math.round(
+		// 			(progressEvent.loaded * 100) / (progressEvent.total || 1),
+		// 		);
+		// 		setUploadProgress(percentCompleted);
+		// 	},
 	});
 };
 
@@ -40,28 +46,3 @@ export const createDocument = async (data: TCreateDocument) => {
 	const response = await axiosInstance.post(`${API_URL}/v1/documents`, data);
 	return response.data;
 };
-
-// export const updateNotes = async (data: TUpdateNote) => {
-// 	const response = await axiosInstance.patch(
-// 		`${API_URL}/v1/notes/${data.id}`,
-// 		data,
-// 	);
-// 	return response.data;
-// };
-
-// export const deleteNote = async (noteId: string) => {
-// 	try {
-// 		const response = await axiosInstance.delete(
-// 			`${API_URL}/v1/notes/${noteId}`,
-// 		);
-// 		return response;
-// 	} catch (error) {
-// 		if (axios.isAxiosError(error) && error.response) {
-// 			console.log(error.response.data.message);
-// 			throw new Error(
-// 				error.response.data.message || "An error occurred during deleting note",
-// 			);
-// 		}
-// 		throw new Error("An error occurred during deleting note");
-// 	}
-// };
