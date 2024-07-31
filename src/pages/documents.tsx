@@ -16,6 +16,7 @@ import {
 	useFetchDocumentByIdQuery,
 	useFetchDocumentQuery,
 } from "../hooks/queries/document";
+import { userStore } from "../stores/store";
 import type { TDisplayDocument } from "../types/document.type";
 import { MainContainer } from "../ui/MainContainer";
 
@@ -127,6 +128,10 @@ const DisplayDocuments = ({ parentId }: { parentId: string | null }) => {
 };
 
 const CreateDocument = () => {
+	const store = userStore();
+	const handleCreateFolder = () => {
+		store.openModal("createFolder", "Create Folder", {}, "sm");
+	};
 	return (
 		<Menu>
 			<Menu.Target>
@@ -136,7 +141,9 @@ const CreateDocument = () => {
 			</Menu.Target>
 			<Menu.Dropdown>
 				<Menu.Label>Options</Menu.Label>
-				<Menu.Item leftSection={<FaFolderOpen />}>New Folder</Menu.Item>
+				<Menu.Item leftSection={<FaFolderOpen />} onClick={handleCreateFolder}>
+					New Folder
+				</Menu.Item>
 				<Menu.Item leftSection={<FaFileImage />}>Upload File</Menu.Item>
 			</Menu.Dropdown>
 		</Menu>

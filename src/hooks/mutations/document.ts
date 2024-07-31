@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import {
 	createDocument,
+	createFolder,
 	generateS3UploadUrl,
 	uploadFileToS3,
 } from "../../api/document";
@@ -80,4 +81,15 @@ export const useDocumentUpload = () => {
 	};
 
 	return { uploadDocument, uploadProgress };
+};
+
+export const useCreateFolderMutation = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: createFolder,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["documents"] });
+			toast.success("Folder created successfully");
+		},
+	});
 };

@@ -4,14 +4,14 @@ import { fetchDocuments, fetchDocumentsById } from "../../api/document";
 
 export const useFetchDocumentQuery = () => {
 	return useQuery({
-		queryKey: ["notes"],
+		queryKey: ["documents"],
 		queryFn: fetchDocuments,
 	});
 };
 
 export const useFetchDocumentByIdQuery = (id: string) => {
 	return useQuery({
-		queryKey: ["notes", id],
+		queryKey: ["documents", id],
 		queryFn: (context: QueryFunctionContext) =>
 			fetchDocumentsById(context.queryKey[1] as string),
 	});

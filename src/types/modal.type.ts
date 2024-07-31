@@ -1,4 +1,9 @@
-type ModalType = "updateNote" | "deleteNote" | "newNote" | null;
+type ModalType =
+	| "updateNote"
+	| "deleteNote"
+	| "newNote"
+	| "createFolder"
+	| null;
 type ModalSize = "sm" | "md" | "lg" | "xl";
 
 export type ModalProps = {
@@ -11,6 +16,7 @@ export type ModalProps = {
 	};
 	deleteNote: { noteId: string };
 	newNote: Record<string, never>;
+	createFolder: Record<string, never>;
 };
 
 type State = {

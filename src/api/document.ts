@@ -53,3 +53,11 @@ export const createDocument = async (data: TCreateDocument) => {
 	const response = await axiosInstance.post(`${API_URL}/v1/documents`, data);
 	return response.data;
 };
+
+export const createFolder = async (folderName: string) => {
+	const response = await axiosInstance.post(`${API_URL}/v1/documents/folder`, {
+		fileName: folderName,
+		isDirectory: true,
+	});
+	return response.data;
+};

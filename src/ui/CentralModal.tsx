@@ -1,6 +1,7 @@
 import { Modal } from "@mantine/core";
 import { userStore } from "../stores/store";
 
+import { FolderCreateModal } from "../components/modals/FolderCreateModal";
 import { NoteCreateModal } from "../components/modals/NoteCreateModal";
 import { NoteDeleteModal } from "../components/modals/NoteDeleteModal";
 import { NoteUpdateModal } from "../components/modals/NoteUpdateModal";
@@ -23,6 +24,8 @@ export const CentralModal = () => {
 				);
 			case "newNote":
 				return <NoteCreateModal />;
+			case "createFolder":
+				return <FolderCreateModal />;
 			default:
 				return null;
 		}
