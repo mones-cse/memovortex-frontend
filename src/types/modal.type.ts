@@ -16,7 +16,9 @@ export type ModalProps = {
 	};
 	deleteNote: { noteId: string };
 	newNote: Record<string, never>;
-	createFolder: Record<string, never>;
+	createFolder: {
+		parentId: string | null;
+	};
 };
 
 type State = {

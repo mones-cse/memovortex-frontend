@@ -25,7 +25,9 @@ export const CentralModal = () => {
 			case "newNote":
 				return <NoteCreateModal />;
 			case "createFolder":
-				return <FolderCreateModal />;
+				return (
+					<FolderCreateModal {...(modalProps as ModalProps["createFolder"])} />
+				);
 			default:
 				return null;
 		}

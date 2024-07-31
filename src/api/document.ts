@@ -37,7 +37,6 @@ export const uploadFileToS3 = async ({
 }: {
 	url: string;
 	file: File;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	onUploadProgress: (progressEvent: AxiosProgressEvent) => void;
 }) => {
 	console.log("🚀 ~ file:", file, url);
@@ -54,10 +53,18 @@ export const createDocument = async (data: TCreateDocument) => {
 	return response.data;
 };
 
-export const createFolder = async (folderName: string) => {
-	const response = await axiosInstance.post(`${API_URL}/v1/documents/folder`, {
+export const createFolder = async ({
+	folderName,
+	parentId,
+}: { folderName: string; parentId: string | null }) => {
+	const data = {
 		fileName: folderName,
 		isDirectory: true,
-	});
+		...(parentId && { parentId }),
+	};
+	const response = await axiosInstance.post(
+		`${API_URL}/v1/documents/folder`,
+		data,
+	);
 	return response.data;
 };

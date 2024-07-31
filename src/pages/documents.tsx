@@ -127,10 +127,15 @@ const DisplayDocuments = ({ parentId }: { parentId: string | null }) => {
 	);
 };
 
-const CreateDocument = () => {
+const CreateDocument = ({ parentId }: { parentId: string | null }) => {
 	const store = userStore();
 	const handleCreateFolder = () => {
-		store.openModal("createFolder", "Create Folder", {}, "sm");
+		store.openModal(
+			"createFolder",
+			"Create Folder",
+			{ parentId: parentId },
+			"sm",
+		);
 	};
 	return (
 		<Menu>
@@ -159,7 +164,7 @@ const Documents = () => {
 					<div>
 						<p className="text-3xl font-bold">Tttle</p>
 					</div>
-					<CreateDocument />
+					<CreateDocument parentId={id || null} />
 				</div>
 				<br />
 				<DisplayDocuments parentId={id || null} />

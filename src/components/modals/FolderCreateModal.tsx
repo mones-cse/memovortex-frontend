@@ -5,20 +5,23 @@ import { useCreateFolderMutation } from "../../hooks/mutations/document";
 import { folderSchemas } from "../../schemas/index.schemas";
 import { userStore } from "../../stores/store";
 
-export const FolderCreateModal = () => {
+export const FolderCreateModal = ({
+	parentId,
+}: { parentId: string | null }) => {
 	const store = userStore();
 	const { mutateAsync } = useCreateFolderMutation();
 
 	const form = useForm({
 		initialValues: {
 			folderName: "",
+			parentId: parentId,
 		},
 		validate: zodResolver(folderSchemas.folderCreateSchema),
 	});
 
 	const handleCreateFolder = async (values: typeof form.values) => {
 		if (form.isValid()) {
-			await mutateAsync(values.folderName);
+			await mutateAsync(values);
 			store.closeModal();
 		}
 	};
