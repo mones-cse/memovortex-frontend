@@ -68,3 +68,8 @@ export const createFolder = async ({
 	);
 	return response.data;
 };
+
+export const deleteDocument = async (id: string) => {
+	const response = await axiosInstance.delete(`${API_URL}/v1/documents/${id}`);
+	return response.data;
+};

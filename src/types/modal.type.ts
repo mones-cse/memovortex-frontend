@@ -3,6 +3,7 @@ type ModalType =
 	| "deleteNote"
 	| "newNote"
 	| "createFolder"
+	| "deleteDocument"
 	| null;
 type ModalSize = "sm" | "md" | "lg" | "xl";
 
@@ -15,6 +16,7 @@ export type ModalProps = {
 		noteBgColor: string;
 	};
 	deleteNote: { noteId: string };
+	deleteDocument: { id: string };
 	newNote: Record<string, never>;
 	createFolder: {
 		parentId: string | null;

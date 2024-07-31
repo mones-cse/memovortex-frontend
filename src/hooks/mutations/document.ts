@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import {
 	createDocument,
 	createFolder,
+	deleteDocument,
 	generateS3UploadUrl,
 	uploadFileToS3,
 } from "../../api/document";
@@ -90,6 +91,17 @@ export const useCreateFolderMutation = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["documents"] });
 			toast.success("Folder created successfully");
+		},
+	});
+};
+
+export const useDeleteDocumentMutation = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: (id: string) => deleteDocument(id),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["documents"] });
+			toast.success("Document deleted successfully");
 		},
 	});
 };

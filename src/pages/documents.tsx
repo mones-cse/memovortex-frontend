@@ -43,6 +43,12 @@ const DisplayDocument = (document: TDisplayDocument) => {
 	};
 
 	const MenuDropDown = () => {
+		const store = userStore();
+
+		const handleTrashClick = (id: string) => {
+			store.openModal("deleteDocument", "Delete Document", { id: id }, "sm");
+		};
+
 		return (
 			<Menu.Dropdown>
 				<Menu.Label>Options</Menu.Label>
@@ -52,7 +58,7 @@ const DisplayDocument = (document: TDisplayDocument) => {
 
 				<Menu.Item
 					leftSection={<FaRegTrashCan />}
-					onClick={() => console.log("delete file")}
+					onClick={() => handleTrashClick(document.id)}
 				>
 					Delete
 				</Menu.Item>
@@ -137,6 +143,7 @@ const CreateDocument = ({ parentId }: { parentId: string | null }) => {
 			"sm",
 		);
 	};
+
 	return (
 		<Menu>
 			<Menu.Target>
