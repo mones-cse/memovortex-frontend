@@ -1,73 +1,162 @@
-import { Progress } from "@mantine/core";
+import { Button, Menu } from "@mantine/core";
 import { useState } from "react";
-import type { ChangeEventHandler } from "react";
-import { useDocumentUpload } from "../hooks/mutations/document";
+import {
+	FaCopy,
+	FaDownload,
+	FaFileExport,
+	FaFileImage,
+	FaFilePen,
+	FaFolderOpen,
+	FaRegTrashCan,
+} from "react-icons/fa6";
+import { SlOptionsVertical } from "react-icons/sl";
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import {
+	useFetchDocumentByIdQuery,
+	useFetchDocumentQuery,
+} from "../hooks/queries/document";
+import type { TDisplayDocument } from "../types/document.type";
 import { MainContainer } from "../ui/MainContainer";
 
-// import type { FileWithPath } from "@mantine/dropzone";
-// import { IMAGE_MIME_TYPE, Dropzone } from "@mantine/dropzone";
+const DisplayDocument = (document: TDisplayDocument) => {
+	const [selectedDocument, setSelectedDocument] =
+		useState<TDisplayDocument | null>(null);
 
-// import { Text, Image, SimpleGrid } from "@mantine/core";
+	const navigate = useNavigate();
+	const handleDoubleClick = (document: TDisplayDocument) => {
+		// if folder redirect to the folder
+		if (document.isDirectory) {
+			navigate(`/folder/${document.id}`);
+			console.log("Double Clicked", document.id, document.fileName);
+			return;
+		}
+		// if file open the file
+		navigate(`/folder/${document.id}`);
+		console.log("Double Clicked", document.id, document.fileName);
+		setSelectedDocument(document);
+	};
+	const handleOptionClick = (document: TDisplayDocument) => {
+		console.log("Option Clicked", document.id, document.fileName);
+		setSelectedDocument(document);
+	};
 
-// const BaseDemo = () => {
-// 	const [files, setFiles] = useState<FileWithPath[]>([]);
+	const MenuDropDown = () => {
+		return (
+			<Menu.Dropdown>
+				<Menu.Label>Options</Menu.Label>
+				{!selectedDocument?.isDirectory && (
+					<Menu.Item leftSection={<FaDownload />}>Download</Menu.Item>
+				)}
 
-// 	const previews = files.map((file) => {
-// 		const imageUrl = URL.createObjectURL(file);
-// 		return (
-// 			<Image
-// 				key={file.name}
-// 				src={imageUrl}
-// 				onLoad={() => URL.revokeObjectURL(imageUrl)}
-// 			/>
-// 		);
-// 	});
+				<Menu.Item
+					leftSection={<FaRegTrashCan />}
+					onClick={() => console.log("delete file")}
+				>
+					Delete
+				</Menu.Item>
+				<Menu.Item
+					leftSection={<FaFilePen />}
+					onClick={() => console.log("rename file")}
+				>
+					Rename
+				</Menu.Item>
+				<Menu.Item
+					leftSection={<FaCopy />}
+					onClick={() => console.log("copy file")}
+				>
+					Copy File
+				</Menu.Item>
+				<Menu.Item
+					leftSection={<FaFileExport />}
+					onClick={() => console.log("copy file")}
+				>
+					Move File
+				</Menu.Item>
+			</Menu.Dropdown>
+		);
+	};
 
-// 	return (
-// 		<div>
-// 			<Dropzone accept={IMAGE_MIME_TYPE} onDrop={setFiles}>
-// 				<SimpleGrid
-// 					cols={{ base: 1, sm: 4 }}
-// 					mt={previews.length > 0 ? "xl" : 0}
-// 				>
-// 					{previews}
-// 				</SimpleGrid>
-// 				<Text ta="center">Drop images here</Text>
-// 			</Dropzone>
-// 		</div>
-// 	);
-// };
+	return (
+		<div
+			className="bg-slate-50 flex justify-end items-center py-2 px-4 gap-2 cursor-pointer"
+			onDoubleClick={() => {
+				handleDoubleClick(document);
+			}}
+		>
+			{document.isDirectory ? (
+				<FaFolderOpen size={"24"} />
+			) : (
+				<FaFileImage size={"20"} />
+			)}
+			<p className="line-clamp-1 text-sm w-full">{document.fileName}</p>
+
+			<Menu>
+				<Menu.Target>
+					<button type="button" onClick={() => handleOptionClick(document)}>
+						<SlOptionsVertical color="black" />
+					</button>
+				</Menu.Target>
+				<MenuDropDown />
+			</Menu>
+		</div>
+	);
+};
+
+const useFetchDocument = (parentId?: string | null) => {
+	const documentByIdQuery = useFetchDocumentByIdQuery(parentId || "");
+	const documentsQuery = useFetchDocumentQuery();
+
+	return parentId ? documentByIdQuery : documentsQuery;
+};
+
+const DisplayDocuments = ({ parentId }: { parentId: string | null }) => {
+	console.log("🚀 ~ DisplayDocuments ~ parentId:", parentId);
+
+	const { data, isLoading } = useFetchDocument(parentId);
+	if (isLoading) {
+		return <p>Loading...</p>;
+	}
+	return (
+		<div className="grid grig-cols-1 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6  gap-y-4 gap-x-6">
+			{data?.data?.map((document: TDisplayDocument) => (
+				<DisplayDocument key={document.id} {...document} />
+			))}
+		</div>
+	);
+};
+
+const CreateDocument = () => {
+	return (
+		<Menu>
+			<Menu.Target>
+				<Button variant="light" color="blue">
+					+ New
+				</Button>
+			</Menu.Target>
+			<Menu.Dropdown>
+				<Menu.Label>Options</Menu.Label>
+				<Menu.Item leftSection={<FaFolderOpen />}>New Folder</Menu.Item>
+				<Menu.Item leftSection={<FaFileImage />}>Upload File</Menu.Item>
+			</Menu.Dropdown>
+		</Menu>
+	);
+};
 
 const Documents = () => {
-	const [file, setFile] = useState({ name: "", type: "", size: 0 });
-	const { uploadDocument, uploadProgress } = useDocumentUpload();
-
-	const handleFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-		if (e.target.files && e.target.files.length > 0) {
-			setFile(e.target.files[0]);
-		}
-	};
-
-	const handleUpload = async () => {
-		if (!file) return;
-		const result = await uploadDocument(file as File);
-		console.log(result);
-	};
+	const { id } = useParams();
 	return (
 		<MainContainer withSpace>
-			<p>Photos Page</p>
-			<input type="file" onChange={handleFileChange} />
-			<button
-				type="button"
-				onClick={handleUpload}
-				className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-			>
-				Upload
-			</button>
-			{uploadProgress > 0 && <Progress value={uploadProgress} />}
-			<br />
-
-			{/* <BaseDemo /> */}
+			<div className="flex flex-col gap=1">
+				<div className="flex justify-between w-full">
+					<div>
+						<p className="text-3xl font-bold">Tttle</p>
+					</div>
+					<CreateDocument />
+				</div>
+				<br />
+				<DisplayDocuments parentId={id || null} />
+			</div>
 		</MainContainer>
 	);
 };

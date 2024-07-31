@@ -27,6 +27,7 @@ function App() {
 							<Route path="/settings" element={<Settings />} />
 							<Route path="/notes" element={<Notes />} />
 							<Route path="/documents" element={<Documents />} />
+							<Route path="/folder/:id" element={<Documents />} />
 							<Route path="/logout" element={<Logout />} />
 							<Route path="test" element={<Test />} />
 							<Route path="/" element={<Home />} />

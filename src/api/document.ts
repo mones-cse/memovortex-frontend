@@ -10,6 +10,11 @@ export const fetchDocuments = async () => {
 	return result.data;
 };
 
+export const fetchDocumentsById = async (id: string) => {
+	const result = await axiosInstance.get(`${API_URL}/v1/documents/${id}`);
+	return result.data;
+};
+
 export const generateS3UploadUrl = async (data: {
 	fileName: string;
 	fileType: string;
