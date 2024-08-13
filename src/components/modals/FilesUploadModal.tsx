@@ -23,7 +23,7 @@ export const FilesUploadModal = ({ parentId }: { parentId: string | null }) => {
 
 	return (
 		<div className="py-4">
-			<input type="file" onChange={handleFileChange} />
+			<input type="file" accept={"image/*"} onChange={handleFileChange} />
 			{uploadProgress > 0 && <Progress value={uploadProgress} />}
 			<div className="flex gap-1 justify-end">
 				<Button

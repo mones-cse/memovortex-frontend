@@ -45,8 +45,9 @@ export const useDocumentUpload = ({
 
 	const uploadDocument = async (file: File) => {
 		try {
+			const randomFileName = `${Math.random().toString(36).substring(2, 15) + Date.now().toString(36)}-${file.name}`;
 			const data = await generateS3UploadUrlMutate({
-				fileName: file.name,
+				fileName: randomFileName,
 				fileType: file.type,
 			});
 
@@ -66,7 +67,7 @@ export const useDocumentUpload = ({
 				fileType: file.name.split(".").pop() || "uncategorized",
 				mimeType: file.type,
 				fileSize: BigInt(file.size),
-				fileS3key: file.name,
+				fileS3key: randomFileName,
 				category: "file",
 				parentId: parentId,
 				isDirectory: false,
