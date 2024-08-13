@@ -134,6 +134,8 @@ const DisplayDocuments = ({ parentId }: { parentId: string | null }) => {
 };
 
 const CreateDocument = ({ parentId }: { parentId: string | null }) => {
+	console.log("🚀 ~ CreateDocument ~ parentId:", parentId);
+
 	const store = userStore();
 	const handleCreateFolder = () => {
 		store.openModal(
@@ -142,6 +144,11 @@ const CreateDocument = ({ parentId }: { parentId: string | null }) => {
 			{ parentId: parentId },
 			"sm",
 		);
+	};
+
+	const handleUploadFile = () => {
+		console.log("Upload File");
+		store.openModal("filesUpload", "Upload File", { parentId: parentId }, "sm");
 	};
 
 	return (
@@ -156,7 +163,9 @@ const CreateDocument = ({ parentId }: { parentId: string | null }) => {
 				<Menu.Item leftSection={<FaFolderOpen />} onClick={handleCreateFolder}>
 					New Folder
 				</Menu.Item>
-				<Menu.Item leftSection={<FaFileImage />}>Upload File</Menu.Item>
+				<Menu.Item leftSection={<FaFileImage />} onClick={handleUploadFile}>
+					Upload File
+				</Menu.Item>
 			</Menu.Dropdown>
 		</Menu>
 	);

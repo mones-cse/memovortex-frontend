@@ -32,7 +32,11 @@ export const useGenerateS3UploadUrlMutation = () => {
 	});
 };
 
-export const useDocumentUpload = () => {
+export const useDocumentUpload = ({
+	parentId,
+}: { parentId: string | null }) => {
+	console.log("🚀 ~ parentId:", parentId);
+
 	const [uploadProgress, setUploadProgress] = useState(0);
 
 	const { mutateAsync: generateS3UploadUrlMutate } =
@@ -64,7 +68,7 @@ export const useDocumentUpload = () => {
 				fileSize: BigInt(file.size),
 				fileS3key: file.name,
 				category: "file",
-				parentId: null,
+				parentId: parentId,
 				isDirectory: false,
 			};
 			return createDocumentMutate(documentData);

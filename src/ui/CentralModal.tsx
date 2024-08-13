@@ -2,10 +2,12 @@ import { Modal } from "@mantine/core";
 import { userStore } from "../stores/store";
 
 import { DocumentDeleteModal } from "../components/modals/DocumentDeleteModal";
+import { FilesUploadModal } from "../components/modals/FilesUploadModal";
 import { FolderCreateModal } from "../components/modals/FolderCreateModal";
 import { NoteCreateModal } from "../components/modals/NoteCreateModal";
 import { NoteDeleteModal } from "../components/modals/NoteDeleteModal";
 import { NoteUpdateModal } from "../components/modals/NoteUpdateModal";
+
 import type { ModalProps } from "../types/modal.type";
 
 export const CentralModal = () => {
@@ -28,6 +30,10 @@ export const CentralModal = () => {
 			case "createFolder":
 				return (
 					<FolderCreateModal {...(modalProps as ModalProps["createFolder"])} />
+				);
+			case "filesUpload":
+				return (
+					<FilesUploadModal {...(modalProps as ModalProps["filesUpload"])} />
 				);
 			case "deleteDocument":
 				return (

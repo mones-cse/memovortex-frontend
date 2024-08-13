@@ -4,6 +4,7 @@ type ModalType =
 	| "newNote"
 	| "createFolder"
 	| "deleteDocument"
+	| "filesUpload"
 	| null;
 type ModalSize = "sm" | "md" | "lg" | "xl";
 
@@ -19,6 +20,9 @@ export type ModalProps = {
 	deleteDocument: { id: string };
 	newNote: Record<string, never>;
 	createFolder: {
+		parentId: string | null;
+	};
+	filesUpload: {
 		parentId: string | null;
 	};
 };
