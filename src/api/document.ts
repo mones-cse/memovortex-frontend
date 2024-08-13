@@ -15,6 +15,13 @@ export const fetchDocumentsById = async (id: string) => {
 	return result.data;
 };
 
+export const fetchDocumentSignedUrl = async (s3Key: string) => {
+	const result = await axiosInstance.get(
+		`${API_URL}/v1/documents/get-signed-document/${s3Key}`,
+	);
+	return result.data;
+};
+
 export const generateS3UploadUrl = async (data: {
 	fileName: string;
 	fileType: string;

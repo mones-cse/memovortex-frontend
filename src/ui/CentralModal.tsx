@@ -8,12 +8,13 @@ import { NoteCreateModal } from "../components/modals/NoteCreateModal";
 import { NoteDeleteModal } from "../components/modals/NoteDeleteModal";
 import { NoteUpdateModal } from "../components/modals/NoteUpdateModal";
 
+import { DocumentPreviewModal } from "../components/modals/DocumentPreviewModal";
 import type { ModalProps } from "../types/modal.type";
 
 export const CentralModal = () => {
 	const { modalType, closeModal, modalProps, modalTitle, modalSize } =
 		userStore();
-	console.log("🚀 ~ CentralModal ~ modalType:", modalType);
+	console.log("🚀 ~ CentralModal ~ modalType:", modalType, modalSize);
 
 	const renderModal = () => {
 		switch (modalType) {
@@ -41,9 +42,25 @@ export const CentralModal = () => {
 						{...(modalProps as ModalProps["deleteDocument"])}
 					/>
 				);
+			case "documentPreview":
+				return (
+					<DocumentPreviewModal
+						{...(modalProps as ModalProps["documentPreview"])}
+					/>
+				);
 			default:
 				return null;
 		}
+	};
+
+	const modalSizeCalculate = () => {
+		if (modalSize) {
+			if (modalSize === "xl") {
+				return "70%";
+			}
+			return modalSize;
+		}
+		return "lg";
 	};
 
 	return (
@@ -51,7 +68,7 @@ export const CentralModal = () => {
 			opened={modalType !== null}
 			onClose={closeModal}
 			title={modalTitle || "Modal Title"}
-			size={modalSize || "lg"}
+			size={modalSizeCalculate()}
 			centered
 		>
 			{renderModal()}

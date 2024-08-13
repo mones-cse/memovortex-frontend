@@ -21,20 +21,23 @@ import type { TDisplayDocument } from "../types/document.type";
 import { MainContainer } from "../ui/MainContainer";
 
 const DisplayDocument = (document: TDisplayDocument) => {
+	const store = userStore();
 	const [selectedDocument, setSelectedDocument] =
 		useState<TDisplayDocument | null>(null);
 
 	const navigate = useNavigate();
 	const handleDoubleClick = (document: TDisplayDocument) => {
-		// if folder redirect to the folder
 		if (document.isDirectory) {
 			navigate(`/folder/${document.id}`);
 			console.log("Double Clicked", document.id, document.fileName);
 			return;
 		}
-		// if file open the file
-		navigate(`/folder/${document.id}`);
-		console.log("Double Clicked", document.id, document.fileName);
+		store.openModal(
+			"documentPreview",
+			"New Note",
+			{ documentUrl: document.fileS3key || "ai.jpg" },
+			"xl",
+		);
 		setSelectedDocument(document);
 	};
 	const handleOptionClick = (document: TDisplayDocument) => {
@@ -190,3 +193,5 @@ const Documents = () => {
 };
 
 export default Documents;
+
+// todo show thumbnail for images

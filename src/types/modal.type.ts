@@ -5,6 +5,7 @@ type ModalType =
 	| "createFolder"
 	| "deleteDocument"
 	| "filesUpload"
+	| "documentPreview"
 	| null;
 type ModalSize = "sm" | "md" | "lg" | "xl";
 
@@ -24,6 +25,9 @@ export type ModalProps = {
 	};
 	filesUpload: {
 		parentId: string | null;
+	};
+	documentPreview: {
+		documentUrl: string;
 	};
 };
 
