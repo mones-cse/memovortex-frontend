@@ -17,6 +17,8 @@ import {
 	useFetchDocumentQuery,
 } from "../hooks/queries/document";
 
+import { useDuplicateDocumentMutation } from "../hooks/mutations/document";
+
 import { toast } from "react-toastify";
 import { fetchDocumentSignedUrl } from "../api/document";
 import { userStore } from "../stores/store";
@@ -25,6 +27,7 @@ import { MainContainer } from "../ui/MainContainer";
 
 const DisplayDocument = (documentItem: TDisplayDocument) => {
 	const store = userStore();
+	const { mutateAsync } = useDuplicateDocumentMutation();
 	const [selectedDocument, setSelectedDocument] =
 		useState<TDisplayDocument | null>(null);
 
@@ -105,16 +108,28 @@ const DisplayDocument = (documentItem: TDisplayDocument) => {
 			);
 		};
 
+		const handleDuplicateDocument = async () => {
+			await mutateAsync(selectedDocument?.id || "");
+		};
+
 		return (
 			<Menu.Dropdown>
 				<Menu.Label>Options</Menu.Label>
 				{!selectedDocument?.isDirectory && (
-					<Menu.Item
-						leftSection={<FaDownload />}
-						onClick={() => handleDownloadClick(documentItem.fileS3key || "")}
-					>
-						Download
-					</Menu.Item>
+					<>
+						<Menu.Item
+							leftSection={<FaDownload />}
+							onClick={() => handleDownloadClick(documentItem.fileS3key || "")}
+						>
+							Download
+						</Menu.Item>
+						<Menu.Item
+							leftSection={<FaCopy />}
+							onClick={handleDuplicateDocument}
+						>
+							Copy File
+						</Menu.Item>
+					</>
 				)}
 
 				<Menu.Item
@@ -126,12 +141,7 @@ const DisplayDocument = (documentItem: TDisplayDocument) => {
 				<Menu.Item leftSection={<FaFilePen />} onClick={handleRenameClick}>
 					Rename
 				</Menu.Item>
-				<Menu.Item
-					leftSection={<FaCopy />}
-					onClick={() => console.log("copy file")}
-				>
-					Copy File
-				</Menu.Item>
+
 				<Menu.Item
 					leftSection={<FaFileExport />}
 					onClick={() => console.log("copy file")}

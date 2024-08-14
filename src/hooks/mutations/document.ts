@@ -11,6 +11,7 @@ import {
 	renameDocument,
 	uploadFileToS3,
 } from "../../api/document";
+import { duplicateDocument } from "./../../api/document";
 
 export const useCreateDocumentMutation = () => {
 	const queryClient = useQueryClient();
@@ -117,6 +118,17 @@ export const useRenameDocumentMutation = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["documents"] });
 			toast.success("Document renamed successfully");
+		},
+	});
+};
+
+export const useDuplicateDocumentMutation = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: duplicateDocument,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["documents"] });
+			toast.success("Document duplicated successfully");
 		},
 	});
 };

@@ -88,3 +88,10 @@ export const renameDocument = async ({ id, fileName }: TRenameDocument) => {
 	});
 	return response.data;
 };
+
+export const duplicateDocument = async (id: string) => {
+	const response = await axiosInstance.post(
+		`${API_URL}/v1/documents/duplicate/${id}`,
+	);
+	return response.data;
+};
