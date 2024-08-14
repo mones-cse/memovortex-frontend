@@ -16,11 +16,14 @@ import {
 	useFetchDocumentByIdQuery,
 	useFetchDocumentQuery,
 } from "../hooks/queries/document";
+
+import { toast } from "react-toastify";
+import { fetchDocumentSignedUrl } from "../api/document";
 import { userStore } from "../stores/store";
 import type { TDisplayDocument } from "../types/document.type";
 import { MainContainer } from "../ui/MainContainer";
 
-const DisplayDocument = (document: TDisplayDocument) => {
+const DisplayDocument = (documentItem: TDisplayDocument) => {
 	const store = userStore();
 	const [selectedDocument, setSelectedDocument] =
 		useState<TDisplayDocument | null>(null);
@@ -52,16 +55,59 @@ const DisplayDocument = (document: TDisplayDocument) => {
 			store.openModal("deleteDocument", "Delete Document", { id: id }, "sm");
 		};
 
+		const handleDownloadClick = async (fileS3key: string) => {
+			try {
+				const data = await fetchDocumentSignedUrl(fileS3key);
+				if (data.success) {
+					const signedUrl = data.data.url;
+
+					// Fetch the file content
+					const response = await fetch(signedUrl);
+					const blob = await response.blob();
+
+					// Create a blob URL
+					const blobUrl = window.URL.createObjectURL(blob);
+
+					// Create a temporary anchor element
+					const link = document.createElement("a");
+					link.href = blobUrl;
+
+					// Set the download attribute with the filename
+					link.download = selectedDocument?.fileName || "download";
+
+					// Append to the body, click, and remove
+					document.body.appendChild(link);
+					link.click();
+					document.body.removeChild(link);
+
+					// Revoke the blob URL
+					window.URL.revokeObjectURL(blobUrl);
+
+					toast.success("Download Completed");
+				} else {
+					toast.error("Failed to get download URL");
+				}
+			} catch (e) {
+				console.log("🚀 ~ handleDownloadClick ~ e:", e);
+				toast.error("Failed to download file");
+			}
+		};
+
 		return (
 			<Menu.Dropdown>
 				<Menu.Label>Options</Menu.Label>
 				{!selectedDocument?.isDirectory && (
-					<Menu.Item leftSection={<FaDownload />}>Download</Menu.Item>
+					<Menu.Item
+						leftSection={<FaDownload />}
+						onClick={() => handleDownloadClick(documentItem.fileS3key || "")}
+					>
+						Download
+					</Menu.Item>
 				)}
 
 				<Menu.Item
 					leftSection={<FaRegTrashCan />}
-					onClick={() => handleTrashClick(document.id)}
+					onClick={() => handleTrashClick(documentItem.id)}
 				>
 					Delete
 				</Menu.Item>
@@ -91,19 +137,19 @@ const DisplayDocument = (document: TDisplayDocument) => {
 		<div
 			className="bg-slate-50 flex justify-end items-center py-2 px-4 gap-2 cursor-pointer"
 			onDoubleClick={() => {
-				handleDoubleClick(document);
+				handleDoubleClick(documentItem);
 			}}
 		>
-			{document.isDirectory ? (
+			{documentItem.isDirectory ? (
 				<FaFolderOpen size={"24"} />
 			) : (
 				<FaFileImage size={"20"} />
 			)}
-			<p className="line-clamp-1 text-sm w-full">{document.fileName}</p>
+			<p className="line-clamp-1 text-sm w-full">{documentItem.fileName}</p>
 
 			<Menu>
 				<Menu.Target>
-					<button type="button" onClick={() => handleOptionClick(document)}>
+					<button type="button" onClick={() => handleOptionClick(documentItem)}>
 						<SlOptionsVertical color="black" />
 					</button>
 				</Menu.Target>
