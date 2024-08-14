@@ -2,6 +2,7 @@ import { Modal } from "@mantine/core";
 import { userStore } from "../stores/store";
 
 import { DocumentDeleteModal } from "../components/modals/DocumentDeleteModal";
+import { DocumentRenameModal } from "../components/modals/DocumentRenameModal";
 import { FilesUploadModal } from "../components/modals/FilesUploadModal";
 import { FolderCreateModal } from "../components/modals/FolderCreateModal";
 import { NoteCreateModal } from "../components/modals/NoteCreateModal";
@@ -46,6 +47,12 @@ export const CentralModal = () => {
 				return (
 					<DocumentPreviewModal
 						{...(modalProps as ModalProps["documentPreview"])}
+					/>
+				);
+			case "renameDocument":
+				return (
+					<DocumentRenameModal
+						{...(modalProps as ModalProps["renameDocument"])}
 					/>
 				);
 			default:

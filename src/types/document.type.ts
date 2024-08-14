@@ -34,3 +34,5 @@ export type CustomFile = {
 	type: string;
 	size?: bigint;
 };
+
+export type TRenameDocument = Pick<TDocument, "id" | "fileName">;

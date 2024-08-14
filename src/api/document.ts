@@ -1,6 +1,7 @@
 import axios from "axios";
 import type { AxiosProgressEvent } from "axios";
 import type { TCreateDocument } from "../types/document.type";
+import type { TRenameDocument } from "../types/document.type";
 import { axiosInstance } from "../utils/axiosConfig";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -78,5 +79,12 @@ export const createFolder = async ({
 
 export const deleteDocument = async (id: string) => {
 	const response = await axiosInstance.delete(`${API_URL}/v1/documents/${id}`);
+	return response.data;
+};
+
+export const renameDocument = async ({ id, fileName }: TRenameDocument) => {
+	const response = await axiosInstance.patch(`${API_URL}/v1/documents/${id}`, {
+		fileName,
+	});
 	return response.data;
 };

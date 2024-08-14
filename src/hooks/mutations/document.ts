@@ -8,6 +8,7 @@ import {
 	createFolder,
 	deleteDocument,
 	generateS3UploadUrl,
+	renameDocument,
 	uploadFileToS3,
 } from "../../api/document";
 
@@ -35,8 +36,6 @@ export const useGenerateS3UploadUrlMutation = () => {
 export const useDocumentUpload = ({
 	parentId,
 }: { parentId: string | null }) => {
-	console.log("🚀 ~ parentId:", parentId);
-
 	const [uploadProgress, setUploadProgress] = useState(0);
 
 	const { mutateAsync: generateS3UploadUrlMutate } =
@@ -107,6 +106,17 @@ export const useDeleteDocumentMutation = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["documents"] });
 			toast.success("Document deleted successfully");
+		},
+	});
+};
+
+export const useRenameDocumentMutation = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: renameDocument,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["documents"] });
+			toast.success("Document renamed successfully");
 		},
 	});
 };

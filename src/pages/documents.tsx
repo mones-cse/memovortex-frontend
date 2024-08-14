@@ -93,6 +93,18 @@ const DisplayDocument = (documentItem: TDisplayDocument) => {
 			}
 		};
 
+		const handleRenameClick = () => {
+			store.openModal(
+				"renameDocument",
+				"Rename",
+				{
+					id: selectedDocument?.id || "",
+					fileName: selectedDocument?.fileName || "",
+				},
+				"sm",
+			);
+		};
+
 		return (
 			<Menu.Dropdown>
 				<Menu.Label>Options</Menu.Label>
@@ -111,10 +123,7 @@ const DisplayDocument = (documentItem: TDisplayDocument) => {
 				>
 					Delete
 				</Menu.Item>
-				<Menu.Item
-					leftSection={<FaFilePen />}
-					onClick={() => console.log("rename file")}
-				>
+				<Menu.Item leftSection={<FaFilePen />} onClick={handleRenameClick}>
 					Rename
 				</Menu.Item>
 				<Menu.Item

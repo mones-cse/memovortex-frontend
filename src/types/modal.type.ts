@@ -6,6 +6,7 @@ type ModalType =
 	| "deleteDocument"
 	| "filesUpload"
 	| "documentPreview"
+	| "renameDocument"
 	| null;
 type ModalSize = "sm" | "md" | "lg" | "xl";
 
@@ -28,6 +29,10 @@ export type ModalProps = {
 	};
 	documentPreview: {
 		documentUrl: string;
+	};
+	renameDocument: {
+		id: string;
+		fileName: string;
 	};
 };
 
