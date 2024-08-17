@@ -4,6 +4,7 @@ import {
 	fetchDocumentSignedUrl,
 	fetchDocuments,
 	fetchDocumentsById,
+	fetchParentById,
 } from "../../api/document";
 
 export const useFetchDocumentQuery = () => {
@@ -26,5 +27,13 @@ export const useFetchDocumentSignedUrlQuery = (id: string) => {
 		queryKey: ["documents", id, "signedUrl"],
 		queryFn: (context: QueryFunctionContext) =>
 			fetchDocumentSignedUrl(context.queryKey[1] as string),
+	});
+};
+
+export const useFetchParentByIdQuery = (id: string) => {
+	return useQuery({
+		queryKey: ["documents", id, "parent"],
+		queryFn: (context: QueryFunctionContext) =>
+			fetchParentById(context.queryKey[1] as string),
 	});
 };

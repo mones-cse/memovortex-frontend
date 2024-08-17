@@ -15,7 +15,6 @@ import type { ModalProps } from "../types/modal.type";
 export const CentralModal = () => {
 	const { modalType, closeModal, modalProps, modalTitle, modalSize } =
 		userStore();
-	console.log("🚀 ~ CentralModal ~ modalType:", modalType, modalSize);
 
 	const renderModal = () => {
 		switch (modalType) {

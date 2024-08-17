@@ -1,4 +1,4 @@
-import { Button, Menu } from "@mantine/core";
+import { Anchor, Breadcrumbs, Button, Menu, Text } from "@mantine/core";
 import { useState } from "react";
 import {
 	FaCopy,
@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 import {
 	useFetchDocumentByIdQuery,
 	useFetchDocumentQuery,
+	useFetchParentByIdQuery,
 } from "../hooks/queries/document";
 
 import { useDuplicateDocumentMutation } from "../hooks/mutations/document";
@@ -24,6 +25,58 @@ import { fetchDocumentSignedUrl } from "../api/document";
 import { userStore } from "../stores/store";
 import type { TDisplayDocument } from "../types/document.type";
 import { MainContainer } from "../ui/MainContainer";
+
+const BreadCrumb = ({ documentId }: { documentId: string }) => {
+	const { data, isLoading } = useFetchParentByIdQuery(documentId);
+	if (isLoading) {
+		return <p>Loading...</p>;
+	}
+	const isHigHhierarchy = data.data.length > 3;
+	const breadItems = [];
+	const breadItemsData = data?.data;
+	breadItems.push(
+		<Anchor href={"/documents"} key={"home"}>
+			{"Documents"}
+		</Anchor>,
+	);
+
+	for (const element of breadItemsData) {
+		breadItems.push(
+			<Anchor href={element.id} key={element.fileName}>
+				{element.fileName}
+			</Anchor>,
+		);
+	}
+	if (isHigHhierarchy) {
+		breadItems.splice(
+			1,
+			1,
+			<Anchor
+				href={"#"}
+				key={"..."}
+				c={"black"}
+				styles={{
+					root: {
+						cursor: "default",
+						pointerEvents: "none",
+					},
+				}}
+			>
+				{"..."}
+			</Anchor>,
+		);
+	}
+
+	return (
+		<>
+			{
+				<Breadcrumbs separator=">" mt="xs">
+					{breadItems}
+				</Breadcrumbs>
+			}
+		</>
+	);
+};
 
 const DisplayDocument = (documentItem: TDisplayDocument) => {
 	const store = userStore();
@@ -35,7 +88,6 @@ const DisplayDocument = (documentItem: TDisplayDocument) => {
 	const handleDoubleClick = (document: TDisplayDocument) => {
 		if (document.isDirectory) {
 			navigate(`/folder/${document.id}`);
-			console.log("Double Clicked", document.id, document.fileName);
 			return;
 		}
 		store.openModal(
@@ -47,7 +99,6 @@ const DisplayDocument = (documentItem: TDisplayDocument) => {
 		setSelectedDocument(document);
 	};
 	const handleOptionClick = (document: TDisplayDocument) => {
-		console.log("Option Clicked", document.id, document.fileName);
 		setSelectedDocument(document);
 	};
 
@@ -91,7 +142,6 @@ const DisplayDocument = (documentItem: TDisplayDocument) => {
 					toast.error("Failed to get download URL");
 				}
 			} catch (e) {
-				console.log("🚀 ~ handleDownloadClick ~ e:", e);
 				toast.error("Failed to download file");
 			}
 		};
@@ -186,8 +236,6 @@ const useFetchDocument = (parentId?: string | null) => {
 };
 
 const DisplayDocuments = ({ parentId }: { parentId: string | null }) => {
-	console.log("🚀 ~ DisplayDocuments ~ parentId:", parentId);
-
 	const { data, isLoading } = useFetchDocument(parentId);
 	if (isLoading) {
 		return <p>Loading...</p>;
@@ -202,8 +250,6 @@ const DisplayDocuments = ({ parentId }: { parentId: string | null }) => {
 };
 
 const CreateDocument = ({ parentId }: { parentId: string | null }) => {
-	console.log("🚀 ~ CreateDocument ~ parentId:", parentId);
-
 	const store = userStore();
 	const handleCreateFolder = () => {
 		store.openModal(
@@ -215,7 +261,6 @@ const CreateDocument = ({ parentId }: { parentId: string | null }) => {
 	};
 
 	const handleUploadFile = () => {
-		console.log("Upload File");
 		store.openModal("filesUpload", "Upload File", { parentId: parentId }, "sm");
 	};
 
@@ -246,7 +291,12 @@ const Documents = () => {
 			<div className="flex flex-col gap=1">
 				<div className="flex justify-between w-full">
 					<div>
-						<p className="text-3xl font-bold">Tttle</p>
+						{!id && (
+							<Text c={"blue.6"} mt="xs">
+								Documents
+							</Text>
+						)}
+						{id && <BreadCrumb documentId={id} />}
 					</div>
 					<CreateDocument parentId={id || null} />
 				</div>
