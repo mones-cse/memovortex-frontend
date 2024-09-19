@@ -8,10 +8,10 @@ export const createDeck = async (data: TCreateDeck) => {
 	return response.data;
 };
 
-// export const fetchNotes = async () => {
-// 	const result = await axiosInstance.get(`${API_URL}/v1/notes`);
-// 	return result.data;
-// };
+export const fetchDecks = async () => {
+	const result = await axiosInstance.get(`${API_URL}/v1/deck`);
+	return result.data;
+};
 
 // export const updateNotes = async (data: TUpdateNote) => {
 // 	const response = await axiosInstance.patch(
