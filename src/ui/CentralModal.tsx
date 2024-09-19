@@ -2,6 +2,7 @@ import { Modal } from "@mantine/core";
 import { userStore } from "../stores/store";
 
 import { DeckCreateModal } from "../components/modals/DeckCreateModal";
+import { DeckDeleteModal } from "../components/modals/DeckDeleteModal";
 import { DocumentDeleteModal } from "../components/modals/DocumentDeleteModal";
 import { DocumentRenameModal } from "../components/modals/DocumentRenameModal";
 import { FilesUploadModal } from "../components/modals/FilesUploadModal";
@@ -57,6 +58,10 @@ export const CentralModal = () => {
 				);
 			case "newDeck":
 				return <DeckCreateModal />;
+			case "deleteDeck":
+				return (
+					<DeckDeleteModal {...(modalProps as ModalProps["deleteDeck"])} />
+				);
 			default:
 				return null;
 		}

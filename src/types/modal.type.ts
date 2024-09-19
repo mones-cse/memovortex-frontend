@@ -8,6 +8,7 @@ type ModalType =
 	| "documentPreview"
 	| "renameDocument"
 	| "newDeck"
+	| "deleteDeck"
 	| null;
 type ModalSize = "sm" | "md" | "lg" | "xl";
 
@@ -36,6 +37,7 @@ export type ModalProps = {
 		fileName: string;
 	};
 	newDeck: Record<string, never>;
+	deleteDeck: { deckId: string };
 };
 
 type State = {

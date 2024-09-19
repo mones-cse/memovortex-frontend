@@ -1,5 +1,6 @@
 import { Button, Menu } from "@mantine/core";
 import { Table } from "@mantine/core";
+import { FaLayerGroup, FaPen, FaRegTrashAlt } from "react-icons/fa";
 import { useFetchDecksQuery } from "../hooks/queries/deck";
 import { userStore } from "../stores/store";
 import type { TDeck } from "../types/deck.type";
@@ -12,6 +13,11 @@ const Deck = () => {
 		store.openModal("newDeck", "New Deck", {}, "lg");
 		console.log("New Deck");
 	};
+
+	const handleDeleteDeck = async (deckId: string) => {
+		store.openModal("deleteDeck", "Delete Deck", { deckId }, "sm");
+	};
+
 	if (isPending) {
 		return <div>Loading...</div>;
 	}
@@ -19,7 +25,7 @@ const Deck = () => {
 		return <div>Error: {error.message}</div>;
 	}
 
-	const ActionButton = () => {
+	const ActionButton = ({ deckId }: { deckId: string }) => {
 		return (
 			<Menu shadow="md" width={120}>
 				<Menu.Target>
@@ -29,9 +35,14 @@ const Deck = () => {
 				</Menu.Target>
 
 				<Menu.Dropdown>
-					<Menu.Item>Rename</Menu.Item>
-					<Menu.Item>Delete</Menu.Item>
-					<Menu.Item>Browse</Menu.Item>
+					<Menu.Item leftSection={<FaPen />}>Rename</Menu.Item>
+					<Menu.Item
+						leftSection={<FaRegTrashAlt />}
+						onClick={() => handleDeleteDeck(deckId)}
+					>
+						Delete
+					</Menu.Item>
+					<Menu.Item leftSection={<FaLayerGroup />}>Browse</Menu.Item>
 				</Menu.Dropdown>
 			</Menu>
 		);
@@ -45,7 +56,7 @@ const Deck = () => {
 				<Button size="xs" variant="outline" color="blue" className="mx-2">
 					Study
 				</Button>
-				<ActionButton />
+				<ActionButton deckId={element.id} />
 			</Table.Td>
 		</Table.Tr>
 	));

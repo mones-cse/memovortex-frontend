@@ -13,6 +13,11 @@ export const fetchDecks = async () => {
 	return result.data;
 };
 
+export const deleteDeck = async (deckId: string) => {
+	const response = await axiosInstance.delete(`${API_URL}/v1/deck/${deckId}`);
+	return response;
+};
+
 // export const updateNotes = async (data: TUpdateNote) => {
 // 	const response = await axiosInstance.patch(
 // 		`${API_URL}/v1/notes/${data.id}`,
