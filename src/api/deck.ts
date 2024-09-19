@@ -1,4 +1,4 @@
-import type { TCreateDeck } from "../types/deck.type";
+import type { TCreateDeck, TUpdateDeck } from "../types/deck.type";
 import { axiosInstance } from "../utils/axiosConfig";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -18,27 +18,10 @@ export const deleteDeck = async (deckId: string) => {
 	return response;
 };
 
-// export const updateNotes = async (data: TUpdateNote) => {
-// 	const response = await axiosInstance.patch(
-// 		`${API_URL}/v1/notes/${data.id}`,
-// 		data,
-// 	);
-// 	return response.data;
-// };
-
-// export const deleteNote = async (noteId: string) => {
-// 	try {
-// 		const response = await axiosInstance.delete(
-// 			`${API_URL}/v1/notes/${noteId}`,
-// 		);
-// 		return response;
-// 	} catch (error) {
-// 		if (axios.isAxiosError(error) && error.response) {
-// 			console.log(error.response.data.message);
-// 			throw new Error(
-// 				error.response.data.message || "An error occurred during deleting note",
-// 			);
-// 		}
-// 		throw new Error("An error occurred during deleting note");
-// 	}
-// };
+export const updateDeck = async (data: TUpdateDeck) => {
+	const response = await axiosInstance.patch(`${API_URL}/v1/deck/${data.id}`, {
+		deckTitle: data.deckTitle,
+		deckDescription: data.deckDescription,
+	});
+	return response.data;
+};

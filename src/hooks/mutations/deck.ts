@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { createDeck, deleteDeck } from "../../api/deck";
+import { createDeck, deleteDeck, updateDeck } from "../../api/deck";
 
 export const useCreateDeckMutation = () => {
 	const queryClient = useQueryClient();
@@ -25,24 +25,13 @@ export const useDeleteDeckMutation = () => {
 	});
 };
 
-// export const useCreateNoteMutation = () => {
-// 	const queryClient = useQueryClient();
-// 	return useMutation({
-// 		mutationFn: createNotes,
-// 		onSuccess: () => {
-// 			queryClient.invalidateQueries({ queryKey: ["notes"] });
-// 			// toast.success("Note created successfully");
-// 		},
-// 	});
-// };
-
-// export const useUpdateNoteMutation = () => {
-// 	const queryClient = useQueryClient();
-// 	return useMutation({
-// 		mutationFn: updateNotes,
-// 		onSuccess: () => {
-// 			queryClient.invalidateQueries({ queryKey: ["notes"] });
-// 			toast.success("Note updated successfully");
-// 		},
-// 	});
-// };
+export const useUpdateDeckMutation = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: updateDeck,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["decks"] });
+			toast.success("Deck updated successfully");
+		},
+	});
+};

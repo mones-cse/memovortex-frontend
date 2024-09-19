@@ -3,6 +3,7 @@ import { userStore } from "../stores/store";
 
 import { DeckCreateModal } from "../components/modals/DeckCreateModal";
 import { DeckDeleteModal } from "../components/modals/DeckDeleteModal";
+import { DeckUpdateModal } from "../components/modals/DeckUpdateModal";
 import { DocumentDeleteModal } from "../components/modals/DocumentDeleteModal";
 import { DocumentRenameModal } from "../components/modals/DocumentRenameModal";
 import { FilesUploadModal } from "../components/modals/FilesUploadModal";
@@ -61,6 +62,10 @@ export const CentralModal = () => {
 			case "deleteDeck":
 				return (
 					<DeckDeleteModal {...(modalProps as ModalProps["deleteDeck"])} />
+				);
+			case "updateDeck":
+				return (
+					<DeckUpdateModal {...(modalProps as ModalProps["updateDeck"])} />
 				);
 			default:
 				return null;

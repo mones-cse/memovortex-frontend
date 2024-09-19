@@ -3,15 +3,27 @@ import { Table } from "@mantine/core";
 import { FaLayerGroup, FaPen, FaRegTrashAlt } from "react-icons/fa";
 import { useFetchDecksQuery } from "../hooks/queries/deck";
 import { userStore } from "../stores/store";
-import type { TDeck } from "../types/deck.type";
+import type { TDeck, TUpdateDeck } from "../types/deck.type";
 import { MainContainer } from "../ui/MainContainer";
 
 const Deck = () => {
 	const { data, isPending, isError, error } = useFetchDecksQuery();
 	const store = userStore();
-	const handleNewNoteModal = () => {
+	const handleNewDeckModal = () => {
 		store.openModal("newDeck", "New Deck", {}, "lg");
-		console.log("New Deck");
+	};
+
+	const handleUpdateDeckModal = ({ deck }: { deck: TUpdateDeck }) => {
+		store.openModal(
+			"updateDeck",
+			"Update Deck",
+			{
+				id: deck.id,
+				deckTitle: deck.deckTitle || "",
+				deckDescription: deck.deckDescription || "",
+			},
+			"lg",
+		);
 	};
 
 	const handleDeleteDeck = async (deckId: string) => {
@@ -25,7 +37,7 @@ const Deck = () => {
 		return <div>Error: {error.message}</div>;
 	}
 
-	const ActionButton = ({ deckId }: { deckId: string }) => {
+	const ActionButton = ({ deck }: { deck: TUpdateDeck }) => {
 		return (
 			<Menu shadow="md" width={120}>
 				<Menu.Target>
@@ -35,10 +47,15 @@ const Deck = () => {
 				</Menu.Target>
 
 				<Menu.Dropdown>
-					<Menu.Item leftSection={<FaPen />}>Rename</Menu.Item>
+					<Menu.Item
+						leftSection={<FaPen />}
+						onClick={() => handleUpdateDeckModal({ deck })}
+					>
+						Rename
+					</Menu.Item>
 					<Menu.Item
 						leftSection={<FaRegTrashAlt />}
-						onClick={() => handleDeleteDeck(deckId)}
+						onClick={() => handleDeleteDeck(deck.id)}
 					>
 						Delete
 					</Menu.Item>
@@ -56,7 +73,7 @@ const Deck = () => {
 				<Button size="xs" variant="outline" color="blue" className="mx-2">
 					Study
 				</Button>
-				<ActionButton deckId={element.id} />
+				<ActionButton deck={element} />
 			</Table.Td>
 		</Table.Tr>
 	));
@@ -65,7 +82,7 @@ const Deck = () => {
 		<MainContainer withSpace>
 			<div className="flex justify-between">
 				<p className="text-3xl">Decks</p>
-				<Button onClick={handleNewNoteModal}>New Deck</Button>
+				<Button onClick={handleNewDeckModal}>New Deck</Button>
 			</div>
 			<br />
 			<div>
