@@ -1,6 +1,7 @@
 import { Modal } from "@mantine/core";
 import { userStore } from "../stores/store";
 
+import { DeckCreateModal } from "../components/modals/DeckCreateModal";
 import { DocumentDeleteModal } from "../components/modals/DocumentDeleteModal";
 import { DocumentRenameModal } from "../components/modals/DocumentRenameModal";
 import { FilesUploadModal } from "../components/modals/FilesUploadModal";
@@ -54,6 +55,8 @@ export const CentralModal = () => {
 						{...(modalProps as ModalProps["renameDocument"])}
 					/>
 				);
+			case "newDeck":
+				return <DeckCreateModal />;
 			default:
 				return null;
 		}

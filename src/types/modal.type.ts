@@ -7,6 +7,7 @@ type ModalType =
 	| "filesUpload"
 	| "documentPreview"
 	| "renameDocument"
+	| "newDeck"
 	| null;
 type ModalSize = "sm" | "md" | "lg" | "xl";
 
@@ -34,6 +35,7 @@ export type ModalProps = {
 		id: string;
 		fileName: string;
 	};
+	newDeck: Record<string, never>;
 };
 
 type State = {

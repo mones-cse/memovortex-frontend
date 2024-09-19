@@ -12,6 +12,7 @@ import Settings from "./pages/settings.tsx";
 import Test from "./pages/test.tsx";
 import "react-toastify/dist/ReactToastify.css";
 import { Suspense } from "react";
+import Deck from "./pages/deck.tsx";
 import Documents from "./pages/documents.tsx";
 import { CentralModal } from "./ui/CentralModal.tsx";
 import PrivateRoute from "./utils/PrivateRotue.tsx";
@@ -28,6 +29,7 @@ function App() {
 							<Route path="/notes" element={<Notes />} />
 							<Route path="/documents" element={<Documents />} />
 							<Route path="/folder/:id" element={<Documents />} />
+							<Route path="/deck" element={<Deck />} />
 							<Route path="/logout" element={<Logout />} />
 							<Route path="test" element={<Test />} />
 							<Route path="/" element={<Home />} />
