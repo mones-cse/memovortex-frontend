@@ -35,7 +35,7 @@ const BreadCrumb = ({ documentId }: { documentId: string }) => {
 	const breadItems = [];
 	const breadItemsData = data?.data;
 	breadItems.push(
-		<Anchor href={"/documents"} key={"home"}>
+		<Anchor href={"/documents"} key={"documents"}>
 			{"Documents"}
 		</Anchor>,
 	);
