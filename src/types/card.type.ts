@@ -1,4 +1,5 @@
 export type TCard = {
+	id: string;
 	deckId: string;
 	frontText: string;
 	backText: string;
@@ -10,6 +11,8 @@ export type TCard = {
 };
 
 export type TCreateCard = Pick<TCard, "deckId" | "frontText" | "backText">;
+
+export type TUpdateCard = Pick<TCard, "id"> & Partial<TCreateCard>;
 
 // export type TCreateDeck = Pick<TDeck, "deckTitle" | "deckDescription">;
 
