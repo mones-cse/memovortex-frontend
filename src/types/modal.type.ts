@@ -10,6 +10,7 @@ type ModalType =
 	| "newDeck"
 	| "deleteDeck"
 	| "updateDeck"
+	| "newCard"
 	| null;
 type ModalSize = "sm" | "md" | "lg" | "xl";
 
@@ -43,6 +44,9 @@ export type ModalProps = {
 		id: string;
 		deckTitle: string;
 		deckDescription: string;
+	};
+	newCard: {
+		deckId: string;
 	};
 };
 

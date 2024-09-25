@@ -1,6 +1,7 @@
 import { Modal } from "@mantine/core";
 import { userStore } from "../stores/store";
 
+import { CardCreateModal } from "../components/modals/CardCreateModal";
 import { DeckCreateModal } from "../components/modals/DeckCreateModal";
 import { DeckDeleteModal } from "../components/modals/DeckDeleteModal";
 import { DeckUpdateModal } from "../components/modals/DeckUpdateModal";
@@ -67,6 +68,8 @@ export const CentralModal = () => {
 				return (
 					<DeckUpdateModal {...(modalProps as ModalProps["updateDeck"])} />
 				);
+			case "newCard":
+				return <CardCreateModal {...(modalProps as ModalProps["newCard"])} />;
 			default:
 				return null;
 		}

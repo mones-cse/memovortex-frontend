@@ -3,3 +3,4 @@ export * as userSchemas from "./user.schemas";
 export * as noteSchemas from "./note.schemas";
 export * as folderSchemas from "./document.schemas";
 export * as deckSchemas from "./deck.schemas";
+export * as cardSchemas from "./card.schemas";

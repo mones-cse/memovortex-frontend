@@ -1,12 +1,14 @@
 import { Button, Menu } from "@mantine/core";
 import { Table } from "@mantine/core";
 import { FaLayerGroup, FaPen, FaRegTrashAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { useFetchDecksQuery } from "../hooks/queries/deck";
 import { userStore } from "../stores/store";
 import type { TDeck, TUpdateDeck } from "../types/deck.type";
 import { MainContainer } from "../ui/MainContainer";
 
 const Deck = () => {
+	const navigate = useNavigate();
 	const { data, isPending, isError, error } = useFetchDecksQuery();
 	const store = userStore();
 	const handleNewDeckModal = () => {
@@ -28,6 +30,14 @@ const Deck = () => {
 
 	const handleDeleteDeck = async (deckId: string) => {
 		store.openModal("deleteDeck", "Delete Deck", { deckId }, "sm");
+	};
+
+	const handleStudy = (id: string) => {
+		navigate(`/study/${id}`);
+	};
+
+	const handleBrowse = (id: string) => {
+		navigate(`/card/${id}`);
 	};
 
 	if (isPending) {
@@ -59,7 +69,12 @@ const Deck = () => {
 					>
 						Delete
 					</Menu.Item>
-					<Menu.Item leftSection={<FaLayerGroup />}>Browse</Menu.Item>
+					<Menu.Item
+						leftSection={<FaLayerGroup />}
+						onClick={() => handleBrowse(deck.id)}
+					>
+						Browse
+					</Menu.Item>
 				</Menu.Dropdown>
 			</Menu>
 		);
@@ -70,7 +85,13 @@ const Deck = () => {
 			<Table.Td>{element.deckTitle}</Table.Td>
 			<Table.Td>{element.deckDescription}</Table.Td>
 			<Table.Td className="float-end">
-				<Button size="xs" variant="outline" color="blue" className="mx-2">
+				<Button
+					size="xs"
+					variant="outline"
+					color="blue"
+					className="mx-2"
+					onClick={() => handleStudy(element.id)}
+				>
 					Study
 				</Button>
 				<ActionButton deck={element} />
