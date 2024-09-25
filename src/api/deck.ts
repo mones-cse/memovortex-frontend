@@ -4,22 +4,22 @@ import { axiosInstance } from "../utils/axiosConfig";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const createDeck = async (data: TCreateDeck) => {
-	const response = await axiosInstance.post(`${API_URL}/v1/deck`, data);
+	const response = await axiosInstance.post(`${API_URL}/v1/decks`, data);
 	return response.data;
 };
 
 export const fetchDecks = async () => {
-	const result = await axiosInstance.get(`${API_URL}/v1/deck`);
+	const result = await axiosInstance.get(`${API_URL}/v1/decks`);
 	return result.data;
 };
 
 export const deleteDeck = async (deckId: string) => {
-	const response = await axiosInstance.delete(`${API_URL}/v1/deck/${deckId}`);
+	const response = await axiosInstance.delete(`${API_URL}/v1/decks/${deckId}`);
 	return response;
 };
 
 export const updateDeck = async (data: TUpdateDeck) => {
-	const response = await axiosInstance.patch(`${API_URL}/v1/deck/${data.id}`, {
+	const response = await axiosInstance.patch(`${API_URL}/v1/decks/${data.id}`, {
 		deckTitle: data.deckTitle,
 		deckDescription: data.deckDescription,
 	});

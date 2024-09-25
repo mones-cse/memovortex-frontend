@@ -4,8 +4,18 @@ import { axiosInstance } from "../utils/axiosConfig";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const createCard = async (data: TCreateCard) => {
-	const response = await axiosInstance.post(`${API_URL}/v1/card`, data);
+	const { deckId, ...rest } = data;
+	const response = await axiosInstance.post(
+		`${API_URL}/v1/decks/${deckId}/cards`,
+		rest,
+	);
 	return response.data;
+};
+
+export const fetchCards = async (deckId: string) => {
+	console.log("🚀 ~ fetchCards ~ deckId:", deckId);
+	const result = await axiosInstance.get(`${API_URL}/v1/decks/${deckId}/cards`);
+	return result.data;
 };
 
 // export const fetchDecks = async () => {
