@@ -27,20 +27,17 @@ export const updateCard = async (data: TUpdateCard) => {
 	return response.data;
 };
 
-// export const fetchDecks = async () => {
-// 	const result = await axiosInstance.get(`${API_URL}/v1/deck`);
-// 	return result.data;
-// };
+export const deleteCard = async ({
+	deckId,
+	cardId,
+}: { deckId: string; cardId: string }) => {
+	const response = await axiosInstance.delete(
+		`${API_URL}/v1/decks/${deckId}/cards/${cardId}`,
+	);
+	return response;
+};
 
 // export const deleteDeck = async (deckId: string) => {
 // 	const response = await axiosInstance.delete(`${API_URL}/v1/deck/${deckId}`);
 // 	return response;
-// };
-
-// export const updateDeck = async (data: TUpdateDeck) => {
-// 	const response = await axiosInstance.patch(`${API_URL}/v1/deck/${data.id}`, {
-// 		deckTitle: data.deckTitle,
-// 		deckDescription: data.deckDescription,
-// 	});
-// 	return response.data;
 // };
