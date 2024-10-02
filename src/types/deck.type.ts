@@ -2,6 +2,10 @@ export type TDeck = {
 	id: string;
 	deckTitle: string;
 	deckDescription: string;
+	stateNew: number;
+	stateLearning: number;
+	stateReview: number;
+	stateRelearning: number;
 	createdAt: string;
 	updatedAt: string;
 };

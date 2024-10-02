@@ -84,6 +84,10 @@ const Deck = () => {
 		<Table.Tr key={element.id} className="justify-between">
 			<Table.Td>{element.deckTitle}</Table.Td>
 			<Table.Td>{element.deckDescription}</Table.Td>
+			<Table.Td>{element.stateNew}</Table.Td>
+			<Table.Td>{element.stateLearning}</Table.Td>
+			<Table.Td>{element.stateReview}</Table.Td>
+			<Table.Td>{element.stateRelearning}</Table.Td>
 			<Table.Td className="float-end">
 				<Button
 					size="xs"
@@ -112,6 +116,10 @@ const Deck = () => {
 						<Table.Tr>
 							<Table.Th>Deck Title</Table.Th>
 							<Table.Th>Deck Description</Table.Th>
+							<Table.Th>New</Table.Th>
+							<Table.Th>Learning</Table.Th>
+							<Table.Th>Review</Table.Th>
+							<Table.Th>Relearing</Table.Th>
 							<Table.Th className="float-end">Actions</Table.Th>
 						</Table.Tr>
 					</Table.Thead>
