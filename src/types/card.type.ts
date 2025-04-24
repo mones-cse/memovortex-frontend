@@ -45,6 +45,12 @@ export type TCardData = {
 	};
 };
 
+export type TReviewStudyCards = {
+	deckId: string;
+	cardId: string;
+	rating: 1 | 2 | 3 | 4;
+};
+
 // export type TCreateDeck = Pick<TDeck, "deckTitle" | "deckDescription">;
 
 // export type TUpdateDeck = Pick<TDeck, "id"> & Partial<TCreateDeck>;

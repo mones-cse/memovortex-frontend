@@ -1,6 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { createCard, deleteCard, updateCard } from "./../../api/card";
+import {
+	createCard,
+	deleteCard,
+	reviewStudyCards,
+	updateCard,
+} from "./../../api/card";
 
 export const useCreateCardMutation = () => {
 	const queryClient = useQueryClient();
@@ -31,6 +36,17 @@ export const useDeleteCardMutation = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["cards"] });
 			toast.success("Card deleted successfully");
+		},
+	});
+};
+
+export const useReviewStudyCardsMutation = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: reviewStudyCards,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["studyCards"] });
+			toast.success("Reviewed successfully");
 		},
 	});
 };

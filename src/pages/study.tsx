@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useReviewStudyCardsMutation } from "../hooks/mutations/card";
 import { useFetchStudyCardsQuery } from "../hooks/queries/card";
 import type { TCardData } from "../types/card.type";
 import { MainContainer } from "../ui/MainContainer";
@@ -11,6 +12,8 @@ const Study = () => {
 	const [currentCard, setCurrentCard] = useState<TCardData | null>(null);
 	const [isQuestionWindow, setIsQuestionWindow] = useState(true);
 	const [isStudyComplete, setIsStudyComplete] = useState(false);
+
+	const { mutateAsync } = useReviewStudyCardsMutation();
 
 	// TODO: I need approximate next schedule time for each type of card submission
 	// Initialize cards when data is loaded
@@ -39,18 +42,28 @@ const Study = () => {
 		setIsQuestionWindow(false);
 	};
 
-	const handleCardResponse = (
-		response: "easy" | "medium" | "hard" | "again",
-	) => {
+	const handleCardResponse = (response: "easy" | "good" | "hard" | "again") => {
 		if (response === "again") {
 			// Put current card at the end of the deck
 			if (currentCard) {
 				setCardsData([...cardsData, currentCard]);
 			}
 		}
+		const responsInNumber =
+			response === "easy"
+				? 4
+				: response === "good"
+					? 3
+					: response === "hard"
+						? 2
+						: 1;
 
 		// submit api call to update card state
-
+		mutateAsync({
+			deckId: id || "",
+			cardId: currentCard?.card?.id || "",
+			rating: responsInNumber,
+		});
 		// Remove current card from the beginning
 		const newCards = [...cardsData];
 		newCards.shift();
@@ -93,7 +106,7 @@ const Study = () => {
 				<button
 					type="button"
 					className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors"
-					onClick={() => handleCardResponse("medium")}
+					onClick={() => handleCardResponse("good")}
 				>
 					Medium
 				</button>

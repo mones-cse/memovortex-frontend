@@ -33,7 +33,7 @@ const Decks = () => {
 	};
 
 	const handleStudy = (id: string) => {
-		navigate(`/study/${id}`);
+		navigate(`/studies/${id}`);
 	};
 
 	const handleBrowse = (id: string) => {

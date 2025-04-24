@@ -1,4 +1,8 @@
-import type { TCreateCard, TUpdateCard } from "../types/card.type";
+import type {
+	TCreateCard,
+	TReviewStudyCards,
+	TUpdateCard,
+} from "../types/card.type";
 import { axiosInstance } from "../utils/axiosConfig";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -15,14 +19,6 @@ export const createCard = async (data: TCreateCard) => {
 export const fetchCards = async (deckId: string) => {
 	console.log("🚀 ~ fetchCards ~ deckId:", deckId);
 	const result = await axiosInstance.get(`${API_URL}/v1/decks/${deckId}/cards`);
-	return result.data;
-};
-
-export const fetchStudyCards = async (deckId: string) => {
-	console.log("🚀 ~ fetchCards ~ deckId:", deckId);
-	const result = await axiosInstance.get(
-		`${API_URL}/v1/decks/${deckId}/studies`,
-	);
 	return result.data;
 };
 
@@ -45,7 +41,20 @@ export const deleteCard = async ({
 	return response;
 };
 
-// export const deleteDeck = async (deckId: string) => {
-// 	const response = await axiosInstance.delete(`${API_URL}/v1/deck/${deckId}`);
-// 	return response;
-// };
+export const fetchStudyCards = async (deckId: string) => {
+	console.log("🚀 ~ fetchStudyCards ~ deckId:", deckId);
+	const result = await axiosInstance.get(
+		`${API_URL}/v1/decks/${deckId}/studies`,
+	);
+	return result.data;
+};
+
+export const reviewStudyCards = async (data: TReviewStudyCards) => {
+	console.log("🚀 ~ ReviewStudyCards ~ deckId:", data);
+	const { deckId, cardId, rating } = data;
+	const response = await axiosInstance.patch(
+		`${API_URL}/v1/decks/${deckId}/cards/review/${cardId}`,
+		{ rating },
+	);
+	return response.data;
+};
