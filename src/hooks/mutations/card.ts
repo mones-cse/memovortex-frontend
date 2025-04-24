@@ -30,7 +30,6 @@ export const useDeleteCardMutation = () => {
 		mutationFn: deleteCard,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["cards"] });
-
 			toast.success("Card deleted successfully");
 		},
 	});
