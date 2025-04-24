@@ -176,9 +176,25 @@ const Study = () => {
 						</div>
 					</div>
 				)}
-				<p className="text-sm text-gray-500 text-center">
-					Cards remaining: {cardsData.length}
-				</p>
+				<div className="space-y-2">
+					<p className="text-sm text-gray-500 text-center">
+						Cards remaining: {cardsData.length}
+					</p>
+					{data?.data.deck && (
+						<div className="text-sm text-gray-500 space-y-1">
+							<p className="text-center">New: {data.data.deck.stateNew}</p>
+							<p className="text-center">
+								Learning: {data.data.deck.stateLearning}
+							</p>
+							<p className="text-center">
+								Review: {data.data.deck.stateReview}
+							</p>
+							<p className="text-center">
+								Relearning: {data.data.deck.stateRelearning}
+							</p>
+						</div>
+					)}
+				</div>
 			</div>
 		</MainContainer>
 	);

@@ -18,6 +18,7 @@ const CardContentView: React.FC<CardContentViewProps> = ({
 	selectedCard,
 	onUpdate,
 }) => {
+	const dueDate = new Date(selectedCard.card.due);
 	const { mutateAsync } = useUpdateCardMutation();
 	const store = userStore();
 
@@ -80,6 +81,17 @@ const CardContentView: React.FC<CardContentViewProps> = ({
 				key={form.key("backText")}
 				mb="sm"
 			/>
+			<p className="text-md text-gray-800">
+				Due Date:{" "}
+				{dueDate.toLocaleDateString("en-US", {
+					year: "numeric",
+					month: "long",
+					day: "numeric",
+					hour: "2-digit",
+					minute: "2-digit",
+				})}
+			</p>
+			<br />
 			<div className="flex gap-1 justify-end">
 				<Button
 					variant="outline"
