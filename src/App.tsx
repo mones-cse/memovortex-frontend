@@ -13,11 +13,13 @@ import Test from "./pages/test.tsx";
 import "react-toastify/dist/ReactToastify.css";
 import { Suspense } from "react";
 import Card from "./pages/card.tsx";
-import Deck from "./pages/deck.tsx";
+import Decks from "./pages/decks.tsx";
 import Documents from "./pages/documents.tsx";
+import Studies from "./pages/studies.tsx";
 import Study from "./pages/study.tsx";
 import { CentralModal } from "./ui/CentralModal.tsx";
 import PrivateRoute from "./utils/PrivateRotue.tsx";
+
 function App() {
 	return (
 		<>
@@ -31,9 +33,10 @@ function App() {
 							<Route path="/notes" element={<Notes />} />
 							<Route path="/documents" element={<Documents />} />
 							<Route path="/folder/:id" element={<Documents />} />
-							<Route path="/deck" element={<Deck />} />
+							<Route path="/decks" element={<Decks />} />
+							<Route path="/studies" element={<Studies />} />
 							<Route path="/card/:id" element={<Card />} />
-							<Route path="/study/:id" element={<Study />} />
+							<Route path="/studies/:id" element={<Study />} />
 							<Route path="/logout" element={<Logout />} />
 							<Route path="test" element={<Test />} />
 							<Route path="/" element={<Home />} />
