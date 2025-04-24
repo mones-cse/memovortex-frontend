@@ -70,7 +70,7 @@ const Decks = () => {
 				className="mr-2"
 				onClick={() => handleBrowse(deckId)}
 			>
-				Browse
+				Cards
 			</Button>
 		);
 	};
