@@ -18,6 +18,14 @@ export const fetchCards = async (deckId: string) => {
 	return result.data;
 };
 
+export const fetchStudyCards = async (deckId: string) => {
+	console.log("🚀 ~ fetchCards ~ deckId:", deckId);
+	const result = await axiosInstance.get(
+		`${API_URL}/v1/decks/${deckId}/studies`,
+	);
+	return result.data;
+};
+
 export const updateCard = async (data: TUpdateCard) => {
 	const { deckId, id, ...rest } = data;
 	const response = await axiosInstance.patch(
