@@ -43,12 +43,6 @@ const Study = () => {
 	};
 
 	const handleCardResponse = (response: "easy" | "good" | "hard" | "again") => {
-		if (response === "again") {
-			// Put current card at the end of the deck
-			if (currentCard) {
-				setCardsData([...cardsData, currentCard]);
-			}
-		}
 		const responsInNumber =
 			response === "easy"
 				? 4
@@ -58,15 +52,22 @@ const Study = () => {
 						? 2
 						: 1;
 
-		// submit api call to update card state
 		mutateAsync({
 			deckId: id || "",
 			cardId: currentCard?.card?.id || "",
 			rating: responsInNumber,
 		});
-		// Remove current card from the beginning
+
+		// Create a new array with the current state
 		const newCards = [...cardsData];
+		// remove current card from the beginning
 		newCards.shift();
+
+		if (response === "again" && currentCard) {
+			newCards.push(currentCard);
+		}
+
+		// Update the cards data state
 		setCardsData(newCards);
 
 		// Set next card or complete study
