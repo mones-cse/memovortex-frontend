@@ -8,6 +8,12 @@ import { userStore } from "../../stores/store";
 import type { ModalProps } from "../../types/modal.type";
 import MinimalInputWithImages from "../card/MinimalInputWithImages";
 
+interface ImageItem {
+	file: File;
+	preview: string;
+	id: string;
+}
+
 export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 	const store = userStore();
 
@@ -17,9 +23,9 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 		mode: "uncontrolled",
 		initialValues: {
 			frontText: "",
-			frontImage: [],
+			frontImage: [] as ImageItem[],
 			backText: "",
-			backImage: [],
+			backImage: [] as ImageItem[],
 			cardType: "BASIC",
 		},
 		validate: zodResolver(cardSchemas.cardCreateSchema),
