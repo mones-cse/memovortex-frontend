@@ -128,13 +128,6 @@ const MinimalInputWithImages = ({
 		}
 	};
 
-	// Handle the input change
-	// const handleInputChange = (
-	//   e: React.ChangeEvent<HTMLTextAreaElement>
-	// ): void => {
-	//   setInputValue(e.target.value);
-	// };
-
 	// Remove a specific image by its id
 	const removeImage = (idToRemove: string): void => {
 		setImages(images.filter((image) => image.id !== idToRemove));
