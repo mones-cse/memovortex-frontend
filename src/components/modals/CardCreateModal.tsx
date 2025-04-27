@@ -28,10 +28,10 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 
 	const handleSaveNote = async (values: typeof form.values) => {
 		console.log("Form values:", values);
-		// if (form.isValid()) {
-		// 	await mutateAsync({ ...values, deckId });
-		// 	store.closeModal();
-		// }
+		if (form.isValid()) {
+			await mutateAsync({ ...values, deckId });
+			store.closeModal();
+		}
 	};
 
 	return (
