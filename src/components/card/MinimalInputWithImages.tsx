@@ -34,6 +34,34 @@ const MinimalInputWithImages = ({
 	const MAX_IMAGES: number = 10;
 	const formRef = useRef(form);
 
+	// Process the image file
+	const handleImageFile = useCallback(
+		(file: File): void => {
+			if (!file || images.length >= MAX_IMAGES) return;
+
+			setIsLoading(true);
+
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				const result = e.target?.result;
+				if (typeof result === "string") {
+					setImages((prevImages) => [
+						...prevImages,
+						{
+							file,
+							preview: result,
+							id: Date.now() + Math.random().toString(36).substring(2, 9),
+						},
+					]);
+				}
+				setIsLoading(false);
+			};
+
+			reader.readAsDataURL(file);
+		},
+		[images],
+	);
+
 	// Handle paste event
 	useEffect(() => {
 		const handlePaste = (e: ClipboardEvent) => {
@@ -80,35 +108,7 @@ const MinimalInputWithImages = ({
 		formRef.current.setFieldValue(formKeyImage, [...images]);
 		return () => window.removeEventListener("paste", handlePaste);
 		// TODO form is an object which may cause re-rendering need to check if it is necessary
-	}, [images, formKeyImage]);
-
-	// Process the image file
-	const handleImageFile = useCallback(
-		(file: File): void => {
-			if (!file || images.length >= MAX_IMAGES) return;
-
-			setIsLoading(true);
-
-			const reader = new FileReader();
-			reader.onload = (e) => {
-				const result = e.target?.result;
-				if (typeof result === "string") {
-					setImages((prevImages) => [
-						...prevImages,
-						{
-							file,
-							preview: result,
-							id: Date.now() + Math.random().toString(36).substring(2, 9),
-						},
-					]);
-				}
-				setIsLoading(false);
-			};
-
-			reader.readAsDataURL(file);
-		},
-		[images],
-	);
+	}, [images, formKeyImage, handleImageFile]);
 
 	// Handle file input change for multiple files
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
