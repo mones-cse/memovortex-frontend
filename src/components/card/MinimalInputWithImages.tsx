@@ -117,11 +117,6 @@ const MinimalInputWithImages = ({
 			const remainingSlots = MAX_IMAGES - images.length;
 
 			if (filesArray.length > remainingSlots) {
-				// Process only the allowed number of images
-				// filesArray
-				// 	.slice(0, remainingSlots)
-				// 	.forEach((file) => handleImageFile(file));
-
 				for (const file of filesArray.slice(0, remainingSlots)) {
 					handleImageFile(file);
 				}
@@ -129,8 +124,6 @@ const MinimalInputWithImages = ({
 				for (const file of filesArray) {
 					handleImageFile(file);
 				}
-
-				// filesArray.forEach((file) => handleImageFile(file));
 			}
 		}
 	};
