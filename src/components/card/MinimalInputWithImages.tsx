@@ -1,6 +1,6 @@
 import { Textarea } from "@mantine/core";
 import type { UseFormReturnType } from "@mantine/form";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FaPaperclip } from "react-icons/fa6";
 // Define interface for image object
 interface ImageItem {
@@ -83,29 +83,32 @@ const MinimalInputWithImages = ({
 	}, [images, formKeyImage]);
 
 	// Process the image file
-	const handleImageFile = (file: File): void => {
-		if (!file || images.length >= MAX_IMAGES) return;
+	const handleImageFile = useCallback(
+		(file: File): void => {
+			if (!file || images.length >= MAX_IMAGES) return;
 
-		setIsLoading(true);
+			setIsLoading(true);
 
-		const reader = new FileReader();
-		reader.onload = (e) => {
-			const result = e.target?.result;
-			if (typeof result === "string") {
-				setImages((prevImages) => [
-					...prevImages,
-					{
-						file,
-						preview: result,
-						id: Date.now() + Math.random().toString(36).substring(2, 9),
-					},
-				]);
-			}
-			setIsLoading(false);
-		};
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				const result = e.target?.result;
+				if (typeof result === "string") {
+					setImages((prevImages) => [
+						...prevImages,
+						{
+							file,
+							preview: result,
+							id: Date.now() + Math.random().toString(36).substring(2, 9),
+						},
+					]);
+				}
+				setIsLoading(false);
+			};
 
-		reader.readAsDataURL(file);
-	};
+			reader.readAsDataURL(file);
+		},
+		[images],
+	);
 
 	// Handle file input change for multiple files
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {

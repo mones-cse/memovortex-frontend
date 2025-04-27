@@ -16,7 +16,6 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 	const form = useForm({
 		mode: "uncontrolled",
 		initialValues: {
-			//   customText: { text: "xxx", images: [] },
 			frontText: "",
 			frontImage: [],
 			backText: "",

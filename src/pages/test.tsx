@@ -1,5 +1,4 @@
 import { DEFAULT_THEME, Text } from "@mantine/core";
-import { spread } from "axios";
 import { useState } from "react";
 import { MainContainer } from "../ui/MainContainer";
 
@@ -15,7 +14,11 @@ const Test = () => {
 		swatches,
 		value,
 		onChange,
-	}: { swatches: string[]; value: string; onChange: (x: string) => void }) => {
+	}: {
+		swatches: string[];
+		value: string;
+		onChange: (x: string) => void;
+	}) => {
 		return (
 			<div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
 				{swatches.map((color: string) => (
