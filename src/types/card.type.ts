@@ -62,8 +62,8 @@ export type TCardData = {
 		backText: string;
 		createdAt: string;
 		updatedAt: string;
-		frontImageUrl: string;
-		backImageUrl: string;
+		frontImage: string[];
+		backImage: string[];
 		cardType: "MULTIPLE_CHOICE" | "BASIC";
 		multipleChoiceOptions: string[];
 		tags: string[];

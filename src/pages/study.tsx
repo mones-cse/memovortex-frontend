@@ -1,19 +1,33 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useReviewStudyCardsMutation } from "../hooks/mutations/card";
-import { useFetchStudyCardsQuery } from "../hooks/queries/card";
+import {
+	useFetchImageForCardWithSignedUrlQuery,
+	useFetchStudyCardsQuery,
+} from "../hooks/queries/card";
 import type { TCardData } from "../types/card.type";
 import { MainContainer } from "../ui/MainContainer";
 
 const Study = () => {
 	const { id } = useParams();
-	const { data, isPending, isError, error } = useFetchStudyCardsQuery(id || "");
+
 	const [cardsData, setCardsData] = useState<TCardData[]>([]);
 	const [currentCard, setCurrentCard] = useState<TCardData | null>(null);
 	const [isQuestionWindow, setIsQuestionWindow] = useState(true);
 	const [isStudyComplete, setIsStudyComplete] = useState(false);
 
+	const { data, isPending, isError, error } = useFetchStudyCardsQuery(id || "");
 	const { mutateAsync } = useReviewStudyCardsMutation();
+
+	const { data: frontImage } = useFetchImageForCardWithSignedUrlQuery(
+		currentCard?.cardContent.frontImage || [],
+	);
+	const { data: backImage } = useFetchImageForCardWithSignedUrlQuery(
+		currentCard?.cardContent.backImage || [],
+	);
+
+	console.log("Front Image", frontImage);
+	console.log("Back Image", backImage);
 
 	// TODO: I need approximate next schedule time for each type of card submission
 	// Initialize cards when data is loaded
@@ -136,10 +150,10 @@ const Study = () => {
 											<p className="text-lg font-medium">
 												{currentCard.cardContent.frontText}
 											</p>
-											{currentCard.cardContent.frontImageUrl && (
+											{frontImage && frontImage.length > 0 && (
 												<div className="flex justify-center">
 													<img
-														src={currentCard.cardContent.frontImageUrl}
+														src={frontImage[0].data.url}
 														alt="Front card"
 														className="max-w-full h-auto rounded-lg object-contain"
 													/>
@@ -160,10 +174,10 @@ const Study = () => {
 											<p className="text-lg font-medium">
 												{currentCard.cardContent.backText}
 											</p>
-											{currentCard.cardContent.backImageUrl && (
+											{backImage && backImage.length > 0 && (
 												<div className="flex justify-center">
 													<img
-														src={currentCard.cardContent.backImageUrl}
+														src={backImage[0].data.url}
 														alt="Back card"
 														className="max-w-full h-auto rounded-lg object-contain"
 													/>
