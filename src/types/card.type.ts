@@ -1,3 +1,19 @@
+export type ImageItem = {
+	file: File;
+	preview: string;
+	id: string;
+};
+
+// TODO: make it efficient
+export type TCreateCardFormData = {
+	deckId: string;
+	frontText: string;
+	backText: string;
+	frontImage: ImageItem[];
+	backImage: ImageItem[];
+	cardType: "MULTIPLE_CHOICE" | "BASIC";
+};
+
 export type TCard = {
 	id: string;
 	deckId: string;
@@ -9,8 +25,17 @@ export type TCard = {
 	multipleChoiceOptions: string[];
 	tags: string[];
 };
-
-export type TCreateCard = Pick<TCard, "deckId" | "frontText" | "backText">;
+// TODO: make it efficient
+export type TCreateCard = {
+	deckId: string;
+	frontText: string;
+	backText: string;
+	frontImage?: string[];
+	backImage?: string[];
+	cardType: "MULTIPLE_CHOICE" | "BASIC";
+	multipleChoiceOptions?: string[];
+	tags?: string[];
+};
 
 export type TUpdateCard = Pick<TCard, "id"> & Partial<TCreateCard>;
 

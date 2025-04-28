@@ -5,20 +5,14 @@ import { FaAngleDown } from "react-icons/fa6";
 import { useCreateCardMutation } from "../../hooks/mutations/card";
 import { cardSchemas } from "../../schemas/index.schemas";
 import { userStore } from "../../stores/store";
+import type { ImageItem } from "../../types/card.type";
 import type { ModalProps } from "../../types/modal.type";
 import MinimalInputWithImages from "../card/MinimalInputWithImages";
-
-interface ImageItem {
-	file: File;
-	preview: string;
-	id: string;
-}
 
 export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 	const store = userStore();
 
 	const { mutateAsync } = useCreateCardMutation();
-
 	const form = useForm({
 		mode: "uncontrolled",
 		initialValues: {
@@ -26,7 +20,7 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 			frontImage: [] as ImageItem[],
 			backText: "",
 			backImage: [] as ImageItem[],
-			cardType: "BASIC",
+			cardType: "BASIC" as "BASIC" | "MULTIPLE_CHOICE",
 		},
 		validate: zodResolver(cardSchemas.cardCreateSchema),
 		validateInputOnChange: true,

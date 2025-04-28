@@ -2,6 +2,8 @@ import { Textarea } from "@mantine/core";
 import type { UseFormReturnType } from "@mantine/form";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaPaperclip } from "react-icons/fa6";
+
+// TODO: handle types gracefully and import them from type file
 // Define interface for image object
 interface ImageItem {
 	file: File;
@@ -23,7 +25,7 @@ const MinimalInputWithImages = ({
 		backText: string;
 		frontImage: ImageItem[];
 		backImage: ImageItem[];
-		cardType: string;
+		cardType: "BASIC" | "MULTIPLE_CHOICE";
 	}>;
 }) => {
 	// const [inputValue, setInputValue] = useState<string>("");
