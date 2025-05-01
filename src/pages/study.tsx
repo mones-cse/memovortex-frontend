@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { BackCard } from "../components/card/BackCard";
+import { FrontCard } from "../components/card/FrontCard";
+import { StudyInfo } from "../components/card/StudyInfo";
 import { useReviewStudyCardsMutation } from "../hooks/mutations/card";
 import {
 	useFetchImageForCardWithSignedUrlQuery,
@@ -15,6 +18,28 @@ const Study = () => {
 	const [currentCard, setCurrentCard] = useState<TCardData | null>(null);
 	const [isQuestionWindow, setIsQuestionWindow] = useState(true);
 	const [isStudyComplete, setIsStudyComplete] = useState(false);
+	const [currentFrontImageIndex, setCurrentFrontImageIndex] = useState(0);
+	const [currentBackImageIndex, setCurrentBackImageIndex] = useState(0);
+
+	const handleNextImage = (isFront: boolean) => {
+		if (isFront) {
+			setCurrentFrontImageIndex((prev) =>
+				frontImage && prev < frontImage.length - 1 ? prev + 1 : prev,
+			);
+		} else {
+			setCurrentBackImageIndex((prev) =>
+				backImage && prev < backImage.length - 1 ? prev + 1 : prev,
+			);
+		}
+	};
+
+	const handlePrevImage = (isFront: boolean) => {
+		if (isFront) {
+			setCurrentFrontImageIndex((prev) => (prev > 0 ? prev - 1 : prev));
+		} else {
+			setCurrentBackImageIndex((prev) => (prev > 0 ? prev - 1 : prev));
+		}
+	};
 
 	const { data, isPending, isError, error } = useFetchStudyCardsQuery(id || "");
 	const { mutateAsync } = useReviewStudyCardsMutation();
@@ -25,9 +50,6 @@ const Study = () => {
 	const { data: backImage } = useFetchImageForCardWithSignedUrlQuery(
 		currentCard?.cardContent.backImage || [],
 	);
-
-	console.log("Front Image", frontImage);
-	console.log("Back Image", backImage);
 
 	// TODO: I need approximate next schedule time for each type of card submission
 	// Initialize cards when data is loaded
@@ -57,6 +79,7 @@ const Study = () => {
 	};
 
 	const handleCardResponse = (response: "easy" | "good" | "hard" | "again") => {
+		console.log("Response", response);
 		const responsInNumber =
 			response === "easy"
 				? 4
@@ -88,6 +111,8 @@ const Study = () => {
 		if (newCards.length > 0) {
 			setCurrentCard(newCards[0]);
 			setIsQuestionWindow(true);
+			setCurrentFrontImageIndex(0);
+			setCurrentBackImageIndex(0);
 		} else {
 			setIsStudyComplete(true);
 		}
@@ -101,115 +126,41 @@ const Study = () => {
 		);
 	}
 
-	const AnswerSubmissionButtons = () => {
-		return (
-			<div className="grid grid-cols-4 gap-4 mt-4">
-				<button
-					type="button"
-					className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md transition-colors"
-					onClick={() => handleCardResponse("again")}
-				>
-					Again
-				</button>
-				<button
-					type="button"
-					className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors"
-					onClick={() => handleCardResponse("hard")}
-				>
-					Hard
-				</button>
-				<button
-					type="button"
-					className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors"
-					onClick={() => handleCardResponse("good")}
-				>
-					Medium
-				</button>
-				<button
-					type="button"
-					className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md transition-colors"
-					onClick={() => handleCardResponse("easy")}
-				>
-					Easy
-				</button>
-			</div>
-		);
-	};
-
 	return (
 		<MainContainer withSpace>
-			<div className="flex flex-col space-y-6">
-				<h1 className="text-2xl text-center">Study Session</h1>
+			<div className="flex flex-col space-y-3">
+				<h1 className="text-xl text-center">Study Session</h1>
 				{currentCard && (
-					<div className="w-full h-[60vh] bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+					<div className="w-full h-40vh] bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
 						<div className="h-full flex flex-col">
 							<div className="p-6 flex-1 overflow-auto">
 								{isQuestionWindow ? (
-									<div className="h-full flex flex-col">
-										<div className="flex-1 space-y-4 overflow-auto">
-											<p className="text-lg font-medium">
-												{currentCard.cardContent.frontText}
-											</p>
-											{frontImage && frontImage.length > 0 && (
-												<div className="flex justify-center">
-													<img
-														src={frontImage[0].data.url}
-														alt="Front card"
-														className="max-w-full h-auto rounded-lg object-contain"
-													/>
-												</div>
-											)}
-										</div>
-										<button
-											type="button"
-											className="w-full mt-6 px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors font-medium"
-											onClick={handleShowAnswer}
-										>
-											Show Answer
-										</button>
-									</div>
+									<FrontCard
+										text={currentCard.cardContent.frontText}
+										images={frontImage}
+										currentImageIndex={currentFrontImageIndex}
+										onNextImage={() => handleNextImage(true)}
+										onPrevImage={() => handlePrevImage(true)}
+										onShowAnswer={handleShowAnswer}
+									/>
 								) : (
-									<div className="h-full flex flex-col">
-										<div className="flex-1 space-y-4 overflow-auto">
-											<p className="text-lg font-medium">
-												{currentCard.cardContent.backText}
-											</p>
-											{backImage && backImage.length > 0 && (
-												<div className="flex justify-center">
-													<img
-														src={backImage[0].data.url}
-														alt="Back card"
-														className="max-w-full h-auto rounded-lg object-contain"
-													/>
-												</div>
-											)}
-										</div>
-										<AnswerSubmissionButtons />
-									</div>
+									<BackCard
+										text={currentCard.cardContent.backText}
+										images={backImage}
+										currentImageIndex={currentBackImageIndex}
+										onNextImage={() => handleNextImage(false)}
+										onPrevImage={() => handlePrevImage(false)}
+										onSubmitAnswer={handleCardResponse}
+									/>
 								)}
 							</div>
 						</div>
 					</div>
 				)}
-				<div className="space-y-2">
-					<p className="text-sm text-gray-500 text-center">
-						Cards remaining: {cardsData.length}
-					</p>
-					{data?.data.deck && (
-						<div className="text-sm text-gray-500 space-y-1">
-							<p className="text-center">New: {data.data.deck.stateNew}</p>
-							<p className="text-center">
-								Learning: {data.data.deck.stateLearning}
-							</p>
-							<p className="text-center">
-								Review: {data.data.deck.stateReview}
-							</p>
-							<p className="text-center">
-								Relearning: {data.data.deck.stateRelearning}
-							</p>
-						</div>
-					)}
-				</div>
+				<StudyInfo
+					remainingCards={cardsData.length}
+					deckStats={data?.data.deck}
+				/>
 			</div>
 		</MainContainer>
 	);

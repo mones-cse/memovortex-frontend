@@ -31,10 +31,9 @@ export const useFetchImageForCardWithSignedUrlQuery = (
 			if (fileKeys) {
 				for (const fileKey of fileKeys) {
 					const temp = await fetchDocumentSignedUrl(fileKey);
-					results.push(temp);
+					results.push(temp.data.url);
 				}
 			}
-			console.log("🧨🧨🧨", results);
 			return results;
 		},
 	});
