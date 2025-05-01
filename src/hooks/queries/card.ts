@@ -38,3 +38,27 @@ export const useFetchImageForCardWithSignedUrlQuery = (
 		},
 	});
 };
+
+// this is the same as the above function but returns an array of objects with s3FileKey and url
+export const useFetchImageForCardWithSignedUrlQueryV2 = (
+	s3FileKeys: string[],
+) => {
+	return useQuery({
+		queryKey: ["studyCardImages", s3FileKeys],
+		queryFn: async (context: QueryFunctionContext) => {
+			const results: { s3FileKey: string; url: string }[] = [];
+			const fileKeys = context.queryKey[1] as string[];
+
+			if (fileKeys) {
+				for (const fileKey of fileKeys) {
+					const temp = await fetchDocumentSignedUrl(fileKey);
+					results.push({
+						s3FileKey: fileKey,
+						url: temp.data.url,
+					});
+				}
+			}
+			return results;
+		},
+	});
+};
