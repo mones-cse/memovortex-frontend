@@ -11,7 +11,8 @@ import { toast } from "react-toastify";
 import { useUpdateCardMutation } from "../../hooks/mutations/card";
 import { useFetchImageForCardWithSignedUrlQueryV2 } from "../../hooks/queries/card";
 import { cardSchemas } from "../../schemas/index.schemas";
-import type { TCardData } from "../../types/card.type";
+import type { ImageItem, TCardData } from "../../types/card.type";
+import MinimalInputWithImagesUpdate from "./MinimalInputWithImagesUpdate";
 
 type CardFormValues = {
 	frontText: string;
@@ -19,6 +20,8 @@ type CardFormValues = {
 	cardType: "MULTIPLE_CHOICE" | "BASIC";
 	frontImage: string[];
 	backImage: string[];
+	newFrontImages: ImageItem[];
+	newBackImages: ImageItem[];
 };
 type CardImagesProps = {
 	images: { url: string; s3FileKey: string }[] | undefined;
@@ -70,34 +73,6 @@ const CardImages: React.FC<CardImagesProps> = ({ images, onRemoveImage }) => {
 				</div>
 			))}
 		</div>
-	);
-};
-
-const FrontText = ({ form }: { form: UseFormReturnType<CardFormValues> }) => {
-	return (
-		<Textarea
-			label="Card Front"
-			placeholder="Insert Question"
-			autosize
-			minRows={4}
-			maxRows={6}
-			{...form.getInputProps("frontText")}
-			key={form.key("frontText")}
-		/>
-	);
-};
-
-const BackText = ({ form }: { form: UseFormReturnType<CardFormValues> }) => {
-	return (
-		<Textarea
-			label="Card Back"
-			placeholder="Insert Answer"
-			autosize
-			minRows={4}
-			maxRows={6}
-			{...form.getInputProps("backText")}
-			key={form.key("backText")}
-		/>
 	);
 };
 
@@ -213,6 +188,8 @@ const CardContentView: React.FC<CardContentViewProps> = ({
 			cardType: selectedCard.cardContent.cardType,
 			frontImage: selectedCard.cardContent.frontImage,
 			backImage: selectedCard.cardContent.backImage,
+			newBackImages: [] as ImageItem[],
+			newFrontImages: [] as ImageItem[],
 		},
 		validate: zodResolver(cardSchemas.cardUpdateSchema),
 		validateInputOnChange: true,
@@ -222,13 +199,23 @@ const CardContentView: React.FC<CardContentViewProps> = ({
 		<form onSubmit={form.onSubmit(handleUpdateCard)}>
 			<div className="flex flex-col gap-2">
 				<CardType form={form} />
-				<FrontText form={form} />
+				{/* <FrontText form={form} /> */}
+				<MinimalInputWithImagesUpdate
+					formKeyText="frontText"
+					formKeyImage="newFrontImages"
+					form={form}
+				/>
 				<CardImages
 					images={frontImage}
 					onRemoveImage={handleRemoveImage(true)}
 					key={form.key("frontImage")}
 				/>
-				<BackText form={form} />
+				<MinimalInputWithImagesUpdate
+					formKeyText="backText"
+					formKeyImage="newBackImages"
+					form={form}
+				/>
+				{/* <BackText form={form} /> */}
 				<CardImages
 					images={backImage}
 					onRemoveImage={handleRemoveImage(false)}

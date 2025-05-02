@@ -14,6 +14,20 @@ export type TCreateCardFormData = {
 	cardType: "MULTIPLE_CHOICE" | "BASIC";
 };
 
+export type TUpdateCardFormData = {
+	id: string;
+	deckId: string;
+	frontText: string;
+	backText: string;
+	frontImage: string[];
+	backImage: string[];
+	cardType: "MULTIPLE_CHOICE" | "BASIC";
+	multipleChoiceOptions?: string[];
+	tags?: string[];
+	newFrontImages?: ImageItem[];
+	newBackImages?: ImageItem[];
+};
+
 export type TCard = {
 	id: string;
 	deckId: string;
