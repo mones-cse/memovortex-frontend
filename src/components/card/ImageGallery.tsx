@@ -1,14 +1,8 @@
 import { useState } from "react";
 import type { FC } from "react";
+import type { TImageGalleryProps } from "../../types/card.type";
 
-interface ImageGalleryProps {
-	images: string[];
-	currentIndex: number;
-	onNext: () => void;
-	onPrev: () => void;
-}
-
-export const ImageGallery: FC<ImageGalleryProps> = ({
+export const ImageGallery: FC<TImageGalleryProps> = ({
 	images,
 	currentIndex,
 	onNext,

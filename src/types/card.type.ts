@@ -39,6 +39,7 @@ export type TCard = {
 	multipleChoiceOptions: string[];
 	tags: string[];
 };
+
 // TODO: make it efficient
 export type TCreateCard = {
 	deckId: string;
@@ -90,6 +91,28 @@ export type TReviewStudyCards = {
 	rating: 1 | 2 | 3 | 4;
 };
 
-// export type TCreateDeck = Pick<TDeck, "deckTitle" | "deckDescription">;
+export interface TImageGalleryProps {
+	images: string[];
+	currentIndex: number;
+	onNext: () => void;
+	onPrev: () => void;
+}
 
-// export type TUpdateDeck = Pick<TDeck, "id"> & Partial<TCreateDeck>;
+export interface TCardImagesProps {
+	images: { url: string; s3FileKey: string }[] | undefined;
+	onRemoveImage: (url: string) => void;
+}
+
+export interface TCardFormValues {
+	frontText: string;
+	backText: string;
+	cardType: "MULTIPLE_CHOICE" | "BASIC";
+	frontImage: string[];
+	backImage: string[];
+	newFrontImages: ImageItem[];
+	newBackImages: ImageItem[];
+}
+
+export type TImageState = {
+	[key: string]: boolean;
+};

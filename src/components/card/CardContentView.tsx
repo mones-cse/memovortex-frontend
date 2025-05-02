@@ -1,6 +1,6 @@
 // CardContentView.tsx
 
-import { Button, Input, Textarea } from "@mantine/core";
+import { Button, Input } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import type { UseFormReturnType } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
@@ -11,34 +11,22 @@ import { toast } from "react-toastify";
 import { useUpdateCardMutation } from "../../hooks/mutations/card";
 import { useFetchImageForCardWithSignedUrlQueryV2 } from "../../hooks/queries/card";
 import { cardSchemas } from "../../schemas/index.schemas";
-import type { ImageItem, TCardData } from "../../types/card.type";
+import type {
+	ImageItem,
+	TCardData,
+	TCardFormValues,
+	TCardImagesProps,
+	TImageState,
+} from "../../types/card.type";
 import MinimalInputWithImagesUpdate from "./MinimalInputWithImagesUpdate";
-
-type CardFormValues = {
-	frontText: string;
-	backText: string;
-	cardType: "MULTIPLE_CHOICE" | "BASIC";
-	frontImage: string[];
-	backImage: string[];
-	newFrontImages: ImageItem[];
-	newBackImages: ImageItem[];
-};
-type CardImagesProps = {
-	images: { url: string; s3FileKey: string }[] | undefined;
-	onRemoveImage: (url: string) => void;
-};
-
-type ImageState = {
-	[key: string]: boolean;
-};
 
 type CardContentViewProps = {
 	selectedCard: TCardData;
 	onUpdate: () => void;
 };
 
-const CardImages: React.FC<CardImagesProps> = ({ images, onRemoveImage }) => {
-	const [deletingImages, setDeletingImages] = React.useState<ImageState>({});
+const CardImages: React.FC<TCardImagesProps> = ({ images, onRemoveImage }) => {
+	const [deletingImages, setDeletingImages] = React.useState<TImageState>({});
 
 	if (!images || images.length === 0) return null;
 
@@ -94,7 +82,7 @@ const DueDateInfo = ({ dueDate }: { dueDate: Date }) => {
 const ActionsButtons = ({
 	form,
 	onUpdate,
-}: { form: UseFormReturnType<CardFormValues>; onUpdate: () => void }) => {
+}: { form: UseFormReturnType<TCardFormValues>; onUpdate: () => void }) => {
 	return (
 		// TODO: cancle button does not make sense here\
 		<div className="flex gap-1 justify-end">
@@ -113,7 +101,7 @@ const ActionsButtons = ({
 	);
 };
 
-const CardType = ({ form }: { form: UseFormReturnType<CardFormValues> }) => {
+const CardType = ({ form }: { form: UseFormReturnType<TCardFormValues> }) => {
 	return (
 		<Input.Wrapper label="Card Type">
 			<Input

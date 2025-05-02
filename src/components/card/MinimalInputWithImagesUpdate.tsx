@@ -2,14 +2,7 @@ import { Textarea } from "@mantine/core";
 import type { UseFormReturnType } from "@mantine/form";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaPaperclip } from "react-icons/fa6";
-
-// TODO: handle types gracefully and import them from type file
-// Define interface for image object
-interface ImageItem {
-	file: File;
-	preview: string;
-	id: string;
-}
+import type { ImageItem } from "../../types/card.type";
 
 const MinimalInputWithImagesUpdate = ({
 	formKeyText,
