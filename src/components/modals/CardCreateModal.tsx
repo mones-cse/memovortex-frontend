@@ -1,6 +1,8 @@
 import { Button, Input } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { set } from "date-fns";
 import { zodResolver } from "mantine-form-zod-resolver";
+import { useState } from "react";
 import { FaAngleDown } from "react-icons/fa6";
 import { useCreateCardMutation } from "../../hooks/mutations/card";
 import { cardSchemas } from "../../schemas/index.schemas";
@@ -11,8 +13,9 @@ import MinimalInputWithImages from "../card/MinimalInputWithImages";
 
 export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 	const store = userStore();
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	const { mutateAsync } = useCreateCardMutation();
+	const { mutateAsync: useCreate } = useCreateCardMutation();
 	const form = useForm({
 		mode: "uncontrolled",
 		initialValues: {
@@ -28,8 +31,12 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 
 	const handleSaveNote = async (values: typeof form.values) => {
 		console.log("Form values:", values);
+		setIsSubmitting(true);
 		if (form.isValid()) {
-			await mutateAsync({ ...values, deckId });
+			const useCreateMutation = await useCreate({ ...values, deckId });
+			if (useCreateMutation.isSuccess || useCreateMutation.isError) {
+				setIsSubmitting(false);
+			}
 			store.closeModal();
 		}
 	};
@@ -78,7 +85,7 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 						variant="filled"
 						color="blue"
 						type="submit"
-						disabled={!form.isDirty()}
+						disabled={!form.isDirty() || isSubmitting}
 					>
 						Save
 					</Button>
