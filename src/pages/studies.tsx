@@ -1,4 +1,4 @@
-import { Button, Card, Group, SimpleGrid, Text } from "@mantine/core";
+import { Badge, Button, Card, Group, SimpleGrid, Text } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { useFetchDecksQuery } from "../hooks/queries/deck";
 import { userStore } from "../stores/store";
@@ -15,6 +15,10 @@ const Studies = () => {
 
 	const handleStudy = (id: string) => {
 		navigate(`/studies/${id}`);
+	};
+
+	const handleBrowse = (id: string) => {
+		navigate(`/card/${id}`);
 	};
 
 	if (isPending) {
@@ -41,21 +45,37 @@ const Studies = () => {
 
 						<Group mt="md" justify="space-between">
 							<Group gap={5}>
-								<Text size="sm">New: {deck.stateNew}</Text>
-								<Text size="sm">Learning: {deck.stateLearning}</Text>
-								<Text size="sm">Review: {deck.stateReview}</Text>
-								<Text size="sm">Relearning: {deck.stateRelearning}</Text>
+								<Badge color="blue" variant="light" radius="sm">
+									New: {deck.stateNew}
+								</Badge>
+								<Badge color="violet" variant="light" radius="sm">
+									Learning: {deck.stateLearning}
+								</Badge>
+								<Badge color="green" variant="light" radius="sm">
+									Review: {deck.stateReview}
+								</Badge>
+								<Badge color="orange" variant="light" radius="sm">
+									Relearning: {deck.stateRelearning}
+								</Badge>
 							</Group>
 						</Group>
 
-						<Button
-							fullWidth
-							mt="md"
-							radius="md"
-							onClick={() => handleStudy(deck.id)}
-						>
-							Study
-						</Button>
+						<Group mt="md" grow>
+							<Button
+								variant="filled"
+								color="blue"
+								onClick={() => handleStudy(deck.id)}
+							>
+								Study
+							</Button>
+							<Button
+								variant="outline"
+								color="blue"
+								onClick={() => handleBrowse(deck.id)}
+							>
+								Cards
+							</Button>
+						</Group>
 					</Card>
 				))}
 			</SimpleGrid>

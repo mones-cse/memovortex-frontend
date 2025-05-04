@@ -1,5 +1,12 @@
-import { Button, Menu } from "@mantine/core";
-import { Table } from "@mantine/core";
+import {
+	Badge,
+	Button,
+	Card,
+	Group,
+	Menu,
+	SimpleGrid,
+	Text,
+} from "@mantine/core";
 import { FaPen, FaRegTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useFetchDecksQuery } from "../hooks/queries/deck";
@@ -47,34 +54,6 @@ const Decks = () => {
 		return <div>Error: {error.message}</div>;
 	}
 
-	const StudyButton = ({ deckId }: { deckId: string }) => {
-		return (
-			<Button
-				size="xs"
-				variant="outline"
-				color="blue"
-				className="mr-2"
-				onClick={() => handleStudy(deckId)}
-			>
-				Study
-			</Button>
-		);
-	};
-
-	const BrowsButton = ({ deckId }: { deckId: string }) => {
-		return (
-			<Button
-				size="xs"
-				variant="outline"
-				color="blue"
-				className="mr-2"
-				onClick={() => handleBrowse(deckId)}
-			>
-				Cards
-			</Button>
-		);
-	};
-
 	const ActionButton = ({ deck }: { deck: TUpdateDeck }) => {
 		return (
 			<Menu shadow="md" width={120}>
@@ -102,21 +81,62 @@ const Decks = () => {
 		);
 	};
 
-	const rows = data?.data.map((element: TDeck) => (
-		<Table.Tr key={element.id} className="justify-between">
-			<Table.Td>{element.deckTitle}</Table.Td>
-			<Table.Td>{element.deckDescription}</Table.Td>
-			<Table.Td>{element.stateNew}</Table.Td>
-			<Table.Td>{element.stateLearning}</Table.Td>
-			<Table.Td>{element.stateReview}</Table.Td>
-			<Table.Td>{element.stateRelearning}</Table.Td>
-			<Table.Td className="float-end">
-				<StudyButton deckId={element.id} />
-				<BrowsButton deckId={element.id} />
-				<ActionButton deck={element} />
-			</Table.Td>
-		</Table.Tr>
-	));
+	const DeckCards = ({ decks }: { decks: TDeck[] }) => {
+		return (
+			<SimpleGrid cols={3} spacing="md">
+				{decks.map((deck) => (
+					<Card key={deck.id} shadow="sm" padding="lg" radius="md" withBorder>
+						<Card.Section withBorder inheritPadding py="xs">
+							<Group justify="space-between">
+								<Text fw={500} size="lg">
+									{deck.deckTitle}
+								</Text>
+								<ActionButton deck={deck} />
+							</Group>
+						</Card.Section>
+
+						<Text mt="sm" c="dimmed" size="sm">
+							{deck.deckDescription}
+						</Text>
+
+						<Group mt="md" justify="space-between">
+							<Group gap={5}>
+								<Badge color="blue" variant="light" radius="sm">
+									New: {deck.stateNew}
+								</Badge>
+								<Badge color="violet" variant="light" radius="sm">
+									Learning: {deck.stateLearning}
+								</Badge>
+								<Badge color="green" variant="light" radius="sm">
+									Review: {deck.stateReview}
+								</Badge>
+								<Badge color="orange" variant="light" radius="sm">
+									Relearning: {deck.stateRelearning}
+								</Badge>
+							</Group>
+						</Group>
+
+						<Group mt="md" grow>
+							<Button
+								variant="filled"
+								color="blue"
+								onClick={() => handleStudy(deck.id)}
+							>
+								Study
+							</Button>
+							<Button
+								variant="outline"
+								color="blue"
+								onClick={() => handleBrowse(deck.id)}
+							>
+								Cards
+							</Button>
+						</Group>
+					</Card>
+				))}
+			</SimpleGrid>
+		);
+	};
 
 	return (
 		<MainContainer withSpace>
@@ -125,22 +145,7 @@ const Decks = () => {
 				<Button onClick={handleNewDeckModal}>Create Deck</Button>
 			</div>
 			<br />
-			<div>
-				<Table>
-					<Table.Thead>
-						<Table.Tr>
-							<Table.Th>Deck Title</Table.Th>
-							<Table.Th>Deck Description</Table.Th>
-							<Table.Th>New</Table.Th>
-							<Table.Th>Learning</Table.Th>
-							<Table.Th>Review</Table.Th>
-							<Table.Th>Relearing</Table.Th>
-							<Table.Th className="float-end">Actions</Table.Th>
-						</Table.Tr>
-					</Table.Thead>
-					<Table.Tbody>{rows}</Table.Tbody>
-				</Table>
-			</div>
+			<DeckCards decks={data?.data || []} />
 		</MainContainer>
 	);
 };
