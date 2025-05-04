@@ -1,6 +1,5 @@
 import { Button, Input } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { set } from "date-fns";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useState } from "react";
 import { FaAngleDown } from "react-icons/fa6";
@@ -29,7 +28,7 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 		validateInputOnChange: true,
 	});
 
-	const handleSaveNote = async (values: typeof form.values) => {
+	const handleSaveCard = async (values: typeof form.values) => {
 		console.log("Form values:", values);
 		setIsSubmitting(true);
 		if (form.isValid()) {
@@ -43,7 +42,7 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 
 	return (
 		<div className="py-2">
-			<form onSubmit={form.onSubmit(handleSaveNote)}>
+			<form onSubmit={form.onSubmit(handleSaveCard)}>
 				<Input.Wrapper label="Card Type">
 					<Input
 						component="select"
@@ -72,6 +71,15 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 					formKeyText={"backText"}
 					formKeyImage={"backImage"}
 				/>
+
+				{isSubmitting && (
+					<p className="text-sm font-bold text-gray-900 mt-2">
+						Creating ...{" "}
+						<span className="inline-block animate-spin duration-[500ms]">
+							↻
+						</span>
+					</p>
+				)}
 
 				<div className="flex gap-1 justify-end mt-4">
 					<Button
