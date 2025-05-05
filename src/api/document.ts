@@ -53,14 +53,19 @@ export const uploadFileToS3 = async ({
 	url: string;
 	file: File;
 	onUploadProgress: (progressEvent: AxiosProgressEvent) => void;
-}) => {
-	console.log("🚀 ~ file:", file, url);
-	return axios.put(url, file, {
-		headers: {
-			"Content-Type": file.type,
-		},
-		onUploadProgress,
-	});
+}): Promise<{ status: number }> => {
+	try {
+		const response = await axios.put(url, file, {
+			headers: {
+				"Content-Type": file.type,
+			},
+			onUploadProgress,
+		});
+		return { status: response.status };
+	} catch (error) {
+		console.error("Error uploading file:", error);
+		return { status: 500 };
+	}
 };
 
 export const createDocument = async (data: TCreateDocument) => {
@@ -71,7 +76,10 @@ export const createDocument = async (data: TCreateDocument) => {
 export const createFolder = async ({
 	folderName,
 	parentId,
-}: { folderName: string; parentId: string | null }) => {
+}: {
+	folderName: string;
+	parentId: string | null;
+}) => {
 	const data = {
 		fileName: folderName,
 		isDirectory: true,
