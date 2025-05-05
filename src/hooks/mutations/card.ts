@@ -16,8 +16,11 @@ import type {
 
 const uploadImageToS3 = async (
 	image: ImageItem,
+	onProgress: (progress: number) => void,
 ): Promise<string | undefined> => {
-	const fileName = `${Math.random().toString(36).substring(2, 15) + Date.now().toString(36)}-${image.file.name}`;
+	const fileName = `${
+		Math.random().toString(36).substring(2, 15) + Date.now().toString(36)
+	}-${image.file.name}`;
 	const fileType = image.file.type;
 	const signedUrlResult = await generateS3UploadUrl({
 		fileName,
@@ -28,7 +31,12 @@ const uploadImageToS3 = async (
 		url: signedUrlResult.data.url,
 		file: image.file,
 		onUploadProgress: (progressEvent) => {
-			console.log("Upload progress:", progressEvent);
+			if (progressEvent.total) {
+				const percentCompleted = Math.round(
+					(progressEvent.loaded * 100) / progressEvent.total,
+				);
+				onProgress(percentCompleted);
+			}
 		},
 	});
 
@@ -36,12 +44,19 @@ const uploadImageToS3 = async (
 };
 
 const uploadMultipleImages = async (
-	images: ImageItem[] = [],
+	images: ImageItem[],
+	onImageProgress: (index: number, progress: number) => void,
 ): Promise<string[]> => {
 	const uploadedFileNames: string[] = [];
 
-	for (const image of images) {
-		const fileName = await uploadImageToS3(image);
+	// use empty array to store progress for each image
+	const imagesToUpload = images || [];
+
+	for (let i = 0; i < imagesToUpload.length; i++) {
+		const image = imagesToUpload[i];
+		const fileName = await uploadImageToS3(image, (progress) =>
+			onImageProgress(i, progress),
+		);
 		if (fileName) {
 			uploadedFileNames.push(fileName);
 		}
@@ -57,7 +72,15 @@ const isNewImageAvailable = (data: TUpdateCardFormData): boolean => {
 export const useCreateCardMutation = () => {
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: async (data: TCreateCardFormData) => {
+		mutationFn: async (
+			data: TCreateCardFormData & {
+				onImageProgress?: (
+					side: "front" | "back",
+					index: number,
+					progress: number,
+				) => void;
+			},
+		) => {
 			const dataToCreateCard = {
 				deckId: data.deckId,
 				frontText: data.frontText,
@@ -67,15 +90,36 @@ export const useCreateCardMutation = () => {
 				backImage: [] as string[],
 			};
 
-			// check if data has frontImage and backImage has any value
+			// Upload front images with progress tracking
 			if (data.frontImage.length > 0) {
-				const uploadedFrontImages = await uploadMultipleImages(data.frontImage);
+				const uploadedFrontImages = await uploadMultipleImages(
+					data.frontImage,
+					(index, progress) => {
+						if (data.onImageProgress) {
+							// Instead of passing onImageProgress directly,
+							// we change the function for specific front side
+							data.onImageProgress("front", index, progress);
+						}
+					},
+				);
 				dataToCreateCard.frontImage.push(...uploadedFrontImages);
 			}
+
+			// Upload back images with progress tracking
 			if (data.backImage.length > 0) {
-				const uploadedBackImages = await uploadMultipleImages(data.backImage);
+				const uploadedBackImages = await uploadMultipleImages(
+					data.backImage,
+					(index, progress) => {
+						if (data.onImageProgress) {
+							// Instead of passing onImageProgress directly,
+							// we change the function for specific back side
+							data.onImageProgress("back", index, progress);
+						}
+					},
+				);
 				dataToCreateCard.backImage.push(...uploadedBackImages);
 			}
+
 			console.log("🔥🔥🔥🔥 mutaion ->", dataToCreateCard);
 			const result = await createCard(dataToCreateCard);
 			return result;
@@ -90,7 +134,15 @@ export const useCreateCardMutation = () => {
 export const useUpdateCardMutation = () => {
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: async (data: TUpdateCardFormData) => {
+		mutationFn: async (
+			data: TUpdateCardFormData & {
+				onImageProgress?: (
+					side: "front" | "back",
+					index: number,
+					progress: number,
+				) => void;
+			},
+		) => {
 			try {
 				const dataToCreateCard = {
 					deckId: data.deckId,
@@ -107,6 +159,13 @@ export const useUpdateCardMutation = () => {
 					if (data.newFrontImages && data.newFrontImages.length > 0) {
 						const uploadedFrontImages = await uploadMultipleImages(
 							data.newFrontImages,
+							(index, progress) => {
+								if (data.onImageProgress) {
+									// Instead of passing onImageProgress directly,
+									// we change the function for specific front side
+									data.onImageProgress("front", index, progress);
+								}
+							},
 						);
 						dataToCreateCard.frontImage.push(...uploadedFrontImages);
 					}
@@ -114,6 +173,13 @@ export const useUpdateCardMutation = () => {
 					if (data.newBackImages && data.newBackImages.length > 0) {
 						const uploadedBackImages = await uploadMultipleImages(
 							data.newBackImages,
+							(index, progress) => {
+								if (data.onImageProgress) {
+									// Instead of passing onImageProgress directly,
+									// we change the function for specific back side
+									data.onImageProgress("back", index, progress);
+								}
+							},
 						);
 						dataToCreateCard.backImage.push(...uploadedBackImages);
 					}

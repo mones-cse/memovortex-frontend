@@ -1,10 +1,10 @@
 // CardContentView.tsx
 
-import { Button, Input } from "@mantine/core";
+import { Button, Input, Progress } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import type { UseFormReturnType } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
-import React from "react";
+import React, { useState } from "react";
 import { FaAngleDown } from "react-icons/fa";
 import { RiCloseCircleLine } from "react-icons/ri";
 import { toast } from "react-toastify";
@@ -82,7 +82,12 @@ const DueDateInfo = ({ dueDate }: { dueDate: Date }) => {
 const ActionsButtons = ({
 	form,
 	onUpdate,
-}: { form: UseFormReturnType<TCardFormValues>; onUpdate: () => void }) => {
+	isSubmitting,
+}: {
+	form: UseFormReturnType<TCardFormValues>;
+	onUpdate: () => void;
+	isSubmitting: boolean;
+}) => {
 	return (
 		// TODO: cancle button does not make sense here\
 		<div className="flex gap-1 justify-end">
@@ -93,7 +98,7 @@ const ActionsButtons = ({
 				variant="filled"
 				color="blue"
 				type="submit"
-				disabled={!form.isDirty()}
+				disabled={!form.isDirty() || isSubmitting}
 			>
 				Update
 			</Button>
@@ -124,20 +129,93 @@ const CardContentView: React.FC<CardContentViewProps> = ({
 	selectedCard,
 	onUpdate,
 }) => {
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [uploadProgress, setUploadProgress] = useState<{
+		front: Record<number, number>;
+		back: Record<number, number>;
+	}>({
+		front: {},
+		back: {},
+	});
+
 	const dueDate = new Date(selectedCard.card.due);
 	const { mutateAsync: updateCard } = useUpdateCardMutation();
 
+	// Helper to render progress bars for images
+	const renderImageProgress = (side: "front" | "back", images: ImageItem[]) => {
+		console.log(`Rendering progress for ${side} images:`, images);
+		console.log("Current upload progress:", uploadProgress);
+
+		// Get all the indices from the progress object
+		const indices = Object.keys(uploadProgress[side]).map(Number);
+
+		if (!isSubmitting || (!images.length && !indices.length)) return null;
+
+		// Store image file names in a ref to keep them available during upload
+		const imageFileNames = images.map((img) => img.file.name);
+
+		return (
+			<div className="mt-2 space-y-2">
+				{indices.map((index) => (
+					<div key={index} className="flex items-center">
+						<div className="w-8 text-xs">
+							{uploadProgress[side][index] || 0}%
+						</div>
+						<div className="flex-1">
+							<Progress
+								value={uploadProgress[side][index] || 0}
+								color={uploadProgress[side][index] === 100 ? "green" : "blue"}
+								size="sm"
+								radius="xl"
+							/>
+						</div>
+						<div className="ml-2 text-xs truncate max-w-[120px]">
+							{index < imageFileNames.length
+								? imageFileNames[index]
+								: `Image ${index + 1}`}
+						</div>
+					</div>
+				))}
+			</div>
+		);
+	};
+
+	const handleImageProgress = (
+		side: "front" | "back",
+		index: number,
+		progress: number,
+	) => {
+		setUploadProgress((prev) => ({
+			...prev,
+			[side]: {
+				...prev[side],
+				[index]: progress,
+			},
+		}));
+	};
+
 	const handleUpdateCard = async (values: typeof form.values) => {
 		console.log("Form values:", values);
+		setIsSubmitting(true);
 		if (form.isValid()) {
-			await updateCard({
-				...values,
-				id: selectedCard.card.id,
-				deckId: selectedCard.card.deckId,
-			});
-			// TODO: remove onUpdate and make updatebutton disabled till the form is dirty
-			onUpdate();
+			try {
+				await updateCard({
+					...values,
+					id: selectedCard.card.id,
+					deckId: selectedCard.card.deckId,
+					onImageProgress: handleImageProgress,
+				});
+
+				// TODO: remove onUpdate and make updatebutton disabled till the form is dirty
+				setIsSubmitting(false);
+				onUpdate();
+			} catch (error) {
+				console.error("Error updating card:", error);
+				setIsSubmitting(false);
+				toast.error("Error updating card");
+			}
 		} else {
+			setIsSubmitting(false);
 			console.log("Form validation failed:", form.errors);
 			const errors = Object.entries(form.errors)
 				.map(([field, error]) => `${field}: ${error}`)
@@ -193,6 +271,7 @@ const CardContentView: React.FC<CardContentViewProps> = ({
 					formKeyImage="newFrontImages"
 					form={form}
 				/>
+				{renderImageProgress("front", form.values.newFrontImages)}
 				<CardImages
 					images={frontImage}
 					onRemoveImage={handleRemoveImage(true)}
@@ -203,14 +282,27 @@ const CardContentView: React.FC<CardContentViewProps> = ({
 					formKeyImage="newBackImages"
 					form={form}
 				/>
-				{/* <BackText form={form} /> */}
+				{renderImageProgress("back", form.values.newBackImages)}
+
 				<CardImages
 					images={backImage}
 					onRemoveImage={handleRemoveImage(false)}
 					key={form.key("backImage")}
 				/>
 				<DueDateInfo dueDate={dueDate} />
-				<ActionsButtons form={form} onUpdate={onUpdate} />
+				{isSubmitting && (
+					<p className="text-sm font-bold text-gray-900 mt-2">
+						Updating ...{" "}
+						<span className="inline-block animate-spin duration-[500ms]">
+							↻
+						</span>
+					</p>
+				)}
+				<ActionsButtons
+					form={form}
+					onUpdate={onUpdate}
+					isSubmitting={isSubmitting}
+				/>
 			</div>
 		</form>
 	);

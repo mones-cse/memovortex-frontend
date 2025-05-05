@@ -2,6 +2,7 @@ export type ImageItem = {
 	file: File;
 	preview: string;
 	id: string;
+	progress?: number;
 };
 
 // TODO: make it efficient
