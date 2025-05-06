@@ -19,6 +19,11 @@ const MinimalInputWithImagesUpdate = ({
 		cardType: "BASIC" | "MULTIPLE_CHOICE";
 		newBackImages: ImageItem[];
 		newFrontImages: ImageItem[];
+		multipleChoiceOptions: {
+			id: string;
+			text: string;
+			isCorrect: boolean;
+		}[];
 	}>;
 }) => {
 	// const [inputValue, setInputValue] = useState<string>("");

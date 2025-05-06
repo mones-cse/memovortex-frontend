@@ -21,6 +21,17 @@ export type TCardCreateFormValues = {
 	multipleChoiceOptions: MultipleChoiceOption[];
 };
 
+export type TCardCreateUpdateFormValues = {
+	cardType: "MULTIPLE_CHOICE" | "BASIC";
+	frontText: string;
+	backText: string;
+	frontImage: string[];
+	backImage: string[];
+	newFrontImages: ImageItem[];
+	newBackImages: ImageItem[];
+	multipleChoiceOptions: MultipleChoiceOption[];
+};
+
 // TODO: make it efficient
 export type TCreateCardFormData = {
 	deckId: string;
@@ -40,7 +51,7 @@ export type TUpdateCardFormData = {
 	frontImage: string[];
 	backImage: string[];
 	cardType: "MULTIPLE_CHOICE" | "BASIC";
-	multipleChoiceOptions?: MultipleChoiceOption[];
+	multipleChoiceOptions: MultipleChoiceOption[];
 	tags?: string[];
 	newFrontImages?: ImageItem[];
 	newBackImages?: ImageItem[];
@@ -98,7 +109,7 @@ export type TCardData = {
 		frontImage: string[];
 		backImage: string[];
 		cardType: "MULTIPLE_CHOICE" | "BASIC";
-		multipleChoiceOptions: string[];
+		multipleChoiceOptions: MultipleChoiceOption[];
 		tags: string[];
 	};
 };

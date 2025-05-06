@@ -1,23 +1,21 @@
 // CardContentView.tsx
 
-import { Button, Input, Progress } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import type { UseFormReturnType } from "@mantine/form";
+
 import { zodResolver } from "mantine-form-zod-resolver";
 import React, { useState } from "react";
-import { FaAngleDown } from "react-icons/fa";
+
 import { RiCloseCircleLine } from "react-icons/ri";
 import { toast } from "react-toastify";
 import { useUpdateCardMutation } from "../../hooks/mutations/card";
 import { useFetchImageForCardWithSignedUrlQueryV2 } from "../../hooks/queries/card";
 import { cardSchemas } from "../../schemas/index.schemas";
-import type {
-	ImageItem,
-	TCardData,
-	TCardFormValues,
-	TCardImagesProps,
-	TImageState,
-} from "../../types/card.type";
+import type { ImageItem, TCardData, TCardImagesProps, TImageState } from "../../types/card.type";
+import { CardImageUploadProgress } from "./CardImageUploadProgress";
+
+import { CardContentActionButtons } from "./CardContentActionButtons";
+import { CardDueDateInfo } from "./CardDueDateInfo";
+import { CardTypeUpdateSelector } from "./CardTypeUpdateSelector";
 import MinimalInputWithImagesUpdate from "./MinimalInputWithImagesUpdate";
 
 type CardContentViewProps = {
@@ -64,72 +62,11 @@ const CardImages: React.FC<TCardImagesProps> = ({ images, onRemoveImage }) => {
 	);
 };
 
-const DueDateInfo = ({ dueDate }: { dueDate: Date }) => {
-	return (
-		<p className="text-md text-gray-800">
-			Due Date:{" "}
-			{dueDate.toLocaleDateString("en-US", {
-				year: "numeric",
-				month: "long",
-				day: "numeric",
-				hour: "2-digit",
-				minute: "2-digit",
-			})}
-		</p>
-	);
-};
-
-const ActionsButtons = ({
-	form,
-	onUpdate,
-	isSubmitting,
-}: {
-	form: UseFormReturnType<TCardFormValues>;
-	onUpdate: () => void;
-	isSubmitting: boolean;
-}) => {
-	return (
-		// TODO: cancle button does not make sense here\
-		<div className="flex gap-1 justify-end">
-			<Button variant="outline" color="gray" onClick={() => onUpdate()}>
-				Cancel
-			</Button>
-			<Button
-				variant="filled"
-				color="blue"
-				type="submit"
-				disabled={!form.isDirty() || isSubmitting}
-			>
-				Update
-			</Button>
-		</div>
-	);
-};
-
-const CardType = ({ form }: { form: UseFormReturnType<TCardFormValues> }) => {
-	return (
-		<Input.Wrapper label="Card Type">
-			<Input
-				component="select"
-				rightSection={<FaAngleDown size={14} />}
-				pointer
-				mt="md"
-				{...form.getInputProps("cardType")}
-			>
-				<option value="BASIC">Basic</option>
-				<option value="MULTIPLE_CHOICE" disabled={true}>
-					Multiple Choice
-				</option>
-			</Input>
-		</Input.Wrapper>
-	);
-};
-
-const CardContentView: React.FC<CardContentViewProps> = ({
-	selectedCard,
-	onUpdate,
-}) => {
+const CardContentView: React.FC<CardContentViewProps> = ({ selectedCard, onUpdate }) => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [cardType, setCardType] = useState<"BASIC" | "MULTIPLE_CHOICE">(
+		selectedCard.cardContent.cardType,
+	);
 	const [uploadProgress, setUploadProgress] = useState<{
 		front: Record<number, number>;
 		back: Record<number, number>;
@@ -141,50 +78,7 @@ const CardContentView: React.FC<CardContentViewProps> = ({
 	const dueDate = new Date(selectedCard.card.due);
 	const { mutateAsync: updateCard } = useUpdateCardMutation();
 
-	// Helper to render progress bars for images
-	const renderImageProgress = (side: "front" | "back", images: ImageItem[]) => {
-		console.log(`Rendering progress for ${side} images:`, images);
-		console.log("Current upload progress:", uploadProgress);
-
-		// Get all the indices from the progress object
-		const indices = Object.keys(uploadProgress[side]).map(Number);
-
-		if (!isSubmitting || (!images.length && !indices.length)) return null;
-
-		// Store image file names in a ref to keep them available during upload
-		const imageFileNames = images.map((img) => img.file.name);
-
-		return (
-			<div className="mt-2 space-y-2">
-				{indices.map((index) => (
-					<div key={index} className="flex items-center">
-						<div className="w-8 text-xs">
-							{uploadProgress[side][index] || 0}%
-						</div>
-						<div className="flex-1">
-							<Progress
-								value={uploadProgress[side][index] || 0}
-								color={uploadProgress[side][index] === 100 ? "green" : "blue"}
-								size="sm"
-								radius="xl"
-							/>
-						</div>
-						<div className="ml-2 text-xs truncate max-w-[120px]">
-							{index < imageFileNames.length
-								? imageFileNames[index]
-								: `Image ${index + 1}`}
-						</div>
-					</div>
-				))}
-			</div>
-		);
-	};
-
-	const handleImageProgress = (
-		side: "front" | "back",
-		index: number,
-		progress: number,
-	) => {
+	const handleImageProgress = (side: "front" | "back", index: number, progress: number) => {
 		setUploadProgress((prev) => ({
 			...prev,
 			[side]: {
@@ -194,8 +88,15 @@ const CardContentView: React.FC<CardContentViewProps> = ({
 		}));
 	};
 
+	const displayMultipleChoiceFormErrors = () => {
+		console.log("Form errors:", form.errors);
+		if (!Object.keys(form.errors).length) return null;
+		return <p className="text-sm text-red-500">{form.errors.multipleChoiceOptions || ""}</p>;
+	};
+
 	const handleUpdateCard = async (values: typeof form.values) => {
 		console.log("Form values:", values);
+		//TODO: After testing remove this comment
 		setIsSubmitting(true);
 		if (form.isValid()) {
 			try {
@@ -256,7 +157,9 @@ const CardContentView: React.FC<CardContentViewProps> = ({
 			backImage: selectedCard.cardContent.backImage,
 			newBackImages: [] as ImageItem[],
 			newFrontImages: [] as ImageItem[],
+			multipleChoiceOptions: selectedCard.cardContent.multipleChoiceOptions,
 		},
+		// TODO: remove validation comment
 		validate: zodResolver(cardSchemas.cardUpdateSchema),
 		validateInputOnChange: true,
 	});
@@ -264,45 +167,59 @@ const CardContentView: React.FC<CardContentViewProps> = ({
 	return (
 		<form onSubmit={form.onSubmit(handleUpdateCard)}>
 			<div className="flex flex-col gap-2">
-				<CardType form={form} />
+				<CardTypeUpdateSelector form={form} setCardType={setCardType} />
+				{/* <CardType form={form} /> */}
 				{/* <FrontText form={form} /> */}
-				<MinimalInputWithImagesUpdate
-					formKeyText="frontText"
-					formKeyImage="newFrontImages"
-					form={form}
-				/>
-				{renderImageProgress("front", form.values.newFrontImages)}
-				<CardImages
-					images={frontImage}
-					onRemoveImage={handleRemoveImage(true)}
-					key={form.key("frontImage")}
-				/>
-				<MinimalInputWithImagesUpdate
-					formKeyText="backText"
-					formKeyImage="newBackImages"
-					form={form}
-				/>
-				{renderImageProgress("back", form.values.newBackImages)}
 
-				<CardImages
-					images={backImage}
-					onRemoveImage={handleRemoveImage(false)}
-					key={form.key("backImage")}
-				/>
-				<DueDateInfo dueDate={dueDate} />
+				{cardType === "BASIC" ? (
+					<section>
+						<MinimalInputWithImagesUpdate
+							formKeyText="frontText"
+							formKeyImage="newFrontImages"
+							form={form}
+						/>
+
+						<CardImageUploadProgress
+							images={form.getValues().newFrontImages}
+							uploadProgress={uploadProgress.front}
+							isSubmitting={isSubmitting}
+						/>
+						<CardImages
+							images={frontImage}
+							onRemoveImage={handleRemoveImage(true)}
+							key={form.key("frontImage")}
+						/>
+						<MinimalInputWithImagesUpdate
+							formKeyText="backText"
+							formKeyImage="newBackImages"
+							form={form}
+						/>
+						<CardImageUploadProgress
+							images={form.getValues().newBackImages}
+							uploadProgress={uploadProgress.back}
+							isSubmitting={isSubmitting}
+						/>
+
+						<CardImages
+							images={backImage}
+							onRemoveImage={handleRemoveImage(false)}
+							key={form.key("backImage")}
+						/>
+						<CardDueDateInfo dueDate={dueDate} />
+						{displayMultipleChoiceFormErrors()}
+					</section>
+				) : (
+					<section>
+						<p>wtf</p>
+					</section>
+				)}
+
 				{isSubmitting && (
 					<p className="text-sm font-bold text-gray-900 mt-2">
-						Updating ...{" "}
-						<span className="inline-block animate-spin duration-[500ms]">
-							↻
-						</span>
+						Updating ... <span className="inline-block animate-spin duration-[500ms]">↻</span>
 					</p>
 				)}
-				<ActionsButtons
-					form={form}
-					onUpdate={onUpdate}
-					isSubmitting={isSubmitting}
-				/>
+				<CardContentActionButtons form={form} onUpdate={onUpdate} isSubmitting={isSubmitting} />
 			</div>
 		</form>
 	);
