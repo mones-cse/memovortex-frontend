@@ -3,17 +3,13 @@ import type { UseFormReturnType } from "@mantine/form";
 import { FaAngleDown } from "react-icons/fa";
 import type { TCardCreateFormValues } from "../../types/card.type";
 
-export const CardTypeSelector = ({
-	form,
-	setCardType,
-}: {
+type TCardTypeSelectorProps = {
 	form: UseFormReturnType<TCardCreateFormValues>;
-	setCardType: React.Dispatch<
-		React.SetStateAction<"BASIC" | "MULTIPLE_CHOICE">
-	>;
-}) => {
-	const { onChange: onChangeCardType, ...otherCardTypePropery } =
-		form.getInputProps("cardType");
+	setCardType: React.Dispatch<React.SetStateAction<"BASIC" | "MULTIPLE_CHOICE">>;
+};
+
+export const CardTypeSelector = ({ form, setCardType }: TCardTypeSelectorProps) => {
+	const { onChange: onChangeCardType, ...otherCardTypePropery } = form.getInputProps("cardType");
 	return (
 		<div>
 			<p className="font-semibold">Card Type </p>
