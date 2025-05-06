@@ -1,4 +1,3 @@
-import { Button, Progress } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useState } from "react";
@@ -7,6 +6,8 @@ import { cardSchemas } from "../../schemas/index.schemas";
 import { userStore } from "../../stores/store";
 import type { ImageItem } from "../../types/card.type";
 import type { ModalProps } from "../../types/modal.type";
+import { CardFormButtons } from "../card/CardFormButtons";
+import { CardImageUploadProgress } from "../card/CardImageUploadProgress";
 import { CardTypeSelector } from "../card/CardTypeSelector";
 import MinimalInputWithImages from "../card/MinimalInputWithImages";
 import { MultipleChoiceOptions } from "../card/MultipleChoiceOptions";
@@ -82,38 +83,6 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 		}
 	};
 
-	// Helper to render progress bars for images
-	const renderImageProgress = (side: "front" | "back", images: ImageItem[]) => {
-		// Get all the indices from the progress object
-		const indices = Object.keys(uploadProgress[side]).map(Number);
-
-		if (!isSubmitting || (!images.length && !indices.length)) return null;
-
-		// Store image file names in a ref to keep them available during upload
-		const imageFileNames = images.map((img) => img.file.name);
-
-		return (
-			<div className="mt-2 space-y-2">
-				{indices.map((index) => (
-					<div key={index} className="flex items-center">
-						<div className="w-8 text-xs">{uploadProgress[side][index] || 0}%</div>
-						<div className="flex-1">
-							<Progress
-								value={uploadProgress[side][index] || 0}
-								color={uploadProgress[side][index] === 100 ? "green" : "blue"}
-								size="sm"
-								radius="xl"
-							/>
-						</div>
-						<div className="ml-2 text-xs truncate max-w-[120px]">
-							{index < imageFileNames.length ? imageFileNames[index] : `Image ${index + 1}`}
-						</div>
-					</div>
-				))}
-			</div>
-		);
-	};
-
 	const displayMultipleChoiceFormErrors = () => {
 		if (!Object.keys(form.errors).length) return null;
 		console.log("Form errors:", form.errors);
@@ -132,7 +101,12 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 							formKeyText={"frontText"}
 							formKeyImage={"frontImage"}
 						/>
-						{renderImageProgress("front", form.values.frontImage)}
+						<CardImageUploadProgress
+							images={form.getValues().frontImage}
+							// images={form.values.frontImage}
+							uploadProgress={uploadProgress.front}
+							isSubmitting={isSubmitting}
+						/>
 
 						<MinimalInputWithImages
 							label="Card Back"
@@ -140,7 +114,11 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 							formKeyText={"backText"}
 							formKeyImage={"backImage"}
 						/>
-						{renderImageProgress("back", form.values.backImage)}
+						<CardImageUploadProgress
+							images={form.getValues().backImage}
+							uploadProgress={uploadProgress.back}
+							isSubmitting={isSubmitting}
+						/>
 					</section>
 				) : (
 					<section>
@@ -150,7 +128,12 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 							formKeyText={"frontText"}
 							formKeyImage={"frontImage"}
 						/>
-						{renderImageProgress("front", form.values.frontImage)}
+						<CardImageUploadProgress
+							images={form.getValues().frontImage}
+							uploadProgress={uploadProgress.front}
+							isSubmitting={isSubmitting}
+						/>
+
 						<MultipleChoiceOptions form={form} />
 
 						{displayMultipleChoiceFormErrors()}
@@ -163,7 +146,11 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 							formKeyText={"backText"}
 							formKeyImage={"backImage"}
 						/>
-						{renderImageProgress("back", form.values.backImage)}
+						<CardImageUploadProgress
+							images={form.getValues().backImage}
+							uploadProgress={uploadProgress.back}
+							isSubmitting={isSubmitting}
+						/>
 					</section>
 				)}
 
@@ -175,24 +162,7 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 						</p>
 					)}
 
-				<div className="flex gap-1 justify-end mt-4">
-					<Button
-						variant="outline"
-						color="gray"
-						onClick={() => store.closeModal()}
-						disabled={isSubmitting}
-					>
-						Cancel
-					</Button>
-					<Button
-						variant="filled"
-						color="blue"
-						type="submit"
-						disabled={!form.isDirty() || isSubmitting}
-					>
-						{isSubmitting ? "Saving..." : "Save"}
-					</Button>
-				</div>
+				<CardFormButtons isSubmitting={isSubmitting} form={form} />
 			</form>
 		</div>
 	);
