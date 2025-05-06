@@ -88,6 +88,7 @@ export const useCreateCardMutation = () => {
 				cardType: data.cardType,
 				frontImage: [] as string[],
 				backImage: [] as string[],
+				multipleChoiceOptions: data.multipleChoiceOptions,
 			};
 
 			// Upload front images with progress tracking

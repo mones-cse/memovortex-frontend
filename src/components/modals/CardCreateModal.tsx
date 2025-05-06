@@ -1,4 +1,4 @@
-import { Button, Input, Progress } from "@mantine/core";
+import { Button, Input, Progress, Radio, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useState } from "react";
@@ -13,6 +13,10 @@ import MinimalInputWithImages from "../card/MinimalInputWithImages";
 export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 	const store = userStore();
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [seletedRadioIndex, setSelectedRadioIndex] = useState<number | null>(0);
+	const [cardType, setCardType] = useState<"BASIC" | "MULTIPLE_CHOICE">(
+		"BASIC",
+	);
 	const [uploadProgress, setUploadProgress] = useState<{
 		front: Record<number, number>;
 		back: Record<number, number>;
@@ -30,6 +34,12 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 			backText: "",
 			backImage: [] as ImageItem[],
 			cardType: "BASIC" as "BASIC" | "MULTIPLE_CHOICE",
+			multipleChoiceOptions: [
+				{ id: "opt1", text: "", isCorrect: true },
+				{ id: "opt2", text: "", isCorrect: false },
+				{ id: "opt3", text: "", isCorrect: false },
+				{ id: "opt4", text: "", isCorrect: false },
+			],
 		},
 		validate: zodResolver(cardSchemas.cardCreateSchema),
 		validateInputOnChange: true,
@@ -51,6 +61,8 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 
 	const handleSaveCard = async (values: typeof form.values) => {
 		console.log("Form values:", values);
+		console.log("Form errors:", form.errors);
+		console.log("Form valid?", form.isValid());
 		setIsSubmitting(true);
 		// Reset progress
 		setUploadProgress({ front: {}, back: {} });
@@ -111,39 +123,115 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 		);
 	};
 
+	const { onChange: onChangeCardType, ...otherCardTypePropery } =
+		form.getInputProps("cardType");
+
+	const handleCorrectOptionChange = (index: number) => {
+		// Create a new array with all options set to isCorrect: false
+
+		const newOptions = form.values.multipleChoiceOptions.map((option, i) => ({
+			...option,
+			isCorrect: i === index,
+		}));
+		setSelectedRadioIndex(index);
+
+		// Update the form with the new options
+		form.setFieldValue("multipleChoiceOptions", newOptions);
+	};
+
+	const displayMultipleChoiceFormErrors = () => {
+		if (!Object.keys(form.errors).length) return null;
+		console.log("Form errors:", form.errors);
+		return (
+			<p className="text-sm text-red-500">
+				{form.errors.multipleChoiceOptions || ""}
+			</p>
+		);
+	};
+
 	return (
 		<div className="py-2">
 			<form onSubmit={form.onSubmit(handleSaveCard)}>
-				<Input.Wrapper label="Card Type">
-					<Input
-						component="select"
-						rightSection={<FaAngleDown size={14} />}
-						pointer
-						mt="sm"
-						{...form.getInputProps("cardType")}
-					>
-						<option value="BASIC">Basic</option>
-						<option value="MULTIPLE_CHOICE" disabled={true}>
-							Multiple Choice
-						</option>
-					</Input>
-				</Input.Wrapper>
+				<p className="font-semibold">Card Type </p>
+				<Input
+					component="select"
+					rightSection={<FaAngleDown size={14} />}
+					pointer
+					mt="sm"
+					{...otherCardTypePropery}
+					onChange={(event) => {
+						onChangeCardType(event);
+						setCardType(
+							event.currentTarget.value as "BASIC" | "MULTIPLE_CHOICE",
+						);
+					}}
+				>
+					<option value="BASIC">Basic</option>
+					<option value="MULTIPLE_CHOICE">Multiple Choice</option>
+				</Input>
 
-				<MinimalInputWithImages
-					lable="Card Front"
-					form={form}
-					formKeyText={"frontText"}
-					formKeyImage={"frontImage"}
-				/>
-				{renderImageProgress("front", form.values.frontImage)}
+				{cardType === "BASIC" ? (
+					<section>
+						<MinimalInputWithImages
+							lable="Card Front"
+							form={form}
+							formKeyText={"frontText"}
+							formKeyImage={"frontImage"}
+						/>
+						{renderImageProgress("front", form.values.frontImage)}
 
-				<MinimalInputWithImages
-					lable="Card Back"
-					form={form}
-					formKeyText={"backText"}
-					formKeyImage={"backImage"}
-				/>
-				{renderImageProgress("back", form.values.backImage)}
+						<MinimalInputWithImages
+							lable="Card Back"
+							form={form}
+							formKeyText={"backText"}
+							formKeyImage={"backImage"}
+						/>
+						{renderImageProgress("back", form.values.backImage)}
+					</section>
+				) : (
+					<section>
+						<MinimalInputWithImages
+							lable="Question"
+							form={form}
+							formKeyText={"frontText"}
+							formKeyImage={"frontImage"}
+						/>
+						{renderImageProgress("front", form.values.frontImage)}
+						<p className="mt-4 font-semibold">Answer Options</p>
+						{form.values.multipleChoiceOptions.map((option, index) => (
+							<div
+								key={option.id}
+								className="flex items-center gap-2 my-2 justify-center"
+							>
+								<Radio
+									checked={index === seletedRadioIndex}
+									onChange={() => handleCorrectOptionChange(index)}
+								/>
+								<TextInput
+									className="flex-1"
+									placeholder={
+										option.isCorrect
+											? "Enter correct answer option..."
+											: "Enter incorrect option..."
+									}
+									{...form.getInputProps(`multipleChoiceOptions.${index}.text`)}
+								/>
+							</div>
+						))}
+
+						{displayMultipleChoiceFormErrors()}
+						<p className="text-gray-600 text-sm mt-2.5">
+							Select the radio button next to correct answer option
+						</p>
+						<MinimalInputWithImages
+							lable="Explanation (Optional)"
+							form={form}
+							formKeyText={"backText"}
+							formKeyImage={"backImage"}
+						/>
+						{renderImageProgress("back", form.values.backImage)}
+					</section>
+				)}
 
 				{isSubmitting &&
 					!Object.keys(uploadProgress.front).length &&
@@ -178,3 +266,6 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 		</div>
 	);
 };
+
+// TODO: fillup form in multiple choice then switch to basic then fillup form after that submit
+// will have multiple choice options in the basic card which is not correct

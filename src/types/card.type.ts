@@ -4,6 +4,11 @@ export type ImageItem = {
 	id: string;
 	progress?: number;
 };
+type MultipleChoiceOption = {
+	id: string;
+	text: string;
+	isCorrect: boolean;
+};
 
 // TODO: make it efficient
 export type TCreateCardFormData = {
@@ -13,6 +18,7 @@ export type TCreateCardFormData = {
 	frontImage: ImageItem[];
 	backImage: ImageItem[];
 	cardType: "MULTIPLE_CHOICE" | "BASIC";
+	multipleChoiceOptions?: MultipleChoiceOption[];
 };
 
 export type TUpdateCardFormData = {
@@ -23,7 +29,7 @@ export type TUpdateCardFormData = {
 	frontImage: string[];
 	backImage: string[];
 	cardType: "MULTIPLE_CHOICE" | "BASIC";
-	multipleChoiceOptions?: string[];
+	multipleChoiceOptions?: MultipleChoiceOption[];
 	tags?: string[];
 	newFrontImages?: ImageItem[];
 	newBackImages?: ImageItem[];
@@ -49,7 +55,7 @@ export type TCreateCard = {
 	frontImage?: string[];
 	backImage?: string[];
 	cardType: "MULTIPLE_CHOICE" | "BASIC";
-	multipleChoiceOptions?: string[];
+	multipleChoiceOptions?: MultipleChoiceOption[];
 	tags?: string[];
 };
 
