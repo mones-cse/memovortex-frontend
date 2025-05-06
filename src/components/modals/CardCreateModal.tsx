@@ -6,11 +6,11 @@ import { cardSchemas } from "../../schemas/index.schemas";
 import { userStore } from "../../stores/store";
 import type { ImageItem } from "../../types/card.type";
 import type { ModalProps } from "../../types/modal.type";
+import { LoadingSpinner } from "../../ui/LoadingSpinner";
+import { BasicCardForm } from "../card/BasicCardForm";
 import { CardFormButtons } from "../card/CardFormButtons";
-import { CardImageUploadProgress } from "../card/CardImageUploadProgress";
 import { CardTypeSelector } from "../card/CardTypeSelector";
-import MinimalInputWithImages from "../card/MinimalInputWithImages";
-import { MultipleChoiceOptions } from "../card/MultipleChoiceOptions";
+import { MultipleChoiceForm } from "../card/MultipleChoiceForm";
 
 export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 	const store = userStore();
@@ -58,11 +58,9 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 		console.log("Form values:", values);
 		console.log("Form errors:", form.errors);
 		console.log("Form valid?", form.isValid());
-		// TODO: After refactor uncomment this code
-		setIsSubmitting(true);
-		// Reset progress
-		setUploadProgress({ front: {}, back: {} });
 
+		setIsSubmitting(true);
+		setUploadProgress({ front: {}, back: {} });
 		if (form.isValid()) {
 			try {
 				const useCreateMutation = await useCreate({
@@ -83,84 +81,27 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 		}
 	};
 
-	const displayMultipleChoiceFormErrors = () => {
-		if (!Object.keys(form.errors).length) return null;
-		console.log("Form errors:", form.errors);
-		return <p className="text-sm text-red-500">{form.errors.multipleChoiceOptions || ""}</p>;
-	};
+	const showLoadingIndicator =
+		isSubmitting &&
+		!Object.keys(uploadProgress.front).length &&
+		!Object.keys(uploadProgress.back).length;
 
 	return (
 		<div className="py-2">
 			<form onSubmit={form.onSubmit(handleSaveCard)}>
 				<CardTypeSelector form={form} setCardType={setCardType} />
+
 				{cardType === "BASIC" ? (
-					<section>
-						<MinimalInputWithImages
-							label="Card Front"
-							form={form}
-							formKeyText={"frontText"}
-							formKeyImage={"frontImage"}
-						/>
-						<CardImageUploadProgress
-							images={form.getValues().frontImage}
-							// images={form.values.frontImage}
-							uploadProgress={uploadProgress.front}
-							isSubmitting={isSubmitting}
-						/>
-
-						<MinimalInputWithImages
-							label="Card Back"
-							form={form}
-							formKeyText={"backText"}
-							formKeyImage={"backImage"}
-						/>
-						<CardImageUploadProgress
-							images={form.getValues().backImage}
-							uploadProgress={uploadProgress.back}
-							isSubmitting={isSubmitting}
-						/>
-					</section>
+					<BasicCardForm form={form} uploadProgress={uploadProgress} isSubmitting={isSubmitting} />
 				) : (
-					<section>
-						<MinimalInputWithImages
-							label="Question"
-							form={form}
-							formKeyText={"frontText"}
-							formKeyImage={"frontImage"}
-						/>
-						<CardImageUploadProgress
-							images={form.getValues().frontImage}
-							uploadProgress={uploadProgress.front}
-							isSubmitting={isSubmitting}
-						/>
-
-						<MultipleChoiceOptions form={form} />
-
-						{displayMultipleChoiceFormErrors()}
-						<p className="text-gray-600 text-sm mt-2.5">
-							Select the radio button next to correct answer option
-						</p>
-						<MinimalInputWithImages
-							label="Explanation (Optional)"
-							form={form}
-							formKeyText={"backText"}
-							formKeyImage={"backImage"}
-						/>
-						<CardImageUploadProgress
-							images={form.getValues().backImage}
-							uploadProgress={uploadProgress.back}
-							isSubmitting={isSubmitting}
-						/>
-					</section>
+					<MultipleChoiceForm
+						form={form}
+						uploadProgress={uploadProgress}
+						isSubmitting={isSubmitting}
+					/>
 				)}
 
-				{isSubmitting &&
-					!Object.keys(uploadProgress.front).length &&
-					!Object.keys(uploadProgress.back).length && (
-						<p className="text-sm font-bold text-gray-900 mt-2">
-							Creating ... <span className="inline-block animate-spin duration-[500ms]">↻</span>
-						</p>
-					)}
+				{showLoadingIndicator && <LoadingSpinner />}
 
 				<CardFormButtons isSubmitting={isSubmitting} form={form} />
 			</form>

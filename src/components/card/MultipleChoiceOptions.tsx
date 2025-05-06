@@ -18,6 +18,11 @@ export const MultipleChoiceOptions = ({
 		form.setFieldValue("multipleChoiceOptions", newOptions);
 	};
 
+	const displayMultipleChoiceFormErrors = () => {
+		if (!Object.keys(form.errors).length) return null;
+		return <p className="text-sm text-red-500">{form.errors.multipleChoiceOptions || ""}</p>;
+	};
+
 	return (
 		<div>
 			<p className="mt-4 font-semibold">Answer Options</p>
@@ -36,6 +41,10 @@ export const MultipleChoiceOptions = ({
 					/>
 				</div>
 			))}
+			{displayMultipleChoiceFormErrors()}
+			<p className="text-gray-600 text-sm mt-2.5">
+				Select the radio button next to correct answer option
+			</p>
 		</div>
 	);
 };
