@@ -1,4 +1,4 @@
-import { Button, Progress, Radio, TextInput } from "@mantine/core";
+import { Button, Progress } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useState } from "react";
@@ -9,14 +9,12 @@ import type { ImageItem } from "../../types/card.type";
 import type { ModalProps } from "../../types/modal.type";
 import { CardTypeSelector } from "../card/CardTypeSelector";
 import MinimalInputWithImages from "../card/MinimalInputWithImages";
+import { MultipleChoiceOptions } from "../card/MultipleChoiceOptions";
 
 export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 	const store = userStore();
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [seletedRadioIndex, setSelectedRadioIndex] = useState<number | null>(0);
-	const [cardType, setCardType] = useState<"BASIC" | "MULTIPLE_CHOICE">(
-		"BASIC",
-	);
+	const [cardType, setCardType] = useState<"BASIC" | "MULTIPLE_CHOICE">("BASIC");
 	const [uploadProgress, setUploadProgress] = useState<{
 		front: Record<number, number>;
 		back: Record<number, number>;
@@ -45,11 +43,7 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 		validateInputOnChange: true,
 	});
 
-	const handleImageProgress = (
-		side: "front" | "back",
-		index: number,
-		progress: number,
-	) => {
+	const handleImageProgress = (side: "front" | "back", index: number, progress: number) => {
 		setUploadProgress((prev) => ({
 			...prev,
 			[side]: {
@@ -64,28 +58,28 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 		console.log("Form errors:", form.errors);
 		console.log("Form valid?", form.isValid());
 		// TODO: After refactor uncomment this code
-		// setIsSubmitting(true);
-		// // Reset progress
-		// setUploadProgress({ front: {}, back: {} });
+		setIsSubmitting(true);
+		// Reset progress
+		setUploadProgress({ front: {}, back: {} });
 
-		// if (form.isValid()) {
-		// 	try {
-		// 		const useCreateMutation = await useCreate({
-		// 			...values,
-		// 			deckId,
-		// 			onImageProgress: handleImageProgress,
-		// 		});
-		// 		if (useCreateMutation.isSuccess || useCreateMutation.isError) {
-		// 			setIsSubmitting(false);
-		// 		}
-		// 		store.closeModal();
-		// 	} catch (error) {
-		// 		console.error("Error creating card:", error);
-		// 		setIsSubmitting(false);
-		// 	}
-		// } else {
-		// 	setIsSubmitting(false);
-		// }
+		if (form.isValid()) {
+			try {
+				const useCreateMutation = await useCreate({
+					...values,
+					deckId,
+					onImageProgress: handleImageProgress,
+				});
+				if (useCreateMutation.isSuccess || useCreateMutation.isError) {
+					setIsSubmitting(false);
+				}
+				store.closeModal();
+			} catch (error) {
+				console.error("Error creating card:", error);
+				setIsSubmitting(false);
+			}
+		} else {
+			setIsSubmitting(false);
+		}
 	};
 
 	// Helper to render progress bars for images
@@ -102,9 +96,7 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 			<div className="mt-2 space-y-2">
 				{indices.map((index) => (
 					<div key={index} className="flex items-center">
-						<div className="w-8 text-xs">
-							{uploadProgress[side][index] || 0}%
-						</div>
+						<div className="w-8 text-xs">{uploadProgress[side][index] || 0}%</div>
 						<div className="flex-1">
 							<Progress
 								value={uploadProgress[side][index] || 0}
@@ -114,9 +106,7 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 							/>
 						</div>
 						<div className="ml-2 text-xs truncate max-w-[120px]">
-							{index < imageFileNames.length
-								? imageFileNames[index]
-								: `Image ${index + 1}`}
+							{index < imageFileNames.length ? imageFileNames[index] : `Image ${index + 1}`}
 						</div>
 					</div>
 				))}
@@ -124,38 +114,20 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 		);
 	};
 
-	const handleCorrectOptionChange = (index: number) => {
-		// Create a new array with all options set to isCorrect: false
-
-		const newOptions = form.values.multipleChoiceOptions.map((option, i) => ({
-			...option,
-			isCorrect: i === index,
-		}));
-		setSelectedRadioIndex(index);
-
-		// Update the form with the new options
-		form.setFieldValue("multipleChoiceOptions", newOptions);
-	};
-
 	const displayMultipleChoiceFormErrors = () => {
 		if (!Object.keys(form.errors).length) return null;
 		console.log("Form errors:", form.errors);
-		return (
-			<p className="text-sm text-red-500">
-				{form.errors.multipleChoiceOptions || ""}
-			</p>
-		);
+		return <p className="text-sm text-red-500">{form.errors.multipleChoiceOptions || ""}</p>;
 	};
 
 	return (
 		<div className="py-2">
 			<form onSubmit={form.onSubmit(handleSaveCard)}>
 				<CardTypeSelector form={form} setCardType={setCardType} />
-
 				{cardType === "BASIC" ? (
 					<section>
 						<MinimalInputWithImages
-							lable="Card Front"
+							label="Card Front"
 							form={form}
 							formKeyText={"frontText"}
 							formKeyImage={"frontImage"}
@@ -163,7 +135,7 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 						{renderImageProgress("front", form.values.frontImage)}
 
 						<MinimalInputWithImages
-							lable="Card Back"
+							label="Card Back"
 							form={form}
 							formKeyText={"backText"}
 							formKeyImage={"backImage"}
@@ -173,40 +145,20 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 				) : (
 					<section>
 						<MinimalInputWithImages
-							lable="Question"
+							label="Question"
 							form={form}
 							formKeyText={"frontText"}
 							formKeyImage={"frontImage"}
 						/>
 						{renderImageProgress("front", form.values.frontImage)}
-						<p className="mt-4 font-semibold">Answer Options</p>
-						{form.values.multipleChoiceOptions.map((option, index) => (
-							<div
-								key={option.id}
-								className="flex items-center gap-2 my-2 justify-center"
-							>
-								<Radio
-									checked={index === seletedRadioIndex}
-									onChange={() => handleCorrectOptionChange(index)}
-								/>
-								<TextInput
-									className="flex-1"
-									placeholder={
-										option.isCorrect
-											? "Enter correct answer option..."
-											: "Enter incorrect option..."
-									}
-									{...form.getInputProps(`multipleChoiceOptions.${index}.text`)}
-								/>
-							</div>
-						))}
+						<MultipleChoiceOptions form={form} />
 
 						{displayMultipleChoiceFormErrors()}
 						<p className="text-gray-600 text-sm mt-2.5">
 							Select the radio button next to correct answer option
 						</p>
 						<MinimalInputWithImages
-							lable="Explanation (Optional)"
+							label="Explanation (Optional)"
 							form={form}
 							formKeyText={"backText"}
 							formKeyImage={"backImage"}
@@ -219,10 +171,7 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 					!Object.keys(uploadProgress.front).length &&
 					!Object.keys(uploadProgress.back).length && (
 						<p className="text-sm font-bold text-gray-900 mt-2">
-							Creating ...{" "}
-							<span className="inline-block animate-spin duration-[500ms]">
-								↻
-							</span>
+							Creating ... <span className="inline-block animate-spin duration-[500ms]">↻</span>
 						</p>
 					)}
 

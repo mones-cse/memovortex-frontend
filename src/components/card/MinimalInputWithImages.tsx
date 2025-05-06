@@ -5,12 +5,12 @@ import { FaPaperclip } from "react-icons/fa6";
 import type { ImageItem } from "../../types/card.type";
 
 const MinimalInputWithImages = ({
-	lable,
+	label,
 	formKeyText,
 	formKeyImage,
 	form,
 }: {
-	lable: string;
+	label: string;
 	formKeyText: string;
 	formKeyImage: string;
 	form: UseFormReturnType<{
@@ -185,7 +185,7 @@ const MinimalInputWithImages = ({
 
 	return (
 		<div className="w-full max-w-4xl mx-auto mt-4">
-			<p className="text-black  mb-1 font-semibold">{lable}</p>
+			<p className="text-black  mb-1 font-semibold">{label}</p>
 			<div className="bg-gray-50 rounded-t-lg  shadow-sm p-1">
 				<Textarea
 					ref={inputRef}
