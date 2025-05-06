@@ -4,10 +4,21 @@ export type ImageItem = {
 	id: string;
 	progress?: number;
 };
+
 type MultipleChoiceOption = {
 	id: string;
 	text: string;
 	isCorrect: boolean;
+};
+
+// used when creating a card, mantine form values
+export type TCardCreateFormValues = {
+	cardType: "MULTIPLE_CHOICE" | "BASIC";
+	frontText: string;
+	backText: string;
+	frontImage: ImageItem[];
+	backImage: ImageItem[];
+	multipleChoiceOptions: MultipleChoiceOption[];
 };
 
 // TODO: make it efficient
@@ -110,7 +121,7 @@ export interface TCardImagesProps {
 	onRemoveImage: (url: string) => void;
 }
 
-export interface TCardFormValues {
+export type TCardFormValues = {
 	frontText: string;
 	backText: string;
 	cardType: "MULTIPLE_CHOICE" | "BASIC";
@@ -118,7 +129,8 @@ export interface TCardFormValues {
 	backImage: string[];
 	newFrontImages: ImageItem[];
 	newBackImages: ImageItem[];
-}
+	multipleChoiceOptions?: MultipleChoiceOption[];
+};
 
 export type TImageState = {
 	[key: string]: boolean;

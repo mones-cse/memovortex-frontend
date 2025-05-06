@@ -1,13 +1,13 @@
-import { Button, Input, Progress, Radio, TextInput } from "@mantine/core";
+import { Button, Progress, Radio, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useState } from "react";
-import { FaAngleDown } from "react-icons/fa6";
 import { useCreateCardMutation } from "../../hooks/mutations/card";
 import { cardSchemas } from "../../schemas/index.schemas";
 import { userStore } from "../../stores/store";
 import type { ImageItem } from "../../types/card.type";
 import type { ModalProps } from "../../types/modal.type";
+import { CardTypeSelector } from "../card/CardTypeSelector";
 import MinimalInputWithImages from "../card/MinimalInputWithImages";
 
 export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
@@ -63,28 +63,29 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 		console.log("Form values:", values);
 		console.log("Form errors:", form.errors);
 		console.log("Form valid?", form.isValid());
-		setIsSubmitting(true);
-		// Reset progress
-		setUploadProgress({ front: {}, back: {} });
+		// TODO: After refactor uncomment this code
+		// setIsSubmitting(true);
+		// // Reset progress
+		// setUploadProgress({ front: {}, back: {} });
 
-		if (form.isValid()) {
-			try {
-				const useCreateMutation = await useCreate({
-					...values,
-					deckId,
-					onImageProgress: handleImageProgress,
-				});
-				if (useCreateMutation.isSuccess || useCreateMutation.isError) {
-					setIsSubmitting(false);
-				}
-				store.closeModal();
-			} catch (error) {
-				console.error("Error creating card:", error);
-				setIsSubmitting(false);
-			}
-		} else {
-			setIsSubmitting(false);
-		}
+		// if (form.isValid()) {
+		// 	try {
+		// 		const useCreateMutation = await useCreate({
+		// 			...values,
+		// 			deckId,
+		// 			onImageProgress: handleImageProgress,
+		// 		});
+		// 		if (useCreateMutation.isSuccess || useCreateMutation.isError) {
+		// 			setIsSubmitting(false);
+		// 		}
+		// 		store.closeModal();
+		// 	} catch (error) {
+		// 		console.error("Error creating card:", error);
+		// 		setIsSubmitting(false);
+		// 	}
+		// } else {
+		// 	setIsSubmitting(false);
+		// }
 	};
 
 	// Helper to render progress bars for images
@@ -123,9 +124,6 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 		);
 	};
 
-	const { onChange: onChangeCardType, ...otherCardTypePropery } =
-		form.getInputProps("cardType");
-
 	const handleCorrectOptionChange = (index: number) => {
 		// Create a new array with all options set to isCorrect: false
 
@@ -152,23 +150,7 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 	return (
 		<div className="py-2">
 			<form onSubmit={form.onSubmit(handleSaveCard)}>
-				<p className="font-semibold">Card Type </p>
-				<Input
-					component="select"
-					rightSection={<FaAngleDown size={14} />}
-					pointer
-					mt="sm"
-					{...otherCardTypePropery}
-					onChange={(event) => {
-						onChangeCardType(event);
-						setCardType(
-							event.currentTarget.value as "BASIC" | "MULTIPLE_CHOICE",
-						);
-					}}
-				>
-					<option value="BASIC">Basic</option>
-					<option value="MULTIPLE_CHOICE">Multiple Choice</option>
-				</Input>
+				<CardTypeSelector form={form} setCardType={setCardType} />
 
 				{cardType === "BASIC" ? (
 					<section>
