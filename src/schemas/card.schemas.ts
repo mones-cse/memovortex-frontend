@@ -71,12 +71,8 @@ export const cardCreateSchema = z
 		// If it's a MULTIPLE_CHOICE card, ensure at least one option is correct
 		// and all options have text
 		if (data.cardType === "MULTIPLE_CHOICE") {
-			const hasCorrectOption = data.multipleChoiceOptions.some(
-				(opt) => opt.isCorrect,
-			);
-			const allOptionsHaveText = data.multipleChoiceOptions.every(
-				(opt) => opt.text.trim() !== "",
-			);
+			const hasCorrectOption = data.multipleChoiceOptions.some((opt) => opt.isCorrect);
+			const allOptionsHaveText = data.multipleChoiceOptions.every((opt) => opt.text.trim() !== "");
 
 			if (!hasCorrectOption || !allOptionsHaveText) {
 				ctx.addIssue({
@@ -123,18 +119,17 @@ export const cardUpdateSchema = z
 					}),
 			),
 		),
-		multipleChoiceOptions: z.optional(
-			z.array(
-				z.object({
-					text: z.string().min(1, { message: "Option text cannot be empty" }),
-					isCorrect: z.boolean(),
-				}),
-			),
+		multipleChoiceOptions: z.array(
+			z.object({
+				text: z.string(),
+				isCorrect: z.boolean(),
+			}),
 		),
 	})
 	.superRefine((data, ctx) => {
 		// If it's a BASIC card, ensure backText is provided and meets requirements
 		if (data.cardType === "BASIC") {
+			console.log("----> check basic card");
 			if (!data.backText || data.backText.trim() === "") {
 				ctx.addIssue({
 					code: z.ZodIssueCode.custom,
@@ -160,37 +155,30 @@ export const cardUpdateSchema = z
 					path: ["backText"],
 				});
 			}
+			return;
 		}
 
-		// For MULTIPLE_CHOICE, ensure the options array is provided
-		if (
-			data.cardType === "MULTIPLE_CHOICE" &&
-			(!data.multipleChoiceOptions || data.multipleChoiceOptions.length === 0)
-		) {
-			ctx.addIssue({
-				code: z.ZodIssueCode.custom,
-				message:
-					"Multiple choice options are required for multiple choice cards",
-				path: ["multipleChoiceOptions"],
-			});
-		}
-
-		// If multipleChoiceOptions is provided, validate them regardless of card type
-		if (data.multipleChoiceOptions && data.multipleChoiceOptions.length > 0) {
-			const hasCorrectOption = data.multipleChoiceOptions.some(
-				(opt) => opt.isCorrect,
-			);
-			const allOptionsHaveText = data.multipleChoiceOptions.every(
-				(opt) => opt.text.trim() !== "",
-			);
-
-			if (!hasCorrectOption || !allOptionsHaveText) {
+		if (data.cardType === "MULTIPLE_CHOICE") {
+			console.log("----> check multiple choice card");
+			if (!data.multipleChoiceOptions || data.multipleChoiceOptions.length === 0) {
 				ctx.addIssue({
 					code: z.ZodIssueCode.custom,
-					message:
-						"Multiple choice cards must have at least one correct option and all options must have text",
+					message: "Multiple choice options are required for multiple choice cards",
 					path: ["multipleChoiceOptions"],
 				});
+			} else {
+				const hasCorrectOption = data.multipleChoiceOptions.some((opt) => opt.isCorrect);
+				const allOptionsHaveText = data.multipleChoiceOptions.every(
+					(opt) => opt.text.trim() !== "",
+				);
+				if (!hasCorrectOption || !allOptionsHaveText) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message:
+							"Multiple choice cards must have at least one correct option and all options must have text",
+						path: ["multipleChoiceOptions"],
+					});
+				}
 			}
 		}
 	});

@@ -1,18 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import {
-	createCard,
-	deleteCard,
-	reviewStudyCards,
-	updateCard,
-} from "./../../api/card";
+import { createCard, deleteCard, reviewStudyCards, updateCard } from "./../../api/card";
 import { generateS3UploadUrl, uploadFileToS3 } from "./../../api/document";
 
-import type {
-	ImageItem,
-	TCreateCardFormData,
-	TUpdateCardFormData,
-} from "../../types/card.type";
+import type { ImageItem, TCreateCardFormData, TUpdateCardFormData } from "../../types/card.type";
 
 const uploadImageToS3 = async (
 	image: ImageItem,
@@ -32,9 +23,7 @@ const uploadImageToS3 = async (
 		file: image.file,
 		onUploadProgress: (progressEvent) => {
 			if (progressEvent.total) {
-				const percentCompleted = Math.round(
-					(progressEvent.loaded * 100) / progressEvent.total,
-				);
+				const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
 				onProgress(percentCompleted);
 			}
 		},
@@ -54,9 +43,7 @@ const uploadMultipleImages = async (
 
 	for (let i = 0; i < imagesToUpload.length; i++) {
 		const image = imagesToUpload[i];
-		const fileName = await uploadImageToS3(image, (progress) =>
-			onImageProgress(i, progress),
-		);
+		const fileName = await uploadImageToS3(image, (progress) => onImageProgress(i, progress));
 		if (fileName) {
 			uploadedFileNames.push(fileName);
 		}
@@ -74,11 +61,7 @@ export const useCreateCardMutation = () => {
 	return useMutation({
 		mutationFn: async (
 			data: TCreateCardFormData & {
-				onImageProgress?: (
-					side: "front" | "back",
-					index: number,
-					progress: number,
-				) => void;
+				onImageProgress?: (side: "front" | "back", index: number, progress: number) => void;
 			},
 		) => {
 			const dataToCreateCard = {
@@ -108,16 +91,13 @@ export const useCreateCardMutation = () => {
 
 			// Upload back images with progress tracking
 			if (data.backImage.length > 0) {
-				const uploadedBackImages = await uploadMultipleImages(
-					data.backImage,
-					(index, progress) => {
-						if (data.onImageProgress) {
-							// Instead of passing onImageProgress directly,
-							// we change the function for specific back side
-							data.onImageProgress("back", index, progress);
-						}
-					},
-				);
+				const uploadedBackImages = await uploadMultipleImages(data.backImage, (index, progress) => {
+					if (data.onImageProgress) {
+						// Instead of passing onImageProgress directly,
+						// we change the function for specific back side
+						data.onImageProgress("back", index, progress);
+					}
+				});
 				dataToCreateCard.backImage.push(...uploadedBackImages);
 			}
 
@@ -137,11 +117,7 @@ export const useUpdateCardMutation = () => {
 	return useMutation({
 		mutationFn: async (
 			data: TUpdateCardFormData & {
-				onImageProgress?: (
-					side: "front" | "back",
-					index: number,
-					progress: number,
-				) => void;
+				onImageProgress?: (side: "front" | "back", index: number, progress: number) => void;
 			},
 		) => {
 			try {
@@ -152,6 +128,7 @@ export const useUpdateCardMutation = () => {
 					cardType: data.cardType,
 					frontImage: data.frontImage,
 					backImage: data.backImage,
+					multipleChoiceOptions: data.multipleChoiceOptions,
 				};
 
 				if (isNewImageAvailable(data)) {

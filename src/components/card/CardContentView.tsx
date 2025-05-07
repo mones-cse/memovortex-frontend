@@ -6,17 +6,18 @@ import { zodResolver } from "mantine-form-zod-resolver";
 import React, { useState } from "react";
 
 import { RiCloseCircleLine } from "react-icons/ri";
-import { toast } from "react-toastify";
 import { useUpdateCardMutation } from "../../hooks/mutations/card";
 import { useFetchImageForCardWithSignedUrlQueryV2 } from "../../hooks/queries/card";
 import { cardSchemas } from "../../schemas/index.schemas";
 import type { ImageItem, TCardData, TCardImagesProps, TImageState } from "../../types/card.type";
 import { CardImageUploadProgress } from "./CardImageUploadProgress";
 
+import { toast } from "react-toastify";
 import { CardContentActionButtons } from "./CardContentActionButtons";
 import { CardDueDateInfo } from "./CardDueDateInfo";
 import { CardTypeUpdateSelector } from "./CardTypeUpdateSelector";
 import MinimalInputWithImagesUpdate from "./MinimalInputWithImagesUpdate";
+import { MultipleChoiceOptionsUpdate } from "./MultipleChoiceOptionsUpdate";
 
 type CardContentViewProps = {
 	selectedCard: TCardData;
@@ -210,7 +211,41 @@ const CardContentView: React.FC<CardContentViewProps> = ({ selectedCard, onUpdat
 					</section>
 				) : (
 					<section>
-						<p>wtf</p>
+						<MinimalInputWithImagesUpdate
+							formKeyText="frontText"
+							formKeyImage="newFrontImages"
+							form={form}
+						/>
+
+						<CardImageUploadProgress
+							images={form.getValues().newFrontImages}
+							uploadProgress={uploadProgress.front}
+							isSubmitting={isSubmitting}
+						/>
+
+						<CardImages
+							images={frontImage}
+							onRemoveImage={handleRemoveImage(true)}
+							key={form.key("frontImage")}
+						/>
+						<MultipleChoiceOptionsUpdate form={form} />
+						<MinimalInputWithImagesUpdate
+							formKeyText="backText"
+							formKeyImage="newBackImages"
+							form={form}
+						/>
+						<CardImageUploadProgress
+							images={form.getValues().newBackImages}
+							uploadProgress={uploadProgress.back}
+							isSubmitting={isSubmitting}
+						/>
+
+						<CardImages
+							images={backImage}
+							onRemoveImage={handleRemoveImage(false)}
+							key={form.key("backImage")}
+						/>
+						<CardDueDateInfo dueDate={dueDate} />
 					</section>
 				)}
 
