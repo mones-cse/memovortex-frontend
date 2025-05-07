@@ -1,20 +1,12 @@
-// CardContentView.tsx
-
-import { useForm } from "@mantine/form";
-
-import { zodResolver } from "mantine-form-zod-resolver";
-import React, { useState } from "react";
-
+import React, { useCallback, useState } from "react";
 import { RiCloseCircleLine } from "react-icons/ri";
-import { useUpdateCardMutation } from "../../hooks/mutations/card";
+import { useCardUpdateForm } from "../../hooks/card/useCardUpdateForm";
 import { useFetchImageForCardWithSignedUrlQueryV2 } from "../../hooks/queries/card";
-import { cardSchemas } from "../../schemas/index.schemas";
-import type { ImageItem, TCardData, TCardImagesProps, TImageState } from "../../types/card.type";
-import { CardImageUploadProgress } from "./CardImageUploadProgress";
-
-import { toast } from "react-toastify";
+import type { TCardData, TCardImagesProps, TImageState } from "../../types/card.type";
+import { LoadingSpinner } from "../../ui/LoadingSpinner";
 import { CardContentActionButtons } from "./CardContentActionButtons";
 import { CardDueDateInfo } from "./CardDueDateInfo";
+import { CardImageUploadProgress } from "./CardImageUploadProgress";
 import { CardTypeUpdateSelector } from "./CardTypeUpdateSelector";
 import MinimalInputWithImagesUpdate from "./MinimalInputWithImagesUpdate";
 import { MultipleChoiceOptionsUpdate } from "./MultipleChoiceOptionsUpdate";
@@ -64,82 +56,24 @@ const CardImages: React.FC<TCardImagesProps> = ({ images, onRemoveImage }) => {
 };
 
 const CardContentView: React.FC<CardContentViewProps> = ({ selectedCard, onUpdate }) => {
-	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [cardType, setCardType] = useState<"BASIC" | "MULTIPLE_CHOICE">(
 		selectedCard.cardContent.cardType,
 	);
-	const [uploadProgress, setUploadProgress] = useState<{
-		front: Record<number, number>;
-		back: Record<number, number>;
-	}>({
-		front: {},
-		back: {},
-	});
+	const { form, handleUpdateCard, isSubmitting, uploadProgress, handleRemoveImage } =
+		useCardUpdateForm(selectedCard, onUpdate);
 
 	const dueDate = new Date(selectedCard.card.due);
-	const { mutateAsync: updateCard } = useUpdateCardMutation();
 
-	const handleImageProgress = (side: "front" | "back", index: number, progress: number) => {
-		setUploadProgress((prev) => ({
-			...prev,
-			[side]: {
-				...prev[side],
-				[index]: progress,
-			},
-		}));
-	};
-
-	const displayMultipleChoiceFormErrors = () => {
+	// Replace the existing displayMultipleChoiceFormErrors function
+	const displayMultipleChoiceFormErrors = useCallback(() => {
 		console.log("Form errors:", form.errors);
-		if (!Object.keys(form.errors).length) return null;
-		return <p className="text-sm text-red-500">{form.errors.multipleChoiceOptions || ""}</p>;
-	};
+		if (!form.errors || Object.keys(form.errors).length === 0) return null;
 
-	const handleUpdateCard = async (values: typeof form.values) => {
-		console.log("Form values:", values);
-		//TODO: After testing remove this comment
-		setIsSubmitting(true);
-		if (form.isValid()) {
-			try {
-				await updateCard({
-					...values,
-					id: selectedCard.card.id,
-					deckId: selectedCard.card.deckId,
-					onImageProgress: handleImageProgress,
-				});
-
-				// TODO: remove onUpdate and make updatebutton disabled till the form is dirty
-				setIsSubmitting(false);
-				onUpdate();
-			} catch (error) {
-				console.error("Error updating card:", error);
-				setIsSubmitting(false);
-				toast.error("Error updating card");
-			}
-		} else {
-			setIsSubmitting(false);
-			console.log("Form validation failed:", form.errors);
-			const errors = Object.entries(form.errors)
-				.map(([field, error]) => `${field}: ${error}`)
-				.join("\n");
-			toast.error(`Form validation failed:\n${errors}`);
-		}
-	};
-
-	const handleRemoveImage = (isFront: boolean) => (s3FileKey: string) => {
-		const field = isFront ? "frontImage" : "backImage";
-		const currentImages = form.values[field];
-
-		// Toggle the image: if it exists remove it, if it doesn't exist add it
-		if (currentImages.includes(s3FileKey)) {
-			form.setFieldValue(
-				field,
-				currentImages.filter((key) => key !== s3FileKey),
-			);
-		} else {
-			form.setFieldValue(field, [...currentImages, s3FileKey]);
-		}
-	};
+		// Directly return the error message component if there are errors
+		return form.errors.multipleChoiceOptions ? (
+			<p className="text-sm text-red-500">{form.errors.multipleChoiceOptions}</p>
+		) : null;
+	}, [form?.errors]);
 
 	const { data: frontImage } = useFetchImageForCardWithSignedUrlQueryV2(
 		selectedCard.cardContent.frontImage || [],
@@ -148,29 +82,10 @@ const CardContentView: React.FC<CardContentViewProps> = ({ selectedCard, onUpdat
 		selectedCard.cardContent.backImage || [],
 	);
 
-	const form = useForm({
-		mode: "controlled",
-		initialValues: {
-			frontText: selectedCard.cardContent.frontText,
-			backText: selectedCard.cardContent.backText,
-			cardType: selectedCard.cardContent.cardType,
-			frontImage: selectedCard.cardContent.frontImage,
-			backImage: selectedCard.cardContent.backImage,
-			newBackImages: [] as ImageItem[],
-			newFrontImages: [] as ImageItem[],
-			multipleChoiceOptions: selectedCard.cardContent.multipleChoiceOptions,
-		},
-		// TODO: remove validation comment
-		validate: zodResolver(cardSchemas.cardUpdateSchema),
-		validateInputOnChange: true,
-	});
-
 	return (
 		<form onSubmit={form.onSubmit(handleUpdateCard)}>
 			<div className="flex flex-col gap-2">
 				<CardTypeUpdateSelector form={form} setCardType={setCardType} />
-				{/* <CardType form={form} /> */}
-				{/* <FrontText form={form} /> */}
 
 				{cardType === "BASIC" ? (
 					<section>
@@ -249,11 +164,7 @@ const CardContentView: React.FC<CardContentViewProps> = ({ selectedCard, onUpdat
 					</section>
 				)}
 
-				{isSubmitting && (
-					<p className="text-sm font-bold text-gray-900 mt-2">
-						Updating ... <span className="inline-block animate-spin duration-[500ms]">↻</span>
-					</p>
-				)}
+				{isSubmitting && <LoadingSpinner text="Updating ..." />}
 				<CardContentActionButtons form={form} onUpdate={onUpdate} isSubmitting={isSubmitting} />
 			</div>
 		</form>

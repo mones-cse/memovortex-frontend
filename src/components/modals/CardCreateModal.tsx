@@ -30,7 +30,7 @@ export const CardCreateModal = ({ deckId }: ModalProps["newCard"]) => {
 					/>
 				)}
 
-				{showLoadingIndicator && <LoadingSpinner />}
+				{showLoadingIndicator && <LoadingSpinner text="Creating ..." />}
 
 				<CardFormButtons isSubmitting={isSubmitting} form={form} />
 			</form>

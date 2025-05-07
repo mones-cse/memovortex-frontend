@@ -9,7 +9,6 @@ export const MultipleChoiceOptionsUpdate = ({
 	const selectedOptionIndex = form.values.multipleChoiceOptions.findIndex(
 		(option) => option.isCorrect,
 	);
-	console.log("🚀 ~ selectedOptionIndex:", selectedOptionIndex, form.values.multipleChoiceOptions);
 
 	const [selectedRadioIndex, setSelectedRadioIndex] = useState<number | null>(selectedOptionIndex);
 	const handleCorrectOptionChange = (index: number) => {
